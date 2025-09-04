@@ -3,6 +3,7 @@ import React, { lazy, Suspense } from "react";
 import { Route } from "react-router";
 
 import Contents from "./Contents";
+import NotFound from "./NotFound";
 
 const Cryptanalysis = lazy(() => import("./contents/Cryptanalysis"));
 const DVA = lazy(() => import("./contents/DVA"));
@@ -103,6 +104,7 @@ const contentsRoutes = [
     }
     key="white"
   />,
+  <Route path="*" element={<NotFound />} key="notfound" />,
 ];
 
 export default contentsRoutes;
