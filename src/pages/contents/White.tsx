@@ -220,7 +220,7 @@ const White: React.FC = () => {
   // Initialize white canvas on load
   useEffect(() => {
     handleGenerateWhite();
-  }, []);
+  });
 
   // SVG symbols for HSV visualizations
   const svgSymbols = (
