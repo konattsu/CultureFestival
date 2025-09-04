@@ -2,7 +2,7 @@ import React from "react";
 
 import ContentPageLayout from "../../components/ContentPageLayout";
 
-const HelloWorld: React.FC = () => {
+const Programming: React.FC = () => {
   return (
     <ContentPageLayout title="Hello World">
       <div className="prose dark:prose-invert max-w-none">
@@ -36,4 +36,4 @@ const HelloWorld: React.FC = () => {
   );
 };
 
-export default HelloWorld;
+export default Programming;

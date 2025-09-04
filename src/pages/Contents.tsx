@@ -291,7 +291,7 @@ const WhiteIcon = (): React.JSX.Element => (
   </svg>
 );
 
-const HelloWorldIcon = (): React.JSX.Element => (
+const ProgrammingIcon = (): React.JSX.Element => (
   <svg viewBox="0 0 100 100" className="h-30 w-30">
     <line
       x1="20"
@@ -450,7 +450,7 @@ const contentItems: ContentItem[] = [
     title: "プログラミング入門",
     description:
       "「Hello, World!」から始める簡単なプログラミングの基礎を学びます。",
-    icon: <HelloWorldIcon />,
+    icon: <ProgrammingIcon />,
   },
   {
     id: "tech",

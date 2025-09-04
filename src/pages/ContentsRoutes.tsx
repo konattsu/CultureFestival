@@ -8,7 +8,7 @@ const Cryptanalysis = lazy(() => import("./contents/Cryptanalysis"));
 const DVA = lazy(() => import("./contents/DVA"));
 const Gacha = lazy(() => import("./contents/Gacha"));
 const HeatExhaustion = lazy(() => import("./contents/HeatExhaustion"));
-const HelloWorld = lazy(() => import("./contents/HelloWorld"));
+const Programming = lazy(() => import("./contents/Programming"));
 const Melos = lazy(() => import("./contents/Melos"));
 const Notebook = lazy(() => import("./contents/Notebook"));
 const Tech = lazy(() => import("./contents/Tech"));
@@ -59,13 +59,13 @@ const contentsRoutes = [
     key="heat-exhaustion"
   />,
   <Route
-    path="hello-world"
+    path="programming"
     element={
       <Suspense fallback={<Loading />}>
-        <HelloWorld />
+        <Programming />
       </Suspense>
     }
-    key="hello-world"
+    key="programming"
   />,
   <Route
     path="melos"
