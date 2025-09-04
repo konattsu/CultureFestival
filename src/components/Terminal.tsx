@@ -21,6 +21,11 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
   const xtermRef = useRef<XTerm | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [terminalHeight, setTerminalHeight] = useState(
+    window.innerHeight * 0.5,
+  ); // 50vh
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // ターミナルの初期化
@@ -268,7 +273,61 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         fitAddonRef.current?.fit();
       }, 300);
     }
-  }, [isOpen, isMinimized]);
+  }, [isOpen, isMinimized, terminalHeight]);
+
+  // リサイザーの処理
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent | TouchEvent): void => {
+      if (!isResizing) return;
+
+      let clientY: number;
+      if (e instanceof TouchEvent) {
+        clientY = e.touches[0].clientY;
+      } else {
+        clientY = e.clientY;
+      }
+
+      const newHeight = Math.max(
+        200, // 最小高さ
+        Math.min(window.innerHeight - 100, window.innerHeight - clientY), // 最大高さ
+      );
+      setTerminalHeight(newHeight);
+    };
+
+    const handleMouseUp = (): void => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove, {
+        passive: false,
+      });
+      document.addEventListener("touchmove", handleMouseMove, {
+        passive: false,
+      });
+      document.addEventListener("mouseup", handleMouseUp);
+      document.addEventListener("touchend", handleMouseUp);
+      document.body.style.cursor = "ns-resize";
+      document.body.style.userSelect = "none";
+    } else {
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    }
+
+    return (): void => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("touchmove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchend", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isResizing]);
+
+  const handleResizeStart = (e: React.MouseEvent | React.TouchEvent): void => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
 
   const toggleMinimize = (): void => {
     setIsMinimized(!isMinimized);
@@ -280,11 +339,28 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         <motion.div
           className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-600 bg-black/95 backdrop-blur-sm"
           initial={{ y: "100%" }}
-          animate={{ y: isMinimized ? "calc(100% - 40px)" : "0%" }}
+          animate={{ y: isMinimized ? `calc(100% - 40px)` : "0%" }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ height: isMinimized ? "40px" : "50vh" }}
+          style={{ height: isMinimized ? "40px" : `${terminalHeight}px` }}
         >
+          {/* Resize Handle */}
+          {!isMinimized && (
+            <div
+              ref={resizeRef}
+              className={`absolute top-0 right-0 left-0 h-1 cursor-ns-resize transition-colors hover:bg-blue-500/50 ${
+                isResizing ? "bg-blue-500" : "bg-transparent"
+              }`}
+              onMouseDown={handleResizeStart}
+              onTouchStart={handleResizeStart}
+              role="button"
+              tabIndex={0}
+              title="Drag to resize terminal"
+              style={{
+                touchAction: "none",
+              }}
+            />
+          )}
           {/* Terminal Header */}
           <div className="flex items-center justify-between border-b border-gray-600 bg-gray-800 px-4 py-2">
             <div className="flex items-center space-x-2">
@@ -322,7 +398,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             <div
               ref={terminalRef}
               className="h-full overflow-hidden p-2"
-              style={{ height: "calc(100% - 40px)" }}
+              style={{ height: `${terminalHeight - 40}px` }}
             />
           )}
         </motion.div>
