@@ -75,7 +75,7 @@ const FloatingCodeElements: React.FC = () => {
       element.textContent = snippet;
       element.className =
         "absolute text-blue-300 font-mono opacity-0 select-none pointer-events-none font-bold";
-      element.style.fontSize = `${Math.random() * 20 + 13}px`; // Larger font size
+      element.style.fontSize = `${Math.random() * 20 + 16}px`; // Larger font size
       element.style.textShadow = "0 0 10px rgba(59, 130, 246, 0.8)"; // Glow effect
 
       // Random spawn position outside viewport
@@ -114,7 +114,7 @@ const FloatingCodeElements: React.FC = () => {
       const targetYPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
 
       // 3D perspective animation - much stronger depth effect
-      const startScale = Math.random() * 3 + 2; // Much larger start (very close)
+      const startScale = Math.random() * 3 + 4; // Much larger start (very close)
       const endScale = Math.random() * 0.1 + 0.05; // Much smaller end (very far)
       const startOpacity = Math.random() * 0.9 + 0.3;
 
@@ -122,8 +122,8 @@ const FloatingCodeElements: React.FC = () => {
         scale: startScale,
         opacity: 0,
         z: Math.random() * 500 + 200, // Start much closer
-        rotateX: Math.random() * 60 - 30, // Minimal rotation
-        rotateY: Math.random() * 60 - 30,
+        rotateX: Math.random() * 60, // Minimal rotation
+        rotateY: Math.random() * 60,
         transformPerspective: 800, // Stronger perspective
       });
 
@@ -183,8 +183,8 @@ const FloatingCodeElements: React.FC = () => {
           })(),
           scale: startScale,
           z: Math.random() * 500 + 200, // Reset to close position
-          rotateX: Math.random() * 60 - 30, // Minimal rotation
-          rotateY: Math.random() * 60 - 30,
+          rotateX: Math.random() * 60, // Minimal rotation
+          rotateY: Math.random() * 60,
         });
     }
 
