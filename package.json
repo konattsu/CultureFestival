@@ -18,6 +18,8 @@
     "@codemirror/view": "^6.34.1",
     "@tabler/icons-react": "^3.34.1",
     "@uiw/react-codemirror": "^4.23.5",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
     "lucide-react": "^0.542.0",

@@ -3,14 +3,31 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
-import { X, Home, Grid3X3, Map, Sparkles, ChevronRight } from "lucide-react";
+import {
+  X,
+  Home,
+  Grid3X3,
+  Map,
+  Sparkles,
+  ChevronRight,
+  Terminal as TerminalIcon,
+} from "lucide-react";
+
+import Terminal from "../components/Terminal";
 
 interface HeaderProps {
   menuOpen: boolean;
   toggleMenu: () => void;
+  terminalOpen: boolean;
+  toggleTerminal: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ menuOpen, toggleMenu }) => {
+const Header: React.FC<HeaderProps> = ({
+  menuOpen,
+  toggleMenu,
+  terminalOpen,
+  toggleTerminal,
+}) => {
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,7 +72,22 @@ const Header: React.FC<HeaderProps> = ({ menuOpen, toggleMenu }) => {
           <div className="from-neon-blue/20 to-neon-purple/20 absolute inset-0 -z-10 rounded-lg bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </Link>
 
-        <div className="w-10"></div>
+        <div className="flex items-center space-x-2">
+          <motion.button
+            className={`rounded-lg p-2 transition-colors hover:bg-white/10 ${
+              terminalOpen
+                ? "bg-neon-blue/20 text-neon-blue"
+                : "text-gray-400 hover:text-white"
+            }`}
+            onClick={toggleTerminal}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="ターミナル"
+            title="Toggle Terminal"
+          >
+            <TerminalIcon className="h-5 w-5" />
+          </motion.button>
+        </div>
       </div>
     </motion.header>
   );
@@ -222,7 +254,10 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
 // --- MainLayout ---
 const MainLayout: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [terminalOpen, setTerminalOpen] = useState(false);
   const toggleMenu = (): void => setMenuOpen((open) => !open);
+  const toggleTerminal = (): void => setTerminalOpen((open) => !open);
+  const closeTerminal = (): void => setTerminalOpen(false);
 
   // Close menu when route changes
   const location = useLocation();
@@ -232,7 +267,12 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black">
-      <Header menuOpen={menuOpen} toggleMenu={toggleMenu} />
+      <Header
+        menuOpen={menuOpen}
+        toggleMenu={toggleMenu}
+        terminalOpen={terminalOpen}
+        toggleTerminal={toggleTerminal}
+      />
       <NavMenu menuOpen={menuOpen} toggleMenu={toggleMenu} />
 
       <motion.main
@@ -325,6 +365,13 @@ const MainLayout: React.FC = () => {
         <div className="bg-neon-blue/5 absolute top-1/4 left-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
         <div className="bg-neon-purple/5 absolute right-1/4 bottom-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
       </div>
+
+      {/* Terminal */}
+      <Terminal
+        isOpen={terminalOpen}
+        onClose={closeTerminal}
+        onToggle={toggleTerminal}
+      />
     </div>
   );
 };
