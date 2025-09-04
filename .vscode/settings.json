@@ -1,0 +1,60 @@
+{
+  "editor.formatOnSave": true,
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  // "gitlens.codeLens.authors.enabled": false,
+  // "gitlens.codeLens.recentChange.enabled": false,
+
+  // Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+
+  // ESLint
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // Tailwind CSS
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+
+  // Typescript
+  "typescript.tsserver.log": "verbose",
+
+  // 楽曲データたちよう
+  "json.schemas": [
+    {
+      "fileMatch": ["/music_data/data/artists_data.json"],
+      "url": "./tools/artists_data.schema.json"
+    },
+    {
+      "fileMatch": ["/music_data/data/input/*.json"],
+      "url": "./tools/music_data.schema.json"
+    }
+  ],
+
+  // spell checking
+  "cSpell.words": [
+    "appender",
+    "chrono",
+    "cliplayer",
+    "Deque",
+    "dialoguer",
+    "Gacha",
+    "musictl",
+    "reqwest",
+    "rustls",
+    "serde",
+    "thiserror",
+    "vitest",
+    "walkdir"
+  ]
+}

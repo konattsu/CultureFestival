@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import ContentPageLayout from "../../components/ContentPageLayout";
 
@@ -8,38 +8,41 @@ interface CipherPair {
 }
 
 const Cryptanalysis: React.FC = () => {
-  const [inputText, setInputText] = useState<string>("");
   const [sortColumn, setSortColumn] = useState<number>(0);
-  const [enteredChars, setEnteredChars] = useState<string[]>([]);
+  const [plainText, setPlainText] = useState<string>("");
+  const [encryptedText, setEncryptedText] = useState<string>("");
 
-  // Cipher alphabet mapping
+  const plainTextRef = useRef<HTMLDivElement>(null);
+  const encryptedTextRef = useRef<HTMLDivElement>(null);
+
+  // Cipher alphabet mapping - matches the HTML page exactly
   const cipherPairs: CipherPair[] = [
     { plain: "a", encrypted: "e" },
     { plain: "b", encrypted: "d" },
     { plain: "c", encrypted: "t" },
     { plain: "d", encrypted: "h" },
     { plain: "e", encrypted: "y" },
-    { plain: "f", encrypted: "w" },
-    { plain: "g", encrypted: "b" },
-    { plain: "h", encrypted: "n" },
-    { plain: "i", encrypted: "l" },
-    { plain: "j", encrypted: "k" },
-    { plain: "k", encrypted: "j" },
+    { plain: "f", encrypted: "s" },
+    { plain: "g", encrypted: "f" },
+    { plain: "h", encrypted: "l" },
+    { plain: "i", encrypted: "g" },
+    { plain: "j", encrypted: "z" },
+    { plain: "k", encrypted: "b" },
     { plain: "l", encrypted: "r" },
-    { plain: "m", encrypted: "c" },
-    { plain: "n", encrypted: "q" },
-    { plain: "o", encrypted: "v" },
-    { plain: "p", encrypted: "s" },
-    { plain: "q", encrypted: "f" },
-    { plain: "r", encrypted: "a" },
-    { plain: "s", encrypted: "x" },
-    { plain: "t", encrypted: "z" },
-    { plain: "u", encrypted: "i" },
-    { plain: "v", encrypted: "m" },
-    { plain: "w", encrypted: "o" },
-    { plain: "x", encrypted: "g" },
-    { plain: "y", encrypted: "p" },
-    { plain: "z", encrypted: "u" },
+    { plain: "m", encrypted: "j" },
+    { plain: "n", encrypted: "k" },
+    { plain: "o", encrypted: "c" },
+    { plain: "p", encrypted: "i" },
+    { plain: "q", encrypted: "p" },
+    { plain: "r", encrypted: "x" },
+    { plain: "s", encrypted: "n" },
+    { plain: "t", encrypted: "q" },
+    { plain: "u", encrypted: "o" },
+    { plain: "v", encrypted: "u" },
+    { plain: "w", encrypted: "a" },
+    { plain: "x", encrypted: "v" },
+    { plain: "y", encrypted: "m" },
+    { plain: "z", encrypted: "w" },
   ];
 
   // Sort the cipher pairs based on the selected column
@@ -49,18 +52,36 @@ const Cryptanalysis: React.FC = () => {
     return valueA.localeCompare(valueB);
   });
 
+  // Scroll outputs to right end when text changes
+  useEffect(() => {
+    if (plainTextRef.current !== null) {
+      plainTextRef.current.scrollLeft = plainTextRef.current.scrollWidth;
+    }
+    if (encryptedTextRef.current !== null) {
+      encryptedTextRef.current.scrollLeft =
+        encryptedTextRef.current.scrollWidth;
+    }
+  }, [plainText, encryptedText]);
+
   const handleSort = (columnIndex: number): void => {
     setSortColumn(columnIndex);
   };
 
-  const handleCharClick = (char: string): void => {
-    setEnteredChars([...enteredChars, char]);
-    setInputText(inputText + char);
+  const handleCharClick = (pair: CipherPair): void => {
+    setPlainText((prev) => prev + pair.plain);
+    setEncryptedText((prev) => prev + pair.encrypted);
+  };
+
+  const handleDelete = (): void => {
+    setPlainText((prev) => prev.slice(0, -1));
+    setEncryptedText((prev) => prev.slice(0, -1));
   };
 
   const handleClear = (): void => {
-    setEnteredChars([]);
-    setInputText("");
+    if (window.confirm("全部削除してよろしいですか?")) {
+      setPlainText("");
+      setEncryptedText("");
+    }
   };
 
   const svgSymbols = (
@@ -120,14 +141,19 @@ const Cryptanalysis: React.FC = () => {
 
   return (
     <ContentPageLayout title="暗号解読" svgSymbols={svgSymbols}>
-      <>
+      <div className="prose dark:prose-invert max-w-none">
+        <p className="rounded bg-blue-100/80 p-4 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+          パンフレット記載の暗号解読はこのページです。無くても別の文字列を解読できます。
+        </p>
+
         <h2 className="mt-8 text-2xl font-bold">使用する暗号化方式</h2>
         <p>
           単一換字式暗号(たんいつかえじしき)という手法で暗号化された文字列を解読していただきます。
           これは暗号化前の文章「平文」に対して、必ず同じ暗号文の文字に変換される暗号のことです。
         </p>
         <p>
-          例えば、平文の "a" が、暗号文の "f" に<strong>必ず</strong>
+          例えば、平文の "a" が、暗号文の "f" に
+          <strong className="font-bold">必ず</strong>
           暗号化されるとき、これは単一換字式暗号化です。
         </p>
         <p>
@@ -155,7 +181,7 @@ const Cryptanalysis: React.FC = () => {
           「暗号前」「暗号後」をクリックするとソートできます。
           <br />
           解読の際は
-          <span className="font-bold text-blue-600">
+          <span className="font-semibold text-amber-600 dark:text-amber-400">
             「暗号後」をクリックしてソート
           </span>
           すると操作しやすいです。
@@ -165,18 +191,18 @@ const Cryptanalysis: React.FC = () => {
           「暗号後の"e"」のどちらをクリックしても同様の動作をします。
         </p>
 
-        <div className="mt-6 overflow-x-auto rounded-lg border border-gray-200">
+        <div className="mt-6 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 dark:bg-gray-800">
                 <th
-                  className="cursor-pointer p-3 font-bold hover:bg-gray-200"
+                  className={`cursor-pointer p-3 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 0 ? "text-blue-600 dark:text-blue-400" : ""}`}
                   onClick={() => handleSort(0)}
                 >
                   暗号前 {sortColumn === 0 && "↓"}
                 </th>
                 <th
-                  className="cursor-pointer p-3 font-bold hover:bg-gray-200"
+                  className={`cursor-pointer p-3 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 1 ? "text-blue-600 dark:text-blue-400" : ""}`}
                   onClick={() => handleSort(1)}
                 >
                   暗号後 {sortColumn === 1 && "↓"}
@@ -185,16 +211,19 @@ const Cryptanalysis: React.FC = () => {
             </thead>
             <tbody>
               {sortedPairs.map((pair, index) => (
-                <tr key={index} className="border-t border-gray-200">
+                <tr
+                  key={index}
+                  className="border-t border-gray-200 dark:border-gray-700"
+                >
                   <td
-                    className="cursor-pointer p-3 hover:bg-blue-100"
-                    onClick={() => handleCharClick(pair.plain)}
+                    className="cursor-pointer p-3 font-mono hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
+                    onClick={() => handleCharClick(pair)}
                   >
                     {pair.plain}
                   </td>
                   <td
-                    className="cursor-pointer p-3 hover:bg-blue-100"
-                    onClick={() => handleCharClick(pair.encrypted)}
+                    className="cursor-pointer p-3 font-mono hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
+                    onClick={() => handleCharClick(pair)}
                   >
                     {pair.encrypted}
                   </td>
@@ -204,39 +233,64 @@ const Cryptanalysis: React.FC = () => {
           </table>
         </div>
 
-        <div className="mt-8">
-          <label className="block text-lg font-medium">入力ボックス</label>
-          <div className="mt-2 flex">
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
-            />
+        <div className="mt-8 rounded-lg bg-gray-100 p-6 dark:bg-gray-800">
+          <p className="mb-4 font-medium">以下の文字列を解読してみてください</p>
+          <ul className="mb-2 space-y-2 font-mono">
+            <li>「ejy」</li>
+            <li>「jeqltrod」</li>
+            <li>「ixcfxejjgkf」</li>
+          </ul>
+        </div>
+
+        <div className="mt-8 space-y-4">
+          <div className="flex space-x-2">
+            <button
+              onClick={handleDelete}
+              className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-500"
+            >
+              1つ削除
+            </button>
             <button
               onClick={handleClear}
-              className="ml-2 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+              className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500"
             >
-              クリア
+              全削除
             </button>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+              暗号前:
+            </p>
+            <div
+              ref={plainTextRef}
+              className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
+            >
+              {plainText}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+              暗号後:
+            </p>
+            <div
+              ref={encryptedTextRef}
+              className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
+            >
+              {encryptedText}
+            </div>
           </div>
         </div>
 
-        <div className="mt-8">
-          <h3 className="text-xl font-bold">暗号解読のヒント</h3>
-          <ul className="list-inside list-disc">
-            <li>
-              頻度分析を行ってみましょう。日本語の文章では「あ」「い」「う」などの文字が多く使われます。
-            </li>
-            <li>
-              文脈から推測してみましょう。特に短い単語や助詞などは予測しやすいです。
-            </li>
-            <li>
-              パターンを見つけましょう。同じパターンの繰り返しがあれば、それは同じ意味の可能性があります。
-            </li>
-          </ul>
-        </div>
-      </>
+        <p className="mt-16">
+          逆に自分で暗号化して他人に解読してもらうというのも面白いかもしれません。生成した文字列はクリックしてコピーできるのでぜひ試してみてください。
+          <br />
+          <br />
+          ちなみにこのサイトは"https"というスキームで、"ssl/tls"という通信プロトコルを使用しています。これはwebサイトを閲覧する際の通信を暗号化する仕組みなのですが、これにも上述のRSA,
+          AESといった複雑な暗号方式が使用されています。
+        </p>
+      </div>
     </ContentPageLayout>
   );
 };
