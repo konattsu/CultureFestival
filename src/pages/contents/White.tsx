@@ -140,10 +140,10 @@ const White: React.FC = () => {
   // Draw on the white canvas
   const drawWhiteCanvas = (color: string, name?: string): void => {
     const canvas = whiteCanvasRef.current;
-    if (!canvas) return;
+    if (canvas === null) return;
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (ctx === null) return;
 
     // Fill background
     ctx.fillStyle = color;
@@ -155,7 +155,8 @@ const White: React.FC = () => {
     ctx.fillText(color, 1100, 400);
 
     // Add name if provided
-    if (name && name.trim() !== "") {
+    if (name === null || name === undefined) name = "";
+    if (name.trim() !== "") {
       ctx.font = "120px monospace";
       ctx.fillText(name, 100, 280);
     }
@@ -164,7 +165,7 @@ const White: React.FC = () => {
   // Get canvas as base64 image
   const getCanvasImage = (): string => {
     const canvas = whiteCanvasRef.current;
-    if (!canvas) return "";
+    if (canvas === null) return "";
     return canvas.toDataURL("image/png");
   };
 
@@ -199,7 +200,6 @@ const White: React.FC = () => {
   ): void => {
     const newName = e.target.value.slice(0, 10);
     setWhiteName(newName);
-    drawWhiteCanvas(whiteColor, newName);
   };
 
   // Convert RGB to hex string
@@ -219,8 +219,16 @@ const White: React.FC = () => {
 
   // Initialize white canvas on load
   useEffect(() => {
-    handleGenerateWhite();
-  });
+    // Call handleGenerateWhite inline to avoid dependency warning
+    const newColor = generateWhiteColor();
+    setWhiteColor(newColor);
+    // drawWhiteCanvas will be called by the [whiteColor, whiteName] effect
+  }, []);
+
+  // Redraw canvas whenever whiteColor or whiteName changes
+  useEffect(() => {
+    drawWhiteCanvas(whiteColor, whiteName);
+  }, [whiteColor, whiteName]);
 
   // SVG symbols for HSV visualizations
   const svgSymbols = (
