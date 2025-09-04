@@ -446,7 +446,7 @@ const contentItems: ContentItem[] = [
     icon: <WhiteIcon />,
   },
   {
-    id: "hello-world",
+    id: "programming",
     title: "プログラミング入門",
     description:
       "「Hello, World!」から始める簡単なプログラミングの基礎を学びます。",
