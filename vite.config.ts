@@ -10,7 +10,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  base: "/CultureFestival/",
+  // 今回はrepoごとにurl分けてない(ユーザで一つの形にした)のでいらないかも, 一回試してみる
+  // e.g. https://<usr>.github.io/<こっからコンテンツ>
+  // base: "/CultureFestival/",
   plugins: [
     react(),
     eslint({
