@@ -244,6 +244,82 @@ const MainLayout: React.FC = () => {
         <Outlet />
       </motion.main>
 
+      {/* Footer */}
+      {/* Footer */}
+      <footer className="border-neon-blue/20 border-t bg-black/80 backdrop-blur-lg">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {/* Left Section - About */}
+            <div className="text-center md:text-left">
+              <div className="mb-4 flex items-center justify-center space-x-2 md:justify-start">
+                <Sparkles className="text-neon-yellow h-6 w-6" />
+                <span className="from-neon-blue to-neon-purple bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
+                  数学部
+                </span>
+              </div>
+              <p className="mb-2 text-sm text-gray-400">
+                高校数学部による文化祭展示
+              </p>
+              <p className="text-xs text-gray-500">
+                Mathematics Department Exhibition
+              </p>
+            </div>
+
+            {/* Center Section - Event Info */}
+            <div className="text-center">
+              <h3 className="mb-4 text-lg font-semibold text-white">
+                Culture Festival 2024
+              </h3>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-400">
+                  開催日: 2024年9月7日-8日
+                </p>
+                <p className="text-sm text-gray-400">場所: 高校校舎</p>
+                <div className="mt-3 flex items-center justify-center space-x-2">
+                  <div className="bg-neon-green h-2 w-2 rounded-full" />
+                  <span className="text-xs text-gray-500">LIVE EVENT</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Section - Activities */}
+            <div className="text-center md:text-right">
+              <h3 className="mb-4 text-lg font-semibold text-white">
+                展示内容
+              </h3>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-400">数学パズル</p>
+                <p className="text-sm text-gray-400">暗号解読体験</p>
+                <p className="text-sm text-gray-400">数学ゲーム</p>
+                <p className="text-sm text-gray-400">プログラミング展示</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Section */}
+          <div className="mt-8 border-t border-gray-700 pt-6">
+            <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+              <div className="text-center md:text-left">
+                <p className="text-xs text-gray-500">
+                  © 2024 Math Department. All rights reserved.
+                </p>
+                <p className="mt-1 text-xs text-gray-600">
+                  Built with React + TypeScript + Vite
+                </p>
+              </div>
+              <div className="text-center md:text-right">
+                <p className="text-xs text-gray-500">
+                  Visit us at the school festival!
+                </p>
+                <p className="mt-1 text-xs text-gray-600">
+                  Location: Room 3-A Math Classroom
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+
       {/* Background decorative elements */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="bg-neon-blue/5 absolute top-1/4 left-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
