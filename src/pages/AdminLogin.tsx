@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { signOut } from "firebase/auth";
 import { motion } from "framer-motion";
 import { Key, User, Eye, EyeOff, Shield, AlertCircle } from "lucide-react";
 
+import { auth } from "../config/firebase";
 import { useAuth } from "../context/AuthContext";
 
 const AdminLogin: React.FC = () => {
@@ -13,15 +15,33 @@ const AdminLogin: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { signIn, user, adminUser } = useAuth();
+  const { signIn, user, adminUser, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // ログイン済みの管理者は掲示板にリダイレクト
   useEffect(() => {
-    if (user !== null && adminUser !== null) {
-      void navigate("/bulletin-board");
+    console.log("AdminLogin useEffect:", { user, adminUser, authLoading });
+
+    // loadingが完了していない場合は待機
+    if (authLoading) {
+      return;
     }
-  }, [user, adminUser, navigate]);
+
+    // ユーザーがログインしている場合
+    if (user !== null) {
+      if (adminUser !== null) {
+        // 管理者の場合は掲示板にリダイレクト
+        console.log("管理者としてログイン成功、リダイレクト中...");
+        void navigate("/bulletin-board");
+      } else {
+        // 管理者でない場合はエラーメッセージを表示
+        console.log("管理者権限なし、ログアウト中...");
+        setError("管理者権限がありません。管理者のみログインできます。");
+        // ログアウトする
+        void signOut(auth);
+      }
+    }
+  }, [user, adminUser, authLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -34,7 +54,9 @@ const AdminLogin: React.FC = () => {
     setError("");
 
     try {
+      console.log("ログイン試行中...");
       await signIn(email, password);
+      console.log("signIn呼び出し完了");
       // AuthContextで管理者チェックが行われ、成功すれば自動的にリダイレクトされる
     } catch (error) {
       console.error("Login error:", error);
