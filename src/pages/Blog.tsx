@@ -13,6 +13,7 @@ import {
   BookOpen,
 } from "lucide-react";
 
+import MarkdownPreview from "../components/MarkdownPreview";
 import { getPublishedBlogPosts, getBlogPost } from "../services/blog";
 
 import type { BlogPost } from "../types/blog";
@@ -187,14 +188,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({ postId }) => {
 
           {/* Content */}
           <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div className="prose prose-lg dark:prose-invert max-w-none">
-              <div
-                className="whitespace-pre-wrap text-gray-700 dark:text-gray-300"
-                style={{ lineHeight: "1.8" }}
-              >
-                {post.content}
-              </div>
-            </div>
+            <MarkdownPreview content={post.content} />
           </div>
         </motion.article>
       </div>
