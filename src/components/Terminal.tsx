@@ -6,7 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal as XTerm } from "@xterm/xterm";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Terminal as TerminalIcon, Minimize2 } from "lucide-react";
+import {
+  X,
+  Terminal as TerminalIcon,
+  Minimize2,
+  Maximize2,
+} from "lucide-react";
 
 import "@xterm/xterm/css/xterm.css";
 
@@ -21,6 +26,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
   const xtermRef = useRef<XTerm | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [terminalHeight, setTerminalHeight] = useState(
     window.innerHeight * 0.5,
   ); // 50vh
@@ -106,6 +112,14 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           xterm.writeln("  clear        - Clear terminal screen");
           xterm.writeln("  help         - Show this help message");
           xterm.writeln("  exit         - Close terminal");
+          xterm.writeln("  whoami       - Show current user");
+          xterm.writeln("  date         - Show current date and time");
+          xterm.writeln("  uptime       - Show system uptime");
+          xterm.writeln("  tree         - Show directory structure");
+          xterm.writeln("  history      - Show command history");
+          xterm.writeln("  echo <text>  - Display text");
+          xterm.writeln("  fortune      - Display a random fortune");
+          xterm.writeln("  matrix       - Enter the Matrix");
           xterm.writeln("");
           xterm.writeln("\x1b[36mNavigation paths:\x1b[0m");
           xterm.writeln("  /            - Home page");
@@ -198,6 +212,130 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           }
           break;
 
+        case "whoami":
+          xterm.writeln("\x1b[32mmathclub-visitor\x1b[0m");
+          break;
+
+        case "date":
+          xterm.writeln(`\x1b[33m${new Date().toString()}\x1b[0m`);
+          break;
+
+        case "uptime": {
+          const uptime = Math.floor(Date.now() / 1000);
+          const hours = Math.floor(uptime / 3600);
+          const minutes = Math.floor((uptime % 3600) / 60);
+          const seconds = uptime % 60;
+          xterm.writeln(`\x1b[32mup ${hours}h ${minutes}m ${seconds}s\x1b[0m`);
+          break;
+        }
+
+        case "cat":
+          if (args.length < 2) {
+            xterm.writeln("\x1b[31mcat: missing file operand\x1b[0m");
+          } else {
+            const fileName = args[1];
+            switch (fileName) {
+              case "readme.txt":
+                xterm.writeln(
+                  "\x1b[36m=== Culture Festival 2024 - Math Club ===\x1b[0m",
+                );
+                xterm.writeln("Welcome to our interactive exhibition!");
+                xterm.writeln("Explore various mathematical topics and enjoy!");
+                break;
+              case "about.txt":
+                xterm.writeln("\x1b[36m=== About Math Club ===\x1b[0m");
+                xterm.writeln("We are passionate about mathematics and");
+                xterm.writeln("love sharing our knowledge with everyone!");
+                break;
+              case "contact.txt":
+                xterm.writeln("\x1b[36m=== Contact Information ===\x1b[0m");
+                xterm.writeln("Email: mathclub@example.com");
+                xterm.writeln("Twitter: @mathclub2024");
+                break;
+              default:
+                xterm.writeln(
+                  `\x1b[31mcat: ${fileName}: No such file or directory\x1b[0m`,
+                );
+                break;
+            }
+          }
+          break;
+
+        case "tree":
+          xterm.writeln("\x1b[34m.\x1b[0m");
+          xterm.writeln("├── \x1b[34mcontents/\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mcryptanalysis\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mdva\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mgacha\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mheat-exhaustion\x1b[0m");
+          xterm.writeln("│   └── \x1b[32mmelos\x1b[0m");
+          xterm.writeln("├── \x1b[34mmap/\x1b[0m");
+          xterm.writeln("├── \x1b[37mreadme.txt\x1b[0m");
+          xterm.writeln("├── \x1b[37mabout.txt\x1b[0m");
+          xterm.writeln("└── \x1b[37mcontact.txt\x1b[0m");
+          break;
+
+        case "history":
+          xterm.writeln("\x1b[33mCommand history:\x1b[0m");
+          xterm.writeln("  1  help");
+          xterm.writeln("  2  ls");
+          xterm.writeln("  3  cd contents");
+          xterm.writeln("  4  pwd");
+          break;
+
+        case "echo":
+          if (args.length < 2) {
+            xterm.writeln("");
+          } else {
+            const text = cmd.substring(5); // Remove "echo " prefix
+            xterm.writeln(`\x1b[37m${text}\x1b[0m`);
+          }
+          break;
+
+        case "fortune": {
+          const fortunes = [
+            "The best way to learn mathematics is by doing mathematics. - Paul Halmos",
+            "Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding. - William Paul Thurston",
+            "Pure mathematics is, in its way, the poetry of logical ideas. - Albert Einstein",
+            "Mathematics knows no races or geographic boundaries; for mathematics, the cultural world is one country. - David Hilbert",
+            "In mathematics you don't understand things. You just get used to them. - John von Neumann",
+            "Mathematics is the music of reason. - James Joseph Sylvester",
+            "The study of mathematics, like the Nile, begins in minuteness but ends in magnificence. - Charles Caleb Colton",
+            "Mathematics is the art of giving the same name to different things. - Henri Poincaré",
+          ];
+          const randomFortune =
+            fortunes[Math.floor(Math.random() * fortunes.length)];
+          xterm.writeln(`\x1b[36m${randomFortune}\x1b[0m`);
+          break;
+        }
+
+        case "matrix":
+          xterm.writeln("\x1b[32m");
+          xterm.writeln("Wake up, Math Club...");
+          xterm.writeln("The Matrix has you...");
+          xterm.writeln("Follow the white rabbit.");
+          xterm.writeln("\x1b[0m");
+          // Simulate matrix effect briefly
+          setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+              setTimeout(() => {
+                const chars = "01アイウエオカキクケコサシスセソタチツテト";
+                let line = "";
+                for (let j = 0; j < 40; j++) {
+                  line += chars.charAt(
+                    Math.floor(Math.random() * chars.length),
+                  );
+                }
+                xterm.writeln(`\x1b[32m${line}\x1b[0m`);
+              }, i * 100);
+            }
+            setTimeout(() => {
+              xterm.writeln("\x1b[31mConnection terminated.\x1b[0m");
+              xterm.write(prompt());
+            }, 600);
+          }, 1000);
+          return; // Don't write prompt immediately
+
         case "exit":
           onClose();
           return;
@@ -259,7 +397,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
       xtermRef.current = null;
       fitAddonRef.current = null;
     };
-  }, [isOpen, navigate, onClose, isMinimized]);
+  }, [isOpen, navigate, onClose, isMinimized, isFullscreen]);
 
   // ターミナルのフィット調整
   useEffect(() => {
@@ -273,7 +411,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         fitAddonRef.current?.fit();
       }, 300);
     }
-  }, [isOpen, isMinimized, terminalHeight]);
+  }, [isOpen, isMinimized, isFullscreen, terminalHeight]);
 
   // リサイザーの処理
   useEffect(() => {
@@ -333,19 +471,38 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
     setIsMinimized(!isMinimized);
   };
 
+  const toggleFullscreen = (): void => {
+    setIsFullscreen(!isFullscreen);
+    if (!isFullscreen) {
+      setIsMinimized(false); // Exit minimize mode when entering fullscreen
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-600 bg-black/95 backdrop-blur-sm"
+          className={`fixed z-50 border-t border-gray-600 bg-black/95 backdrop-blur-sm ${
+            isFullscreen
+              ? "top-0 right-0 bottom-0 left-0"
+              : "right-0 bottom-0 left-0"
+          }`}
           initial={{ y: "100%" }}
-          animate={{ y: isMinimized ? `calc(100% - 40px)` : "0%" }}
+          animate={{
+            y: isFullscreen ? "0%" : isMinimized ? `calc(100% - 40px)` : "0%",
+          }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ height: isMinimized ? "40px" : `${terminalHeight}px` }}
+          style={{
+            height: isFullscreen
+              ? "100vh"
+              : isMinimized
+                ? "40px"
+                : `${terminalHeight}px`,
+          }}
         >
           {/* Resize Handle */}
-          {!isMinimized && (
+          {!isMinimized && !isFullscreen && (
             <div
               ref={resizeRef}
               className={`absolute top-0 right-0 left-0 h-1 cursor-ns-resize transition-colors hover:bg-blue-500/50 ${
@@ -371,6 +528,16 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             </div>
 
             <div className="flex items-center space-x-2">
+              <motion.button
+                onClick={toggleFullscreen}
+                className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+              >
+                <Maximize2 className="h-4 w-4" />
+              </motion.button>
+
               <motion.button
                 onClick={toggleMinimize}
                 className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
@@ -398,7 +565,11 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             <div
               ref={terminalRef}
               className="h-full overflow-hidden p-2"
-              style={{ height: `${terminalHeight - 40}px` }}
+              style={{
+                height: isFullscreen
+                  ? `calc(100vh - 40px)`
+                  : `${terminalHeight - 40}px`,
+              }}
             />
           )}
         </motion.div>
