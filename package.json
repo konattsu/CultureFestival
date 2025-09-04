@@ -12,7 +12,13 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@codemirror/view": "^6.34.1",
+    "@uiw/react-codemirror": "^4.23.5",
     "framer-motion": "^12.23.12",
+    "pyodide": "^0.26.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.8.2"
