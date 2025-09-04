@@ -1,0 +1,31 @@
+@use "./../../assets/css/theme.css";
+
+input.range-visibility {
+    appearance: none;
+    height: 80%;
+    background-color: var(--background-color);
+
+    --height: 36px;
+    --border: 2px;
+
+    &::-webkit-slider-runnable-track {
+        background-color: #fff; // お好みで
+        height: var(--height);
+        border-radius: calc(var(--height) / 2);
+        border: solid var(--border) var(--text-color);
+        box-sizing: border-box;
+    }
+    &::-webkit-slider-thumb {
+        appearance: none;
+        background-color: red; // お好みで
+        border-radius: 50%;
+        width: calc(var(--height) - var(--border) * 2);
+        height: calc(var(--height) - var(--border) * 2);
+        border-radius: 100%;
+        transform: scale(1.05);
+        // border: --snip-- ; // これもあり
+    }
+}
+
+// 目立つような色でデフォルト色を定義している
+// (全般に言えること) グラデーションは `background` に対して指定

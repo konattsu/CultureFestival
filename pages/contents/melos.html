@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>メロス | 数学部</title>
+    <link rel="icon" href="./../../favicon.svg?ver=0.1.0" sizes="any" type="image/svg+xml" />
+    <link rel="stylesheet" href="./../../assets/css/main.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/header.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/move_top.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/md.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/range_visibility.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/melos.css?ver=0.1.0" class="css" />
+    <script src="./../../scripts/util/store_settings.js?ver=0.1.0"></script>
+  </head>
+
+  <body class="body" id="body">
+    <div class="all-wrapper">
+      <!-- ヘッダー begin -->
+      <div class="overlay" id="overlay"></div>
+      <header class="header show" id="header">
+        <button class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="menu" id="menu">
+          <ul class="nav-list">
+            <li><a href="https://math-club.net">ホーム</a></li>
+            <li>
+              <a href="https://math-club.net/pages/contents.html">コンテンツ</a>
+            </li>
+            <li><a href="https://math-club.net/pages/map.html">地図</a></li>
+            <li>
+              <button class="settings-button" id="settings-button">more</button>
+            </li>
+            <ul class="change-settings" id="change-settings">
+              <button class="toggle-theme settings" id="toggle-theme">theme</button>
+              <button class="toggle-hand settings" id="toggle-hand">mirror</button>
+              <button class="toggle-up-arrow settings" id="toggle-up-arrow">upArrow</button>
+              <button class="copy-current-url settings" id="copy-current-url">copyUrl</button>
+            </ul>
+          </ul>
+        </nav>
+        <script src="./../../scripts/util/hamburger.js?ver=0.1.0" defer></script>
+      </header>
+      <!-- ヘッダー end -->
+
+      <!-- topに戻る begin -->
+      <script src="./../../scripts/util/fetch_svg.js?ver=0.1.0" defer></script>
+      <div class="svg"></div>
+      <svg class="up-arrow" id="up-arrow">
+        <use href="#up-arrow-svg-src"></use>
+      </svg>
+      <script src="./../../scripts/util/move_top.js?ver=0.1.0" defer></script>
+      <!-- topに戻る end -->
+
+      <!-- メイン begin -->
+      <div class="main-content">
+        <h1>1メロス</h1>
+        <h2>走れメロス</h2>
+        <p>
+          「走れメロス」は太宰治さんが1940年に出版された短編小説です。有名なシーンとして主人公「メロス」が「沈みゆく速度の10倍の速度で走った」という描写があります。<br />
+          太宰治さんが好きな人や文系の人は日常的に速さの単位として[メロス]を使用したいに違いないと考え、「SI組立単位」の速さと「メロス」の速さを相互変換できるツールを作成しました。
+        </p>
+        <h2>メロスの定義</h2>
+        <p>
+          「沈みゆく太陽の速度の10倍の速度で走った」という表現から考察していきます。国語科であれば「メロス」の心情を読み取り定義するのでしょうが、数学部なのでそのような高度な技は使えません。<br />
+          ですので、沈みゆく太陽の速さを算出しこれを10倍にしたものを 1[メロス] と定義します。<br />
+          地球を球とみなし、メロスがいる場所はイタリアのシチリア島なので北緯37度、赤道の長さを40000kmとします。
+        </p>
+        <p>
+          <br /><span class="formulas">赤道 : 北緯37度地点での緯線の長さ = 1 : cos(37deg)</span> <br />なので
+          北緯37度地点での緯線の長さは<br />
+          <span class="formulas"> 40000km x 0.799 = 31960km </span>
+          <br />このときの、自転の速さは<br />
+          <span class="formulas"> 31960km / 24h = 1332km/h </span>
+          <br />これの10倍で走っているので<br />
+          <span class="formulas"> 1332km/h x 10 = 13320km/h </span>
+          <br />これを1[メロス]と定義します。
+        </p>
+
+        <h2>相互変換ツール</h2>
+        <p>先ほどの定義を基に作成した相互変換ツールです。</p>
+        <br />
+        <form class="melos-generator">
+          <div class="max-def">
+            <label for="max-km-h">max km/h base</label>
+            <input
+              type="range"
+              class="range-visibility"
+              id="max-km-h"
+              name="max-km-h"
+              min="1"
+              max="10"
+              value="1"
+              step="1"
+            />
+            <input type="number" class="output" id="max-km-h-output" value="1" readonly />
+            <label for="max-km-h">max km/h pow</label>
+            <input
+              type="range"
+              class="range-visibility"
+              id="max-pow-km-h"
+              name="max-pow-km-h"
+              min="1"
+              max="10"
+              value="1"
+              step="1"
+            />
+            <input type="number" class="output" id="max-pow-km-h-output" value="1" readonly />
+          </div>
+          <div class="generator">
+            <input
+              type="range"
+              class="range-visibility range"
+              id="km-h"
+              value="0"
+              name="km-h"
+              min="0"
+              max="1"
+              step="0.0001"
+            />
+            <label for="km-h" class="display">km/h</label>
+            <input type="number" class="display output" id="km-h-output" value="0" readonly />
+            <label for="m-s" class="display">m/s</label>
+            <input type="number" class="display output" id="m-s-output" value="0" readonly />
+            <label for="melos" class="display">melos</label>
+            <input type="number" class="display output" id="melos-output" value="0" readonly />
+          </div>
+        </form>
+        <h3>使い方</h3>
+        <p>
+          2つの赤色スライダーは[km/h]の最大値を指定します。baseが基数、powが指数です。100km/hを最大値にしたいときは 10^2
+          = 100 なので、baseを10、powを2にします。
+        </p>
+        <p>青色のスライダーで単位の相互変換が行えます。範囲は0から先ほど設定した最大値までです。</p>
+        <h3>様々な速さ</h3>
+        <p>日常でよく見る物体の速さを調べてみました。今日から[メロス]を単位として使っていきましょう!</p>
+        <table class="speed-table">
+          <thead>
+            <tr>
+              <th>物体/状態</th>
+              <th>[km/h]</th>
+              <th>[melos]</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>歩き</th>
+              <td>4</td>
+              <td>0.0003</td>
+            </tr>
+            <tr>
+              <th>走り</th>
+              <td>12</td>
+              <td>0.0009</td>
+            </tr>
+            <tr>
+              <th>自転車</th>
+              <td>20</td>
+              <td>0.0015</td>
+            </tr>
+            <tr>
+              <th>車</th>
+              <td>60</td>
+              <td>0.0045</td>
+            </tr>
+            <tr>
+              <th>電車</th>
+              <td>120</td>
+              <td>0.009</td>
+            </tr>
+            <tr>
+              <th>大谷翔平</th>
+              <td>160</td>
+              <td>0.012</td>
+            </tr>
+            <tr>
+              <th>新幹線</th>
+              <td>300</td>
+              <td>0.023</td>
+            </tr>
+            <tr>
+              <th>リニア</th>
+              <td>500</td>
+              <td>0.038</td>
+            </tr>
+            <tr>
+              <th>飛行機(普通)</th>
+              <td>900</td>
+              <td>0.068</td>
+            </tr>
+            <tr>
+              <th>音速</th>
+              <td>1220</td>
+              <td>0.091</td>
+            </tr>
+            <tr>
+              <th>飛行機(最速)</th>
+              <td>2180</td>
+              <td>0.164</td>
+            </tr>
+            <tr>
+              <th>第一宇宙速度</th>
+              <td>28800</td>
+              <td>2.162</td>
+            </tr>
+            <tr>
+              <th>第二宇宙速度</th>
+              <td>40300</td>
+              <td>3.026</td>
+            </tr>
+            <tr>
+              <th>第三宇宙速度</th>
+              <td>60100</td>
+              <td>4.512</td>
+            </tr>
+            <tr>
+              <th>光</th>
+              <td>10億7900万</td>
+              <td>78754</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- メイン end -->
+    </div>
+  </body>
+  <script src="./../../scripts/util/grant_color_theme.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/util/fetch_settings.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/each_pages/melos.js?ver=0.1.0" defer></script>
+</html>

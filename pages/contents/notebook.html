@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>部誌 | 数学部</title>
+    <link rel="icon" href="./../../favicon.svg?ver=0.1.0" sizes="any" type="image/svg+xml" />
+    <link rel="stylesheet" href="./../../assets/css/main.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/header.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/move_top.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/md.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/notebook.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="https://unpkg.com/scroll-hint@latest/css/scroll-hint.css" class="css" />
+    <script src="https://unpkg.com/scroll-hint@latest/js/scroll-hint.min.js"></script>
+    <script src="./../../scripts/util/store_settings.js?ver=0.1.0"></script>
+  </head>
+
+  <body class="body" id="body">
+    <div class="all-wrapper">
+      <!-- ヘッダー begin -->
+      <div class="overlay" id="overlay"></div>
+      <header class="header show" id="header">
+        <button class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="menu" id="menu">
+          <ul class="nav-list">
+            <li><a href="https://math-club.net">ホーム</a></li>
+            <li>
+              <a href="https://math-club.net/pages/contents.html">コンテンツ</a>
+            </li>
+            <li><a href="https://math-club.net/pages/map.html">地図</a></li>
+            <li>
+              <button class="settings-button" id="settings-button">more</button>
+            </li>
+            <ul class="change-settings" id="change-settings">
+              <button class="toggle-theme settings" id="toggle-theme">theme</button>
+              <button class="toggle-hand settings" id="toggle-hand">mirror</button>
+              <button class="toggle-up-arrow settings" id="toggle-up-arrow">upArrow</button>
+              <button class="copy-current-url settings" id="copy-current-url">copyUrl</button>
+            </ul>
+          </ul>
+        </nav>
+        <script src="./../../scripts/util/hamburger.js?ver=0.1.0" defer></script>
+      </header>
+      <!-- ヘッダー end -->
+
+      <!-- topに戻る begin -->
+      <script src="./../../scripts/util/fetch_svg.js?ver=0.1.0" defer></script>
+      <div class="svg"></div>
+      <svg class="up-arrow" id="up-arrow">
+        <use href="#up-arrow-svg-src"></use>
+      </svg>
+      <script src="./../../scripts/util/move_top.js?ver=0.1.0" defer></script>
+      <!-- topに戻る end -->
+
+      <!-- メイン begin -->
+      <div class="main-content">
+        <h1>部誌</h1>
+        <p>
+          数学部の展示室
+          <span class="md-emphasis"> 4階 407室 </span>で配布している部誌と同じ内容を掲載しています。
+          <span class="md-important">
+            作成者の許可なしにスクリーンショットなどを用いて保存を行うことはご控え頂きますようお願いいたします。
+          </span>
+        </p>
+
+        <!-- 各コンテンツに合わせてid微妙に変更 -->
+        <!-- タイトル一覧 begin -->
+        <p class="title-list-title">タイトル一覧 (クリック可)</p>
+        <ul class="title-list" id="title-list">
+          <li><a href="#content-collatz">80年以上未解決のコラッツ予想</a></li>
+          <li><a href="#content-harmonic-progression">調和数列と音楽の関係性</a></li>
+          <li>
+            <a href="#content-bouble-radical">三重根の二重根号の外し方</a>
+          </li>
+          <li>
+            <a href="#content-trigonometric-ratio">様々な三角比の公式の証明方法</a>
+          </li>
+          <li><a href="#content-fermat">フェルマーの最終定理の解決に貢献した、日本人数学者</a></li>
+          <li><a href="#content-st-petersburg-paradox">サンクトペテルブルクのパラドックス</a></li>
+          <!-- <li><a href="#content-sylvester-gallai">シルヴェスター・ガライの定理</a></li> -->
+          <!-- 下 テンプレ -->
+          <!-- <li><a href="#content-5">hoge</a></li> -->
+        </ul>
+        <!-- タイトル一覧 end -->
+
+        <!-- コラッツ予想 begin -->
+        <div class="content" id="content-collatz">
+          <h2>80年以上未解決のコラッツ予想</h2>
+          <h3>コラッツ予想について</h3>
+          <p>
+            コラッツ予想とは「すべての正の整数において、奇数なら3倍し1を足す、偶数なら2で割る、
+            という操作を繰り返していくとどんな整数でも有限回数で1に到達する」という予想です。
+            また角谷の問題、ウラムの予想とも言われています。
+          </p>
+          <h3>具体例</h3>
+          <p>
+            一例として3を例にとります。3は奇数なので3倍して1を足すと10になります。10は偶数で2で割って5になります。5は奇数なので3倍して1を足し16になります。16は偶数で2で次々と4回割れるので1になります。この操作は以下のようになります。
+            <br />
+            3, 10, 5, 16, 8, 4, 2, 1
+          </p>
+          <h3>証明の進捗</h3>
+          <p>
+            現在までに2の68乗までの値が1に到達することが確かめられています。つまり、2の68乗以下の数字では1以外はどの数字も同じ数字に戻ることはなく(ループせず)、また限りなく大きくなっていくこともない、ということです。
+          </p>
+          <p>
+            ちなみに2021年には、日本企業の音圧爆上げくんが1億2000万円の懸賞金をかけました。<br />
+            皆様もぜひコラッツ予想について調べてみてください。
+          </p>
+        </div>
+        <!-- コラッツ予想 end -->
+        <!-- 調和数列 begin -->
+        <div class="content" id="content-harmonic-progression">
+          <h2>調和数列と音楽の関係性</h2>
+          <p>
+            私はゲームなどのBGMをよく聞き、特にベースのコード進行など音階の構成を楽しんでいる。いきなり数学と全く関係のない話と思うかもしれないが、この音楽ととても深い関係のある数学の要素がある。それは数列である。
+            <br />一体音楽と数列の間にどのような関係があるのか、調べて以下にまとめてみた。
+          </p>
+          <h3>1. 調和数列</h3>
+          <p>本題に入る前に調和数列(等差数列の逆数の数列)についての例を、次に示す。</p>
+          <p class="content-hp-numerical-formula content-hp-a">
+            調和数列 <br />数列{a[n]} = 20, 15, 12, 10,... (a[n] ≠ 0) が調和数列のとき <br />その逆数の数列{1/a[n]} =
+            1/20, 1/15, 1/12, 1/10,... は等差数列 <br /><br />よって一般項 1/a[n] = 1/20 + (n-1)/60 = (n-2)/60
+            <br />したがって a[n] = 60/(n+2)
+          </p>
+          <p>それでは本題に入りたいと思う。</p>
+          <h3>2. 数列と音楽の関係性</h3>
+          <h4>1. 周波数と等比数列</h4>
+          <p>
+            音は空気の振動であり、周波数(1秒間の空気の振動数:
+            Hz)で表すことができる。実はドレミの音階の周波数には等比数列が隠れている。<br />次にラの音から始まる1オクターヴ分の周波数を示す。
+          </p>
+          <div class="content-hp-musical-scale-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>音階</th>
+                  <th>周波数[Hz]</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">ラ</th>
+                  <td>220</td>
+                </tr>
+                <tr>
+                  <th scope="row">ラ#</th>
+                  <td>233</td>
+                </tr>
+                <tr>
+                  <th scope="row">シ</th>
+                  <td>247</td>
+                </tr>
+                <tr>
+                  <th scope="row">ド</th>
+                  <td>262</td>
+                </tr>
+                <tr>
+                  <th scope="row">ド#</th>
+                  <td>277</td>
+                </tr>
+                <tr>
+                  <th scope="row">レ</th>
+                  <td>293</td>
+                </tr>
+                <tr>
+                  <th scope="row">レ#</th>
+                  <td>311</td>
+                </tr>
+                <tr>
+                  <th scope="row">ミ</th>
+                  <td>330</td>
+                </tr>
+                <tr>
+                  <th scope="row">ﾌｧ</th>
+                  <td>349</td>
+                </tr>
+                <tr>
+                  <th scope="row">ﾌｧ#</th>
+                  <td>370</td>
+                </tr>
+                <tr>
+                  <th scope="row">ソ</th>
+                  <td>392</td>
+                </tr>
+                <tr>
+                  <th scope="row">ソ#</th>
+                  <td>415</td>
+                </tr>
+                <tr>
+                  <th scope="row">ラ</th>
+                  <td>440</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>この表で下のラ(220Hz)を初項、公比: 233/220 ≒ 1.06, 項数12個として 周波数は</p>
+          <p class="content-hp-numerical-formula" style="font-weight: bold">
+            a[n] = 220・(1.06)^(n-1) の等差数列を成す。
+          </p>
+          <p>実際、上のラの音は220・(1.06)^12 ≒ 442.6 となり、実際に数列となっていることがわかる。</p>
+          <h4>2. 和音と等差、調和数列</h4>
+          <p>
+            音楽の構成要素として、和音(コード)がある。その中でも代表的な C(ドミソ), F(ﾌｧラド), G (ソシレ)
+            の3つのコードについて見てみると、
+          </p>
+
+          <div class="content-hp-chord-wrapper js-scrollable">
+            <table>
+              <thead>
+                <tr>
+                  <th>コード</th>
+                  <th>構成音</th>
+                  <th>周波数比</th>
+                  <th>弦の長さの比</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="col">C</th>
+                  <td>ドミソ</td>
+                  <td>24, 30, 36</td>
+                  <td>1/24, 1/30, 1/36</td>
+                </tr>
+                <tr>
+                  <th scope="col">F</th>
+                  <td>ﾌｧラド</td>
+                  <td>32, 40, 48</td>
+                  <td>1/32, 1/40, 1/48</td>
+                </tr>
+                <tr>
+                  <th scope="col">G</th>
+                  <td>ソシレ</td>
+                  <td>36, 45, 54</td>
+                  <td>1/36, 1/45, 1/54</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size: 90%">周波数比: 上表,周波数÷11</p>
+          <p>
+            上の表から、周波数比はそれぞれ<br />
+            <span class="content-hp-numerical-formula">
+              C[n] = 6n + 18,<br />
+              F[n] = 8n + 24,<br />
+              G[n] = 9n + 27<br />
+            </span>
+            の等差数列と表すことができ、弦の長さの比はそれぞれの逆数なのだから、調和数列といえる。実際、この弦の長さの比で作られる音が「調和」してコードを構成するから調和数列と呼ばれている。
+          </p>
+          <h4>3. 不協和音と数列</h4>
+          <p>コードの中にはいわゆる不協和音と呼ばれるものもある。そういった物の場合はどうなるであろうか。</p>
+          <p>
+            1. C7(ド,ミ,ソ,シ♭)<br />
+            　周波数比{C7[n]} = 24,30,36,42 となり、ソとシ♭の間で規則性がなくなる。
+          </p>
+          <p>
+            2. Dm9(レ,ﾌｧ,ラ,ド,ミ 但しレ,ﾌｧはラより低いものとする)<br />
+            　周波数比{Dm9[n]} = 13,16,20,24,30 となり、やはり規則性のある数列ではない。
+          </p>
+          <p>つまり、一部ではあるものの、和音は構成音の周波数比が規則性を持つことで初めて調和を成すことができる。</p>
+          <h3>3. まとめ</h3>
+          <p>
+            周波数をラから1オクターヴ分並べると、周波数は等差数列を成す。<br />
+            周波数÷11 の比を和音の低い順に並べると、その比は等差数列を成す。<br />
+            また、それに反比例する弦の長さは調和数列を成す。<br />
+            不協和音を含むコードは規則性のある数列を成さない。(一部除く)
+          </p>
+          <h3>4. 感想</h3>
+          <p>
+            今までなんとなく曲を聴いていたが、今回関係性を調べてみると、意外なことがいくつも見つかった。曲を聴くときにコードを調べてみて、それがどんな数列を成すのか、あるいは規則性からどの音が構成音に使われているのか確かめてみると面白いかもしれない。逆にまとめに記述したように不協和音の中にも構成音を組み替えることで数列を成すものがあるかもしれないので、それも確かめてみたい。
+          </p>
+          <h3>5. 参考文献</h3>
+          <p class="force-wrap">
+            音楽と数列 BIGLOBE
+            <span class="references-url">(https://www7b.biglobe.ne.jp/~math-tota/suB/music.htm)</span><br />
+            C7コード MUSICCA
+            <span class="references-url">(https://www.musicca.com/jp/dictionary/chords/c-dominant-seventh)</span><br />
+            Dm9コード 同上
+            <span class="references-url">(https://www.musicca.com/jp/dictionary/chords/d-minor-ninth)</span><br />
+            数研出版 数学B<br />
+            数研出版 チャート式 基礎からの数学Ⅱ+B+C[ベクトル]
+          </p>
+        </div>
+        <!-- 調和数列 end -->
+        <!-- 三重根号 begin -->
+        <div class="content" id="content-bouble-radical">
+          <h2>三重根の二重根号の外し方</h2>
+          <h3>二重根の二重根号の外し方</h3>
+          <p>多重根号とかどやってかくんや......</p>
+        </div>
+        <!-- 三重根号 end -->
+        <!-- 三角比 begin -->
+        <div class="content" id="content-trigonometric-ratio">
+          <h2>様々な三角比の公式の証明方法</h2>
+          <h3>証明内容の確認</h3>
+          <ul class="content-t-r-ul">
+            <li>sin^2θ + cos^2θ = 1</li>
+            <li>tanθ = sinθ / cosθ</li>
+          </ul>
+          <p>いまからこれらを証明していく</p>
+          <h3>証明</h3>
+          <p>三角形ABCにおいて角ABCを90度、角ACBをθとおく。</p>
+          <p>
+            sinθ = AB/CA, cosθ = CB/CA<br />
+            ここから、
+          </p>
+        </div>
+        <!-- 三角比 end -->
+        <div class="content" id="content-fermat">
+          <h2>フェルマーの最終定理の解決に貢献した、日本人数学者</h2>
+          <p>
+            「フェルマーの最終定理」という言葉は多くの人が一度は耳にしたことがあるだろう。この定理は、17世紀の数学者ピエール・ド・フェルマーによって提唱されたもので、次のように述べられている。
+          </p>
+          <p class="content-center">x^n + y^n = z^n</p>
+          <p>
+            この方程式が n > 2 の場合には、正の整数解を持たないというものだ。 <br />つまり、nが2より大きいとき、x, y, z
+            が整数であるような解は存在しないということだ。
+          </p>
+          <p>
+            この定理は、フェルマーが証明を書き残さなかったため、長い間未解決の問題として残っていた。しかし、1994年にアンドリュー・ワイルズによって証明され、数学界に大きな衝撃を与えた。この証明の話には、3人の日本人数学者の名前がよく登場する。
+            <br />谷山豊、志村五郎、岩沢健一の3名である。谷村と志村は「谷山―志村予想」、岩沢健一は「岩澤理論」という業績を残し、フェルマーの最終定理の解決に大きく貢献した。彼らの業績について、調べたことをまとめてみる。
+          </p>
+          <h3>谷山―志村予想</h3>
+          <p>
+            谷山–志村予想は、「有理数体上に定義されたすべての楕円曲線はモジュラーである」という予想である。もともとは谷山豊によって提起され、その後志村五郎によって定式化された。簡潔に言うと、楕円曲線（特定の方程式で表される曲線）とモジュラー形式（特定の関数の一種）が深く関係しているということだ。
+          </p>
+          <h4>楕円曲線とは?</h4>
+          <p>実平面上、楕円曲線は次の方程式により定義される平面曲線として表され、次のような法停止kで表される。</p>
+          <p class=".content-center">y^2 = x^3 + ax + b</p>
+          <p>ここで、a, bは実数である。</p>
+          <h4>モジュラー形式とは?</h4>
+          <p>複雑な関数の一種で、特定の対称性を持つもの。数論、解析学で重要な役割がある。</p>
+          <h3>岩澤理論</h3>
+          <p>岩澤理論とは、数論の一分野で、特に無限次元のガロア拡大に関する理論。</p>
+          <p>
+            数の性質を調べるために、数の集合を無限に広げていく方法。例えば、円周上の点を考えると、1周するためには360度(2π[rad])必要だ。この円周上の点を無限に細かく分けていくと、非常に多くの点が得られる。このように、数の集合を無限に広げていくことで、新しい性質や関係性を見つけることができる。
+          </p>
+          <h4>具体例</h4>
+          <p>
+            円分体は1のべき根(例えば、1の2乗根、3乗根、4乗根など)を含む数の集合だ。これを無限に広げていくと、非常に多くの数が含まれることになる。この無限に広がった数の集合を使って、数の性質を調べるのが岩澤理論の一部だ。
+          </p>
+          <h4>ガロア群</h4>
+          <p>
+            ガロア群は、数の集合の対称性を表すものだ。例えば、円周上の点を回転させると、元の位置に戻ることがある。この回転の操作を数学的に表現したものがガロア群だ。
+          </p>
+          <h3>感想</h3>
+          <p>
+            彼らの業績は、いずれも非常に高度な内容のため、さっぱり理解できなかったが、なんとなくの雰囲気を掴むことくらいはできたかもしれない。数学史上屈指の大難問の解決に、日本人が関わっていることは、意外である、(自分が関わっているわけでもないのに)やや誇らしい。私ごときには手も足も出ないが、将来彼らの理論を理解できる丸高生が一人でもいてくれたら嬉しい。
+          </p>
+          <h3>参考文献</h3>
+          <p class="force-wrap">
+            自殺も止める？「フェルマーの最終定理」にまつわる人間ドラマ『哲学的な何か、あと数学とか』 | 本がすき。
+            (honsuki.jp) <span class="reference-url">(https://honsuki.jp/review/8011/index.html)</span><br />
+            谷山–志村予想 - Wikipedia
+            <span class="references-url"
+              >(https://ja.wikipedia.org/wiki/%E8%B0%B7%E5%B1%B1%E2%80%93%E5%BF%97%E6%9D%91%E4%BA%88%E6%83%B3)</span
+            ><br />
+            岩澤理論 - Wikipedia
+            <span class="references-url">(https://ja.wikipedia.org/wiki/%E5%B2%A9%E6%BE%A4%E7%90%86%E8%AB%96)</span>
+          </p>
+        </div>
+        <div class="content" id="content-st-petersburg-paradox">
+          <h2>サンクトペテルブルクのパラドックス</h2>
+          <p>
+            偏りのないコインを表が出るまで投げ続け、表が出たときに、賞金をもらえるゲームがあるとする。もらえる賞金は、1回目に表が出たら1円、1回目は表が出て2回目に表が出たら倍の2円、2回目まで表が出ていて3回目に初めて表が出たらそのまた倍の4円、...というふうに倍々で増える賞金がもらえるというゲームをする。
+            <br />この時の期待値は、
+          </p>
+          <p class="content-center">1・1/2 + 2・1/4 + 4・1/8 + … = ∞</p>
+          <p>となり、無限大に発散する。 <br />よって、賭け金がいくらであっても、この賭けには参加すべきとなる。</p>
+          <p>
+            しかし、1/2の確率で1円、1/4の確率で2円、1/1024の確率で512円が得られるので、この賭けに1億円かけて儲かるかというと、直感的にはそう思えない。
+          </p>
+          <p>
+            これに対して、現実的な回答は、賞金には上限があるということだ。例えば、胴元の財産が1億円だとすると、27回続けて裏が出ると、1億円を超えてしまうから、26回裏が出るとゲームを打ち切りにした場合、期待値は14円となる。
+          </p>
+          <p>よって、現実的な範囲では、期待値はせいぜい数十円となる。</p>
+          <h3>感想</h3>
+          <p>
+            期待値が無限大に発散する場合がある事が面白かった。無限を考慮すると、直感と大きく変わるので、このようなパラドックスが生まれると分かった。このパラドックスには、様々な回答がある、気になったらぜひ調べてみて欲しい。
+          </p>
+          <h3>参考文献</h3>
+          <p class="force-wrap">
+            サンクトペテルブルクの逆説
+            <span class="force-wrap">(https://www.nli-research.co.jp/report/detail/id=65215?site-nli&site=nli)</span>
+          </p>
+        </div>
+        <!-- <div class="content" id="content-sylvester-gallai">
+          <h2>シルヴェスター・ガライの定理</h2>
+          <p>
+            シルヴェスター・ガライの定理とは、平面にn点(n >=
+            3)ある。n点は同一直線上に無いとする。このとき、n点のうちちょうど2点だけを通る直線が必ず存在する。という定理です。言い換えれば、同一直線上にならないように3個以上の頂点を平面に配置すると必ず2点だけを通る直線が引けるということです。
+          </p>
+          <p>
+            この定理は、背理法で証明できます。背理法とは、命題が正しくないと仮定して、矛盾を導き、命題が正しいことを証明する方法です。
+          </p>
+          <h3>背理法の例</h3>
+          <p>背理法を使用し、√2が無理数であることを証明します。</p>
+          <p class="content-sg-a">
+            √2が無理数でない、つまり有理数であると仮定する。 <br />有理数であるから互いに素な自然数 a, b を用いて a/b
+            と表せる。 <br />よって √2 = a/b ⇔ 2b^2 = a^2
+            <br /><br />このとき、左辺は2の倍数なので右辺も2の倍数よりaは2の倍数。
+            <br />aが2の倍数よりa^2は4の倍数。<br />よってbも2の倍数<br /><br />これはa,
+            bが互いに素であることに矛盾するから√2は無理数である。
+          </p>
+          <p>このように、命題が正しくないと仮定し、その結果矛盾が生じた場合、仮定が間違っていたことを示せます。</p>
+          <h3>証明</h3>
+          <p>
+            では、背理法を使って、同一直線上にならないように3個以上の頂点を平面に配置すると必ず2点だけを通る直線が引けるということの証明をすると、
+          </p>
+          <p>n=3のときは明らか</p>
+          <p>
+            n>=4とし、n点は同一直線上に無いとしたとき、n点のうちちょうど2点だけを通る直線が存在しないとする。<br />すると、2点を通る直線lに対して、その2点以外の点がl上にある。2点を選んで引ける直線の集合をS(l)とする。次にS(l)に含まれる直線liに対してli上に無く、最も近い点をpiをする。またliとpiの距離をdist(li,pi)とする。
+          </p>
+        </div> -->
+        <!-- 下 テンプレ -->
+        <div class="content" id="content-5">content-5</div>
+      </div>
+      <!-- メイン end -->
+    </div>
+  </body>
+  <script>
+    new ScrollHint(".js-scrollable", {
+      i18n: {
+        scrollable: "スクロールできます",
+      },
+    });
+  </script>
+
+  <script src="./../../scripts/util/grant_color_theme.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/util/fetch_settings.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/each_pages/notebook.js?ver=0.1.0" defer></script>
+</html>

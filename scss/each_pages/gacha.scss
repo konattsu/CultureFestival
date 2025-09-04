@@ -1,0 +1,97 @@
+@use "./../../assets/css/theme.css";
+
+h1 {
+    font-size: calc(2vw + 2rem);
+    text-align: center;
+}
+
+h2 {
+    font-size: calc(min(1.5vw + 1.3rem, 45px));
+    padding: 9px;
+    margin: 4rem 0 2rem 0;
+    max-width: 100%;
+    font-family: serif;
+}
+
+.gacha-wrapper {
+    display: grid;
+    column-gap: 2px;
+    row-gap: 15px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr auto;
+    margin-top: 100px;
+
+    * {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    .gacha-select {
+        font-size: x-large;
+        grid-column: 1 / 5;
+        grid-row: 1 / 2;
+        border: solid 1px var(--text-color);
+    }
+
+    .roll-button {
+        font-size: x-large;
+        width: 100%;
+        border: solid 1px #cb4b16;
+        transition: all 0.05s ease-out;
+        &:hover {
+            scale: 1.05;
+        }
+        &:active {
+            scale: 0.95;
+            filter: brightness(0.5);
+        }
+    }
+
+    .result-count {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: large;
+        border: solid 1px #859900;
+    }
+
+    label {
+        font-size: normal;
+    }
+
+    .gacha-results {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 30px);
+        grid-template-rows: repeat(auto-fill, 30px);
+        grid-column: 1 / 5;
+        margin-top: 50px;
+
+        .gacha-result {
+            height: 30px;
+            width: 30px;
+        }
+
+        .lose {
+            background-color: #444;
+        }
+        .rare {
+            background-color: #ff0;
+        }
+        .pu {
+            background: linear-gradient(
+                to bottom right,
+                #f0f,
+                #ff0,
+                #0f0,
+                #0ff,
+                #00f,
+                #f0f,
+                #f00,
+                #ff0,
+                #0f0
+            );
+        }
+    }
+}

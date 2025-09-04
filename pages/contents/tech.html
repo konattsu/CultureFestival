@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>使用技術等 | 数学部</title>
+    <link rel="icon" href="./../../favicon.svg?ver=0.1.0" sizes="any" type="image/svg+xml" />
+    <link rel="stylesheet" href="./../../assets/css/main.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/header.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/move_top.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/md.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/tech.css?ver=0.1.0" class="css" />
+    <script src="./../../scripts/util/store_settings.js?ver=0.1.0"></script>
+  </head>
+
+  <body class="body" id="body">
+    <div class="all-wrapper">
+      <!-- ヘッダー begin -->
+      <div class="overlay" id="overlay"></div>
+      <header class="header show" id="header">
+        <button class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="menu" id="menu">
+          <ul class="nav-list">
+            <li><a href="https://math-club.net">ホーム</a></li>
+            <li>
+              <a href="https://math-club.net/pages/contents.html">コンテンツ</a>
+            </li>
+            <li><a href="https://math-club.net/pages/map.html">地図</a></li>
+            <li>
+              <button class="settings-button" id="settings-button">more</button>
+            </li>
+            <ul class="change-settings" id="change-settings">
+              <button class="toggle-theme settings" id="toggle-theme">theme</button>
+              <button class="toggle-hand settings" id="toggle-hand">mirror</button>
+              <button class="toggle-up-arrow settings" id="toggle-up-arrow">upArrow</button>
+              <button class="copy-current-url settings" id="copy-current-url">copyUrl</button>
+            </ul>
+          </ul>
+        </nav>
+        <script src="./../../scripts/util/hamburger.js?ver=0.1.0" defer></script>
+      </header>
+      <!-- ヘッダー end -->
+
+      <!-- topに戻る begin -->
+      <script src="./../../scripts/util/fetch_svg.js?ver=0.1.0" defer></script>
+      <div class="svg"></div>
+      <svg class="up-arrow" id="up-arrow">
+        <use href="#up-arrow-svg-src"></use>
+      </svg>
+      <script src="./../../scripts/util/move_top.js?ver=0.1.0" defer></script>
+      <!-- topに戻る end -->
+
+      <!-- メイン begin -->
+      <div class="main-content">
+        <h1>使用技術等</h1>
+        <p class="brief">
+          このサイトの内側についてです。
+          <span class="md-note">ゲームなども無く少し専門的な内容のため、閲覧する人を限定する可能性があります。</span>
+        </p>
+
+        <h2>サーバー</h2>
+        <p>
+          Github
+          Pagesにカスタムドメインを適用しています。ドメインは別サービスで購入しました。当初はサーバーも借りる予定でしたが、Github
+          Pagesの帯域幅が月100GBあり利用規約も大丈夫そうだったので使うことにしました。デプロイも楽なのでこっちにしてよかったです。
+        </p>
+
+        <h2>ローカルストレージ</h2>
+        <p>
+          本サイトではローカルストレージを使用しています。ハンバーガーメニューを開いていただくといくつかの設定があると思いますが、これを一時的に保持しています。サイズは数十バイトです。無効にしていただいても問題なく使用できます。<br />
+          似た機能としてcookieが存在しますが、こちらは使用していません。<br />
+          また、使用者の情報収集は一切していません。(Github
+          Pagesの規約を見て微妙なラインだった、万が一違反すると怖いのでしていない)
+        </p>
+
+        <h2>出来なかったこと</h2>
+        <p>
+          本当は、4択クイズで他のプレイヤーと対戦できるゲームを作る予定でした。
+          WebApi必須になってくるので2,3カ月ほど前からawsの勉強をし、開発していたのですが、
+          残念なことに全く終わりませんでした。
+
+          <br />進捗はバックエンドが8割、フロントエンドが0割です。
+          他のコンテンツを全て捨てればおそらくバックエンドは終わらせられたのですが、
+          「フロントエンド側で使用するjs,tsを全く触ったことが無いので開発の目途が立たない」、
+          「他のコンテンツが無いとこのサイトの意義が薄れる」などの理由から開発を諦めました。
+          <br />正直かなり悔しいです.... もし来年実装していたら是非遊んでください。
+        </p>
+
+        <h2>Rust</h2>
+        <p>
+          このページをここまで閲覧する人はプログラミングやPCが好きな人以外いないと思うので、最後にRust言語はいいぞというのを概要、強み、弱みの順にしたいと思います。強み、弱みは個人的感想がかなり混入しており、筆者はc,py,rsのみの経験です。
+        </p>
+        <h3>概要</h3>
+        <p>メモリ安全、安全な平行性を目標として作成された言語。c/cpp並みの低次元を操作できる。</p>
+        <h3>強み</h3>
+        <p>
+          - メモリ安全<br />
+          大体のエラーはビルド段階でエラーとなります。所有権、借用の仕組みでこれらを制御しています。並行性、非同期になってもこれらを十分に活用できます。
+        </p>
+        <p>
+          - 端的に記述できる<br />
+          例えばヌルポインタがありません。cではファイルポインタの作成時に失敗するとNULLが代入されますが、RustではResult型を利用します。これ用の"?"演算子が用意されており、エラーの委譲が非常に楽です。いちいち
+          if(fptr == NULL) のような記述が必要ありません。他にも便利な構文が色々あり、開発言語を cpp => rs
+          にすると行数が減るという話をよく聞きます。
+        </p>
+        <p>
+          - 大体なんでもいける<br />
+          本当に色々できます。組み込み、wasm、サーバー、CliAppなどです。FirefoxのエンジンはRustで開発されてたりします。Gui(特にGPU)を扱うのが苦手と思い込んでいたのですが、そこまででも無いっぽい感じです。一回も使用していないので何とも言えません...今度試します。
+        </p>
+        <p>
+          - rustup, cargo crates.io<br />
+          これらは依存関係、ビルド、パッケージの管理をしてくれます。brew一行で導入でき、操作も簡単です。
+        </p>
+        <p>
+          - 標準lint clippy<br />
+          何より標準で使えるのが嬉しいです。設定を変更したいときはルートディレクトリにrustfmt.tomlを置くだけ。また、lintとしての性能もかなり上位にランクインすると思います。
+        </p>
+        <p>
+          - c/cpp を呼び出せる<br />
+          既存のc/cppで記述されたコードを呼べます。そのため移行時に少しずつrsに書き換えられます。
+        </p>
+
+        <h3>弱み</h3>
+        <p>
+          - 少し難しい<br />
+          有名な話かと思いますが、構文が少し難しいです。ですが、<a
+            href="https://doc.rust-jp.rs/book-ja/title-page.html"
+            target="_blank"
+            >公式の解説ページ</a
+          >
+          で1から詳しく解説してくれているので、他言語の経験があればそこまで苦にはならないと思います。英語を翻訳した内容ですが、自然な日本語で、訳注もあり読みやすかったです。
+        </p>
+        <p>
+          - 重い<br />
+          コンパイル時間が長いです。上述のバックエンド用のコードを最適化でコンパイルすると7分ぐらいかかりました。また、外部モジュールをたくさん入れているとvscodeでもclippyなどの読み込みが長くなります。
+        </p>
+        <p>rustやろうか迷っている人は学習したところで損しないと思います。やりましょう!!</p>
+        <p style="display: block; border-top: solid 2px; margin: 40px 0">EOF</p>
+      </div>
+      <!-- メイン end -->
+    </div>
+  </body>
+  <script src="./../../scripts/util/grant_color_theme.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/util/fetch_settings.js?ver=0.1.0" defer></script>
+</html>

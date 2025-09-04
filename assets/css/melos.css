@@ -1,0 +1,108 @@
+.light-theme {
+  --text-color: #000;
+  --text-rgb-color: 0, 0, 0;
+  --rev-text-color: #fff;
+  --rev-text-rgb-color: 255, 255, 255;
+  --background-color: #eee;
+  --background-rgb-color: 238, 238, 238;
+  --blurred-text-color: #444;
+  --blurred-text-rgb-color: 68, 68, 68;
+  --rev-blurred-text-color: #bbb;
+  --rev-blurred-text-rgb-color: 187, 187, 187;
+}
+
+.dark-theme {
+  --text-color: #fff;
+  --text-rgb-color: 255, 255, 255;
+  --rev-text-color: #000;
+  --rev-text-rgb-color: 0, 0, 0;
+  --background-color: #002b36;
+  --background-rgb-color: 0, 43, 54;
+  --blurred-text-color: #bbb;
+  --blurred-text-rgb-color: 187, 187, 187;
+  --rev-blurred-text-color: #444;
+  --rev-blurred-text-rgb-color: 68, 68, 68;
+} 
+h1 {
+  font-size: calc(2vw + 2rem);
+  text-align: center;
+}
+
+h2 {
+  font-size: min(1.5vw + 1.3rem, 45px);
+  padding: 9px;
+  margin: 4rem 0 2rem 0;
+  max-width: 100%;
+  font-family: serif;
+}
+
+.formulas {
+  font-style: italic;
+  display: block;
+  padding-left: 10px;
+}
+
+form.melos-generator {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 3fr;
+  width: auto;
+  height: auto;
+  gap: 30px;
+  font-size: calc(1.3vw + 11px);
+}
+form.melos-generator div {
+  display: grid;
+}
+form.melos-generator div label {
+  display: flex;
+  text-align: left;
+  align-items: center;
+}
+form.melos-generator div.max-def {
+  grid-template-columns: auto auto 50px;
+  grid-template-rows: 1fr 1fr;
+}
+form.melos-generator div.generator {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 35px 50px;
+  grid-auto-flow: column;
+}
+form.melos-generator div.generator .range {
+  grid-column: 1/4;
+  grid-row: 1/2;
+}
+form.melos-generator div.generator .range::-webkit-slider-thumb {
+  background-color: blue;
+}
+form.melos-generator div.generator .display {
+  width: 100%;
+  justify-content: center;
+}
+form.melos-generator .output {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: solid 2px var(--text-color);
+  font-size: medium;
+  box-sizing: border-box;
+  padding: 0 1px;
+}
+
+h3 {
+  margin-top: 70px;
+  font-size: 130%;
+}
+
+table.speed-table {
+  width: 100%;
+  border: solid 2px #268bd2;
+  box-sizing: border-box;
+  border-collapse: collapse;
+}
+table.speed-table tr:nth-child(3n-2) {
+  border-top: solid 2px #268bd2;
+}
+table.speed-table tbody > tr > td {
+  text-align: right;
+  padding-right: 10px;
+}/*# sourceMappingURL=melos.css.map */
