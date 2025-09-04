@@ -83,6 +83,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
     let currentLine = "";
     let commandHistory: string[] = [];
     let historyIndex = -1;
+    let cursorPosition = 0;
 
     const prompt = (): string => {
       const pathDisplay = currentPath === "/" ? "~" : currentPath;
@@ -369,16 +370,33 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         // Enter key
         executeCommand(currentLine);
         currentLine = "";
+        cursorPosition = 0;
       } else if (data === "\u007f") {
         // Backspace
-        if (currentLine.length > 0) {
-          currentLine = currentLine.slice(0, -1);
+        if (cursorPosition > 0) {
+          // カーソル位置の文字を削除
+          currentLine =
+            currentLine.slice(0, cursorPosition - 1) +
+            currentLine.slice(cursorPosition);
+          cursorPosition--;
+
+          // 表示を更新
+          const remainingChars = currentLine.length - cursorPosition;
           xterm.write("\b \b");
+          if (remainingChars > 0) {
+            xterm.write(currentLine.slice(cursorPosition));
+            xterm.write(" ");
+            // カーソルを適切な位置に戻す
+            for (let i = 0; i <= remainingChars; i++) {
+              xterm.write("\b");
+            }
+          }
         }
       } else if (data === "\u0003") {
         // Ctrl+C
         xterm.writeln("^C");
         currentLine = "";
+        cursorPosition = 0;
         xterm.write(prompt());
       } else if (data === "\u001b[A") {
         // Up arrow key
@@ -390,37 +408,81 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           }
 
           // 現在の行をクリア
-          const currentLineLength = currentLine.length;
-          for (let i = 0; i < currentLineLength; i++) {
-            xterm.write("\b \b");
+          for (let i = 0; i < cursorPosition; i++) {
+            xterm.write("\b");
+          }
+          for (let i = 0; i < currentLine.length; i++) {
+            xterm.write(" ");
+          }
+          for (let i = 0; i < currentLine.length; i++) {
+            xterm.write("\b");
           }
 
           // 履歴のコマンドを表示
           currentLine = commandHistory[historyIndex];
+          cursorPosition = currentLine.length;
           xterm.write(currentLine);
         }
       } else if (data === "\u001b[B") {
         // Down arrow key
         if (commandHistory.length > 0 && historyIndex !== -1) {
           // 現在の行をクリア
-          const currentLineLength = currentLine.length;
-          for (let i = 0; i < currentLineLength; i++) {
-            xterm.write("\b \b");
+          for (let i = 0; i < cursorPosition; i++) {
+            xterm.write("\b");
+          }
+          for (let i = 0; i < currentLine.length; i++) {
+            xterm.write(" ");
+          }
+          for (let i = 0; i < currentLine.length; i++) {
+            xterm.write("\b");
           }
 
           if (historyIndex < commandHistory.length - 1) {
             historyIndex++;
             currentLine = commandHistory[historyIndex];
+            cursorPosition = currentLine.length;
             xterm.write(currentLine);
           } else {
             historyIndex = -1;
             currentLine = "";
+            cursorPosition = 0;
           }
+        }
+      } else if (data === "\u001b[C") {
+        // Right arrow key
+        if (cursorPosition < currentLine.length) {
+          cursorPosition++;
+          xterm.write("\u001b[C"); // Move cursor right
+        }
+      } else if (data === "\u001b[D") {
+        // Left arrow key
+        if (cursorPosition > 0) {
+          cursorPosition--;
+          xterm.write("\u001b[D"); // Move cursor left
         }
       } else if (data >= " ") {
         // Printable characters
-        currentLine += data;
-        xterm.write(data);
+        if (cursorPosition === currentLine.length) {
+          // カーソルが行末にある場合は通常の追加
+          currentLine += data;
+          cursorPosition++;
+          xterm.write(data);
+        } else {
+          // カーソルが途中にある場合は挿入
+          currentLine =
+            currentLine.slice(0, cursorPosition) +
+            data +
+            currentLine.slice(cursorPosition);
+          cursorPosition++;
+
+          // 表示を更新
+          xterm.write(currentLine.slice(cursorPosition - 1));
+          // カーソルを適切な位置に戻す
+          const charsToMoveBack = currentLine.length - cursorPosition;
+          for (let i = 0; i < charsToMoveBack; i++) {
+            xterm.write("\b");
+          }
+        }
       }
     });
 
