@@ -81,6 +81,8 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
     // 現在のディレクトリとプロンプトの設定
     let currentPath = "/";
     let currentLine = "";
+    let commandHistory: string[] = [];
+    let historyIndex = -1;
 
     const prompt = (): string => {
       const pathDisplay = currentPath === "/" ? "~" : currentPath;
@@ -100,6 +102,12 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
       const cmd = command.trim().toLowerCase();
       const args = cmd.split(" ");
       const baseCmd = args[0];
+
+      // コマンドを履歴に追加（空コマンドは除く）
+      if (command.trim() !== "") {
+        commandHistory.push(command.trim());
+      }
+      historyIndex = -1; // 履歴インデックスをリセット
 
       xterm.writeln("");
 
@@ -277,10 +285,13 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
 
         case "history":
           xterm.writeln("\x1b[33mCommand history:\x1b[0m");
-          xterm.writeln("  1  help");
-          xterm.writeln("  2  ls");
-          xterm.writeln("  3  cd contents");
-          xterm.writeln("  4  pwd");
+          if (commandHistory.length === 0) {
+            xterm.writeln("\x1b[37mNo commands in history\x1b[0m");
+          } else {
+            commandHistory.forEach((cmd, index) => {
+              xterm.writeln(`  ${index + 1}  ${cmd}`);
+            });
+          }
           break;
 
         case "echo":
@@ -369,6 +380,43 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
         xterm.writeln("^C");
         currentLine = "";
         xterm.write(prompt());
+      } else if (data === "\u001b[A") {
+        // Up arrow key
+        if (commandHistory.length > 0) {
+          if (historyIndex === -1) {
+            historyIndex = commandHistory.length - 1;
+          } else if (historyIndex > 0) {
+            historyIndex--;
+          }
+
+          // 現在の行をクリア
+          const currentLineLength = currentLine.length;
+          for (let i = 0; i < currentLineLength; i++) {
+            xterm.write("\b \b");
+          }
+
+          // 履歴のコマンドを表示
+          currentLine = commandHistory[historyIndex];
+          xterm.write(currentLine);
+        }
+      } else if (data === "\u001b[B") {
+        // Down arrow key
+        if (commandHistory.length > 0 && historyIndex !== -1) {
+          // 現在の行をクリア
+          const currentLineLength = currentLine.length;
+          for (let i = 0; i < currentLineLength; i++) {
+            xterm.write("\b \b");
+          }
+
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            currentLine = commandHistory[historyIndex];
+            xterm.write(currentLine);
+          } else {
+            historyIndex = -1;
+            currentLine = "";
+          }
+        }
       } else if (data >= " ") {
         // Printable characters
         currentLine += data;
@@ -469,6 +517,10 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
 
   const toggleMinimize = (): void => {
     setIsMinimized(!isMinimized);
+    if (!isMinimized) {
+      // 最小化する時は、フルスクリーンモードも解除
+      setIsFullscreen(false);
+    }
   };
 
   const toggleFullscreen = (): void => {
@@ -489,7 +541,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           }`}
           initial={{ y: "100%" }}
           animate={{
-            y: isFullscreen ? "0%" : isMinimized ? `calc(100% - 40px)` : "0%",
+            y: isMinimized ? `calc(100% - 40px)` : isFullscreen ? "0%" : "0%",
           }}
           exit={{ y: "100%" }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
