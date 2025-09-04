@@ -74,18 +74,31 @@ const Header: React.FC<HeaderProps> = ({
 
         <div className="flex items-center space-x-2">
           <motion.button
-            className={`rounded-lg p-2 transition-colors hover:bg-white/10 ${
+            className={`relative rounded-lg p-3 transition-all duration-300 ${
               terminalOpen
-                ? "bg-neon-blue/20 text-neon-blue"
-                : "text-gray-400 hover:text-white"
+                ? "from-neon-blue/30 to-neon-green/30 text-neon-blue shadow-neon-blue/20 ring-neon-blue/50 bg-gradient-to-r shadow-lg ring-2"
+                : "hover:from-neon-blue/20 hover:to-neon-green/20 hover:text-neon-blue hover:shadow-neon-blue/10 bg-gray-800/50 text-gray-300 hover:bg-gradient-to-r hover:shadow-md"
             }`}
             onClick={toggleTerminal}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             aria-label="ターミナル"
             title="Toggle Terminal"
           >
-            <TerminalIcon className="h-5 w-5" />
+            <TerminalIcon className="h-6 w-6" />
+            {terminalOpen && (
+              <motion.div
+                className="from-neon-blue/20 to-neon-green/20 absolute -inset-1 rounded-lg bg-gradient-to-r blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+            <div
+              className={`absolute top-1 right-1 h-2 w-2 rounded-full transition-all duration-300 ${
+                terminalOpen ? "bg-neon-green animate-pulse" : "bg-gray-600"
+              }`}
+            />
           </motion.button>
         </div>
       </div>
