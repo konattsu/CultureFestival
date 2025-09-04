@@ -12,12 +12,199 @@ import {
   PaintBucket,
   Rocket,
   ArrowRight,
-  Star,
-  Triangle,
 } from "lucide-react";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+
+// Floating code/formula elements
+const FloatingCodeElements: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container === null) return;
+
+    const codeSnippets = [
+      "∫f(x)dx",
+      "Σn²",
+      "π²/6",
+      "e^(iπ)+1=0",
+      "∇²φ=0",
+      "console.log()",
+      "const x =>",
+      "if(n%2==0)",
+      "√2",
+      "∞",
+      "lim x→0",
+      "f'(x)",
+      "det(A)",
+      "{x|x∈ℝ}",
+      "async/await",
+      "useState()",
+      "∂f/∂x",
+      "sin(θ)",
+      "O(log n)",
+      "∀x∈ℕ",
+      "∂²u/∂t²",
+      "λx.x+1",
+      "∃!x∈ℝ",
+      "∮C F·dr",
+      "npm install",
+      "git commit",
+      "while(true)",
+      "∫₀^∞ e^(-x²)dx",
+      "matrix.multiply()",
+      "∑(n=1 to ∞)",
+      "ℂ → ℝ",
+      "||v||₂",
+      "eigenvalues",
+      "BigO(n²)",
+      "∇×F",
+      "div·curl=0",
+    ];
+
+    const elements: HTMLDivElement[] = [];
+
+    // Increased count for more density
+    for (let i = 0; i < 40; i++) {
+      const element = document.createElement("div");
+      const snippet =
+        codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+
+      element.textContent = snippet;
+      element.className =
+        "absolute text-blue-300 font-mono opacity-0 select-none pointer-events-none font-bold";
+      element.style.fontSize = `${Math.random() * 20 + 13}px`; // Larger font size
+      element.style.textShadow = "0 0 10px rgba(59, 130, 246, 0.8)"; // Glow effect
+
+      // Random spawn position outside viewport
+      const spawnSide = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
+      let startX, startY;
+
+      switch (spawnSide) {
+        case 0: // top
+          startX = Math.random() * 120 - 10; // -10% to 110%
+          startY = -20; // Above viewport
+          break;
+        case 1: // right
+          startX = 120; // Right of viewport
+          startY = Math.random() * 120 - 10;
+          break;
+        case 2: // bottom
+          startX = Math.random() * 120 - 10;
+          startY = 120; // Below viewport
+          break;
+        case 3: // left
+        default:
+          startX = -20; // Left of viewport
+          startY = Math.random() * 120 - 10;
+          break;
+      }
+
+      element.style.left = `${startX}%`;
+      element.style.top = `${startY}%`;
+      element.style.zIndex = `${Math.floor(Math.random() * 10)}`;
+
+      container.appendChild(element);
+      elements.push(element);
+
+      // Calculate target position in center area (42.5% to 57.5% = center ±15%)
+      const targetXPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
+      const targetYPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
+
+      // 3D perspective animation - much stronger depth effect
+      const startScale = Math.random() * 3 + 2; // Much larger start (very close)
+      const endScale = Math.random() * 0.1 + 0.05; // Much smaller end (very far)
+      const startOpacity = Math.random() * 0.9 + 0.3;
+
+      gsap.set(element, {
+        scale: startScale,
+        opacity: 0,
+        z: Math.random() * 500 + 200, // Start much closer
+        rotateX: Math.random() * 60 - 30, // Minimal rotation
+        rotateY: Math.random() * 60 - 30,
+        transformPerspective: 800, // Stronger perspective
+      });
+
+      // Continuous flowing animation with no delays
+      const tl = gsap.timeline({
+        repeat: -1,
+        delay: Math.random() * 2, // Shorter random delay
+        repeatDelay: 0, // No delay between repeats
+      });
+
+      tl.to(element, {
+        opacity: startOpacity,
+        duration: 0.3, // Faster fade in
+        ease: "power2.out",
+      })
+        .to(element, {
+          scale: endScale,
+          z: -1000, // Move much further back
+          left: `${targetXPercent}%`, // Move to calculated center position
+          top: `${targetYPercent}%`, // Move to calculated center position
+          rotateX: `+=${Math.random() * 120 - 60}`, // Much less rotation
+          rotateY: `+=${Math.random() * 120 - 60}`,
+          opacity: 0,
+          duration: Math.random() * 4 + 2, // Faster movement
+          ease: "power1.inOut", // Smoother easing
+        })
+        .set(element, {
+          // Reset to new random spawn position outside viewport
+          ...((): { left: string; top: string } => {
+            const side = Math.floor(Math.random() * 4);
+            // const newTargetXPercent = Math.random() * 30 + 35;
+            // const newTargetYPercent = Math.random() * 30 + 35;
+
+            switch (side) {
+              case 0: // top
+                return {
+                  left: `${Math.random() * 120 - 10}%`,
+                  top: "-20%",
+                };
+              case 1: // right
+                return {
+                  left: "120%",
+                  top: `${Math.random() * 120 - 10}%`,
+                };
+              case 2: // bottom
+                return {
+                  left: `${Math.random() * 120 - 10}%`,
+                  top: "120%",
+                };
+              case 3: // left
+              default:
+                return {
+                  left: "-20%",
+                  top: `${Math.random() * 120 - 10}%`,
+                };
+            }
+          })(),
+          scale: startScale,
+          z: Math.random() * 500 + 200, // Reset to close position
+          rotateX: Math.random() * 60 - 30, // Minimal rotation
+          rotateY: Math.random() * 60 - 30,
+        });
+    }
+
+    return (): void => {
+      elements.forEach((element) => {
+        if (container.contains(element)) {
+          container.removeChild(element);
+        }
+      });
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      style={{ perspective: "600px", perspectiveOrigin: "50% 50%" }}
+    />
+  );
+};
 
 // Floating particles component
 const FloatingParticles: React.FC = () => {
@@ -29,10 +216,11 @@ const FloatingParticles: React.FC = () => {
 
     // Create particles
     const particles: HTMLDivElement[] = [];
-    for (let i = 0; i < 50; i++) {
+    // Reduced count since we have code elements too
+    for (let i = 0; i < 30; i++) {
       const particle = document.createElement("div");
       particle.className =
-        "absolute w-1 h-1 bg-blue-400 rounded-full opacity-70";
+        "absolute w-1 h-1 bg-blue-400 rounded-full opacity-50";
       particle.style.left = `${Math.random() * 100}%`;
       particle.style.top = `${Math.random() * 100}%`;
       container.appendChild(particle);
@@ -132,7 +320,7 @@ const HeroSection: React.FC = () => {
       />
 
       {/* Geometric shapes */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="border-neon-blue absolute top-20 left-20 h-32 w-32 border-2 opacity-50"
           animate={{ rotate: 360 }}
@@ -152,8 +340,9 @@ const HeroSection: React.FC = () => {
           animate={{ y: [-20, 20] }}
           transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
         />
-      </div>
+      </div> */}
 
+      <FloatingCodeElements />
       <FloatingParticles />
 
       {/* Main Title */}
@@ -235,7 +424,7 @@ const FeatureCard: React.FC<{
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!card) return;
+    if (card === null) return;
 
     gsap.fromTo(
       card,
@@ -282,7 +471,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const features = featuresRef.current;
-    if (!features) return;
+    if (features === null) return;
 
     // Smooth reveal animation for the entire section
     gsap.fromTo(
