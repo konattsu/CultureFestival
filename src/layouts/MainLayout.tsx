@@ -14,6 +14,8 @@ import {
   Terminal as TerminalIcon,
   Shield,
   LogOut,
+  BookOpen,
+  Settings,
 } from "lucide-react";
 
 import Terminal from "../components/Terminal";
@@ -129,6 +131,11 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
       to: "/contents",
       label: "コンテンツ",
       icon: <Grid3X3 className="h-5 w-5" />,
+    },
+    {
+      to: "/blog",
+      label: "ブログ",
+      icon: <BookOpen className="h-5 w-5" />,
     },
     {
       to: "/bulletin-board",
@@ -266,6 +273,23 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
                       </div>
                       <div className="mb-3 text-xs text-green-600 dark:text-green-400">
                         {adminUser.email}
+                      </div>
+                      {/* Admin Menu */}
+                      <div className="mb-3 space-y-2">
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Link
+                            to="/cms"
+                            className="group flex w-full items-center space-x-2 rounded-lg bg-white/10 p-2 text-green-700 transition-colors hover:bg-white/20 dark:bg-gray-800/50 dark:text-green-300 dark:hover:bg-gray-700/50"
+                            onClick={toggleMenu}
+                          >
+                            <Settings className="h-4 w-4" />
+                            <span className="text-sm">ブログCMS</span>
+                            <ChevronRight className="ml-auto h-3 w-3 transition-transform group-hover:translate-x-1" />
+                          </Link>
+                        </motion.div>
                       </div>
                       <motion.button
                         onClick={() => {

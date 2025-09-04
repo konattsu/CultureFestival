@@ -12,6 +12,8 @@ import MainLayout from "./layouts/MainLayout.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Map = lazy(() => import("./pages/Map.tsx"));
 const BulletinBoard = lazy(() => import("./pages/BulletinBoard.tsx"));
+const Blog = lazy(() => import("./pages/Blog.tsx"));
+const CMS = lazy(() => import("./pages/CMS.tsx"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const ContentsRoutes = lazy(() => import("./pages/ContentsRoutes.tsx"));
@@ -27,7 +29,9 @@ const App: React.FC = () => {
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
                 <Route path="contents/*" element={<ContentsRoutes />} />
+                <Route path="blog" element={<Blog />} />
                 <Route path="bulletin-board" element={<BulletinBoard />} />
+                <Route path="cms" element={<CMS />} />
                 <Route path="admin-login" element={<AdminLogin />} />
                 <Route path="map" element={<Map />} />
                 <Route path="*" element={<NotFound />} />
