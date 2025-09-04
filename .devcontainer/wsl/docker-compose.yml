@@ -1,0 +1,28 @@
+services:
+  ts_react_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: ts_react_dev
+    working_dir: /workspaces
+
+    ports:
+      - 5173:5173
+
+    volumes:
+      - ~/CultureFestival:/workspaces:cached
+      - ~/.npm:/home/node/.npm:cached
+      - ${SSH_AUTH_SOCK:-/dev/null}:/ssh-agent
+
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent
+      # NODE_ENV: development
+      # CHOKIDAR_USEPOLLING: true
+
+    # cap_add:
+    #   - SYS_PTRACE
+    # security_opt:
+    #   - seccomp:unconfined
+
+    command: sleep infinity

@@ -62,6 +62,12 @@ const FloatingCodeElements: React.FC = () => {
       "BigO(n²)",
       "∇×F",
       "div·curl=0",
+      "OR 1=1 --",
+      "cargo build --release",
+      "line console 0",
+      "line vty 0 15",
+      "write mem",
+      "CHLO",
     ];
 
     const elements: HTMLDivElement[] = [];
@@ -102,13 +108,14 @@ const FloatingCodeElements: React.FC = () => {
       () => Math.random() - 0.5,
     );
 
-    // Increased count for more density
+    // Reduce count for less density
     for (let i = 0; i < 40; i++) {
       const element = document.createElement("div");
       const snippet =
         codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
       element.textContent = snippet;
+      // Softer color, lighter font, less glow, lower opacity
       element.className =
         "absolute text-blue-300 font-mono opacity-0 select-none pointer-events-none font-bold";
       element.style.fontSize = `${Math.random() * 20 + 16}px`; // Larger font size
@@ -124,30 +131,30 @@ const FloatingCodeElements: React.FC = () => {
 
       element.style.left = `${startX}%`;
       element.style.top = `${startY}%`;
-      element.style.zIndex = `${Math.floor(Math.random() * 10)}`;
+      element.style.zIndex = "0";
 
       container.appendChild(element);
       elements.push(element);
 
       // Calculate target position in center area (42.5% to 57.5% = center ±15%)
-      const targetXPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
-      const targetYPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
+      const targetXPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
+      const targetYPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
 
-      // 3D perspective animation - much stronger depth effect
-      const startScale = Math.random() * 3 + 4; // Much larger start (very close)
-      const endScale = Math.random() * 0.1 + 0.05; // Much smaller end (very far)
-      const startOpacity = Math.random() * 0.9 + 0.3;
+      // 3D perspective animation - less depth effect
+      const startScale = Math.random() * 0.8 + 1.3; // Smaller start
+      const endScale = Math.random() * 0.1 + 0.1; // Slightly larger end
+      const startOpacity = Math.random() * 0.3 + 0.1; // Lower opacity
 
       gsap.set(element, {
         scale: startScale,
         opacity: 0,
-        z: Math.random() * 500 + 200, // Start much closer
-        rotateX: Math.random() * 60, // Minimal rotation
-        rotateY: Math.random() * 60,
-        transformPerspective: 800, // Stronger perspective
+        z: Math.random() * 200 + 100, // Start closer
+        rotateX: Math.random() * 30, // Less rotation
+        rotateY: Math.random() * 30,
+        transformPerspective: 800,
       });
 
-      // Continuous flowing animation with no delays
+      // Slower, less frequent animation
       const tl = gsap.timeline({
         repeat: -1,
         delay: Math.random() * 2, // Shorter random delay
@@ -156,41 +163,37 @@ const FloatingCodeElements: React.FC = () => {
 
       tl.to(element, {
         opacity: startOpacity,
-        duration: 0.3, // Faster fade in
+        duration: 0.8, // Slower fade in
         ease: "power2.out",
       })
         .to(element, {
           scale: endScale,
-          z: -1000, // Move much further back
-          left: `${targetXPercent}%`, // Move to calculated center position
-          top: `${targetYPercent}%`, // Move to calculated center position
-          rotateX: `+=${Math.random() * 120 - 60}`, // Much less rotation
-          rotateY: `+=${Math.random() * 120 - 60}`,
+          z: -600, // Move back, but not as far
+          left: `${targetXPercent}%`,
+          top: `${targetYPercent}%`,
+          rotateX: `+=${Math.random() * 60 - 30}`,
+          rotateY: `+=${Math.random() * 60 - 30}`,
           opacity: 0,
-          duration: Math.random() * 4 + 2, // Faster movement
-          ease: "power1.inOut", // Smoother easing
+          duration: Math.random() * 6 + 6, // Slower movement
+          ease: "power1.inOut",
         })
         .set(element, {
           // Reset to new balanced spawn position
           ...((): { left: string; top: string } => {
-            // Use next position in the shuffled array for balance
             const nextIndex =
               (i + Math.floor(elements.length / 2)) % shuffledPositions.length;
             const resetPosition = shuffledPositions[nextIndex];
-
-            // Add small random offset
-            const resetX = resetPosition.x + (Math.random() * 8 - 4); // ±4% variation
-            const resetY = resetPosition.y + (Math.random() * 8 - 4); // ±4% variation
-
+            const resetX = resetPosition.x + (Math.random() * 4 - 2);
+            const resetY = resetPosition.y + (Math.random() * 4 - 2);
             return {
               left: `${resetX}%`,
               top: `${resetY}%`,
             };
           })(),
           scale: startScale,
-          z: Math.random() * 500 + 200, // Reset to close position
-          rotateX: Math.random() * 60, // Minimal rotation
-          rotateY: Math.random() * 60,
+          z: Math.random() * 200 + 100,
+          rotateX: Math.random() * 30,
+          rotateY: Math.random() * 30,
         });
     }
 
@@ -352,10 +355,10 @@ const HeroSection: React.FC = () => {
       <FloatingParticles />
 
       {/* Main Title */}
-      <div className="relative z-10 text-center">
+      <div className="relative z-10 text-center text-white">
         <motion.h1
           ref={titleRef}
-          className="from-neon-blue via-neon-purple to-neon-pink mb-8 bg-gradient-to-r bg-clip-text text-8xl font-extrabold"
+          className="via-neon-purple to-neon-pink mb-8 bg-gradient-to-r bg-clip-text text-8xl font-extrabold"
           style={{
             filter: "drop-shadow(0 0 30px rgba(16, 215, 255, 0.5))",
             transformStyle: "preserve-3d",
@@ -370,22 +373,24 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          <Sparkles className="text-neon-yellow h-8 w-8 animate-pulse" />
-          <span className="text-2xl font-light tracking-widest text-white">
+          <Sparkles className="h-8 w-8 animate-pulse" />
+          <span className="text-2xl font-light tracking-widest">
             CULTURE FESTIVAL
           </span>
-          <Sparkles className="text-neon-yellow h-8 w-8 animate-pulse" />
+          <Sparkles className="h-8 w-8 animate-pulse" />
         </motion.div>
 
         <motion.p
-          className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-gray-300"
+          className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
         >
-          数学とテクノロジーの魔法で、文化祭を革新する。
+          数学とテクノロジーが織りなす魔法で、文化祭をもっと面白く。
           <br />
-          <span className="text-neon-blue">未来への扉がここに開かれる。</span>
+          <span className="text-neon-blue">
+            未来への扉が、いまここで開かれる。
+          </span>
         </motion.p>
 
         <motion.div
@@ -407,7 +412,7 @@ const HeroSection: React.FC = () => {
 
           <Link
             to="/map"
-            className="border-neon-green text-neon-green hover:bg-neon-green flex items-center rounded-full border-2 px-8 py-4 text-lg font-semibold transition-all duration-300 hover:text-black"
+            className="border-neon-green flex items-center rounded-full border-2 px-8 py-4 text-lg font-semibold transition-all duration-300 hover:text-black"
           >
             <Globe className="mr-2 h-5 w-5" />
             マップを見る
@@ -459,7 +464,8 @@ const FeatureCard: React.FC<{
       whileHover={{ y: -10 }}
       style={{ transformStyle: "preserve-3d" }}
     >
-      <div className="absolute inset-0 rounded-2xl bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      {/* <div className="absolute inset-0 rounded-2xl bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" /> */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="relative z-10">
         <div className="mb-6 text-4xl text-white transition-transform duration-300 group-hover:scale-110">
           {icon}
@@ -522,16 +528,17 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
+    <div className="relative min-h-screen overflow-hidden">
+      {/* <div className="relative min-h-screen overflow-hidden bg-black"> */}
       <HeroSection />
       {/* Features Section */}
       <section ref={featuresRef} className="relative px-4 py-32">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-200 to-white dark:from-black dark:via-gray-900 dark:to-black" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
           <motion.div className="mb-20 text-center">
             <h2 className="from-neon-blue to-neon-purple mb-6 bg-gradient-to-r bg-clip-text text-5xl font-bold">
-              特別な体験をあなたに
+              魔法のような体験を。
             </h2>
             <div className="from-neon-pink to-neon-yellow mx-auto h-1 w-32 rounded-full bg-gradient-to-r" />
           </motion.div>
@@ -547,7 +554,7 @@ const Home: React.FC = () => {
       {/* Exhibition Info Section */}
       <section className="relative px-4 py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900" />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0" />
 
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <motion.div
@@ -568,10 +575,10 @@ const Home: React.FC = () => {
                 にて展示中！
               </p>
               <p className="text-lg leading-relaxed text-gray-300">
-                パズルの体験コーナーと数学動画の上映を行っています。
+                パズル体験コーナーや、数学に関する動画の上映もご用意しています。
                 <br />
                 <span className="text-neon-green">冷房完備</span>
-                の快適な環境で、数学の魅力を感じてください。
+                の快適な空間で、数学の楽しさをぜひ体感してください。
               </p>
             </div>
           </motion.div>

@@ -107,4 +107,5 @@ const contentsRoutes = [
   <Route path="*" element={<NotFound />} key="notfound" />,
 ];
 
-export default contentsRoutes;
+const ContentsRoutes = (): React.JSX.Element => <>{contentsRoutes}</>;
+export default ContentsRoutes;
