@@ -32,8 +32,6 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   const [status, setStatus] = useState<"published" | "draft">("draft");
   const [featured, setFeatured] = useState(false);
   const [author, setAuthor] = useState("");
-  const [previewMode, setPreviewMode] = useState(false);
-
   const { adminUser } = useAuth();
 
   useEffect(() => {
