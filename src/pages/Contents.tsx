@@ -736,64 +736,58 @@ const contentItems: ContentItem[] = [
   {
     id: "cryptanalysis",
     title: "暗号解析",
-    description:
-      "古代から現代まで、情報を隠すために使われてきた暗号とその解読方法を解説します。",
+    description: "単一換字式暗号を作ったり、解析したりできます。",
     icon: <CryptanalysisIcon />,
   },
   {
     id: "gacha",
     title: "ガチャシミュレーション",
-    description:
-      "確率と統計を活用したゲームのガチャシミュレーターを体験できます。",
+    description: "確率や統計を使ったゲームのガチャをシミュレーションできます。",
     icon: <GachaIcon />,
   },
   {
     id: "dva",
-    title: "データ可視化分析",
-    description:
-      "さまざまなデータをグラフや図を使って視覚的に分析する方法を紹介します。",
+    title: "動体視力勝負",
+    description: "動体視力を競い合うゲームです。",
     icon: <DvaIcon />,
   },
   {
     id: "heat-exhaustion",
     title: "熱中症対策",
-    description:
-      "統計データを元に熱中症の発生パターンと効果的な対策方法を考えます。",
+    description: "校内で体調が悪くなったときの対処法を紹介します。",
     icon: <HeatExhaustionIcon />,
   },
   {
     id: "notebook",
     title: "ノートブック",
-    description:
-      "数学的思考を整理するためのノートの取り方と活用法を紹介します。",
+    description: "数学の考えを整理するノートの取り方や活用法を紹介します。",
     icon: <NotebookIcon />,
   },
   {
     id: "melos",
     title: "メロスの統計",
     description:
-      "文学作品「走れメロス」の文章を統計的に分析した結果を展示します。",
+      "『走れメロス』のメロスがどれくらいの速さで走ったのかを調べます。",
     icon: <MelosIcon />,
   },
   {
     id: "white",
     title: "色と光の数学",
     description:
-      "RGBとHSVの色空間を通して、色と光の関係性を数学的に考察します。",
+      "RGBやHSVなどの色空間を使って、色と光の関係を数学的に考えます。",
     icon: <WhiteIcon />,
   },
   {
     id: "programming",
-    title: "プログラミング入門",
+    title: "プログラミング",
     description:
-      "「Hello, World!」から始める簡単なプログラミングの基礎を学びます。",
+      "「Hello, World!」から始めて、プログラミングの基礎を学びます。",
     icon: <ProgrammingIcon />,
   },
   {
     id: "tech",
-    title: "最新テクノロジー",
-    description:
-      "AIや機械学習など、最新テクノロジーの背景にある数学的原理を解説します。",
+    title: "ブラウザで開発",
+    description: "ブラウザ上で使える開発環境を体験できます。",
     icon: <TechIcon />,
   },
 ];
