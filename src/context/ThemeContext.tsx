@@ -29,7 +29,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     ).matches;
 
     // Set the theme based on localStorage or user preference
-    if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
+    if (
+      savedTheme !== null &&
+      (savedTheme === "light" || savedTheme === "dark")
+    ) {
       setTheme(savedTheme);
     } else if (prefersDark) {
       setTheme("dark");
