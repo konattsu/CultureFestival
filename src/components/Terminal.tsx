@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { FitAddon } from "@xterm/addon-fit";
 import { Terminal as XTerm } from "@xterm/xterm";
@@ -33,6 +33,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
   const [isResizing, setIsResizing] = useState(false);
   const resizeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // ターミナルの初期化
   useEffect(() => {
@@ -79,14 +80,15 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
     fitAddonRef.current = fitAddon;
 
     // 現在のディレクトリとプロンプトの設定
-    let currentPath = "/";
     let currentLine = "";
     let commandHistory: string[] = [];
     let historyIndex = -1;
     let cursorPosition = 0;
 
     const prompt = (): string => {
-      const pathDisplay = currentPath === "/" ? "~" : currentPath;
+      // 現在のReact Routerのパスを使用
+      const currentLocation = location.pathname;
+      const pathDisplay = currentLocation === "/" ? "~" : currentLocation;
       return `\x1b[32mmath-club\x1b[0m:\x1b[34m${pathDisplay}\x1b[0m$ `;
     };
 
@@ -141,32 +143,40 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           xterm.writeln("  /map         - Map page");
           break;
 
-        case "ls":
-          if (currentPath === "/") {
+        case "ls": {
+          const currentLocation = location.pathname;
+          if (currentLocation === "/") {
             xterm.writeln("\x1b[34mcontents/\x1b[0m    \x1b[34mmap/\x1b[0m");
-          } else if (currentPath === "/contents") {
+          } else if (currentLocation === "/contents") {
             xterm.writeln(
               "\x1b[32mcryptanalysis\x1b[0m    \x1b[32mdva\x1b[0m          \x1b[32mgacha\x1b[0m",
             );
             xterm.writeln(
-              "\x1b[32mheat-exhaustion\x1b[0m  \x1b[32mmelos\x1b[0m",
+              "\x1b[32mheat-exhaustion\x1b[0m  \x1b[32mmelos\x1b[0m        \x1b[32mnotebook\x1b[0m",
+            );
+            xterm.writeln(
+              "\x1b[32mprogramming\x1b[0m      \x1b[32mtech\x1b[0m         \x1b[32mwhite\x1b[0m",
             );
           } else {
             xterm.writeln("\x1b[31mNo files found\x1b[0m");
           }
           break;
+        }
 
-        case "pwd":
-          xterm.writeln(currentPath);
+        case "pwd": {
+          // 現在のReact Routerのパスを取得
+          const currentLocation = location.pathname;
+          xterm.writeln(currentLocation !== "" ? currentLocation : "/");
           break;
+        }
 
         case "clear":
           xterm.clear();
           break;
 
-        case "cd":
+        case "cd": {
+          const currentLocation = location.pathname;
           if (args.length < 2) {
-            currentPath = "/";
             void navigate("/");
           } else {
             const targetPath = args[1];
@@ -174,8 +184,8 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             // パスの正規化
             let newPath = targetPath;
             if (targetPath === "..") {
-              if (currentPath !== "/") {
-                const pathParts = currentPath
+              if (currentLocation !== "/") {
+                const pathParts = currentLocation
                   .split("/")
                   .filter((p) => p !== "");
                 pathParts.pop();
@@ -190,10 +200,10 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
               newPath = targetPath;
             } else {
               // 相対パス
-              if (currentPath === "/") {
+              if (currentLocation === "/") {
                 newPath = `/${targetPath}`;
               } else {
-                newPath = `${currentPath}/${targetPath}`;
+                newPath = `${currentLocation}/${targetPath}`;
               }
             }
 
@@ -206,11 +216,14 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
               "/contents/gacha",
               "/contents/heat-exhaustion",
               "/contents/melos",
+              "/contents/notebook",
+              "/contents/programming",
+              "/contents/tech",
+              "/contents/white",
               "/map",
             ];
 
             if (validPaths.includes(newPath)) {
-              currentPath = newPath;
               void navigate(newPath);
               xterm.writeln(`\x1b[32mNavigated to: ${newPath}\x1b[0m`);
             } else {
@@ -220,6 +233,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             }
           }
           break;
+        }
 
         case "whoami":
           xterm.writeln("\x1b[32mmathclub-visitor\x1b[0m");
@@ -507,7 +521,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
       xtermRef.current = null;
       fitAddonRef.current = null;
     };
-  }, [isOpen, navigate, onClose, isMinimized, isFullscreen]);
+  }, [isOpen, navigate, onClose, isMinimized, isFullscreen, location.pathname]);
 
   // ターミナルのフィット調整
   useEffect(() => {
