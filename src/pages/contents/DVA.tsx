@@ -9,9 +9,20 @@ const DVA: React.FC = () => {
   const [displayText, setDisplayText] = useState<string>("...");
   const [winner, setWinner] = useState<1 | 2 | null>(null);
   const [foulPlayer, setFoulPlayer] = useState<1 | 2 | null>(null);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [timeoutId, setTimeoutId] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   const gameDisplayRef = useRef<HTMLDivElement>(null);
+
+  const resetGame = useCallback(() => {
+    setGameState("idle");
+    setDisplayText("...");
+    setWinner(null);
+    setFoulPlayer(null);
+    document.body.style.overflow = "auto";
+    if (timeoutId !== null) clearTimeout(timeoutId);
+  }, [timeoutId]);
 
   const handleStart = useCallback(() => {
     if (gameState !== "idle") {
@@ -27,7 +38,7 @@ const DVA: React.FC = () => {
     setFoulPlayer(null);
 
     // Scroll to game area
-    if (gameDisplayRef.current) {
+    if (gameDisplayRef.current !== null) {
       gameDisplayRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -46,7 +57,7 @@ const DVA: React.FC = () => {
     }, delay);
 
     setTimeoutId(id);
-  }, [gameState]);
+  }, [gameState, resetGame]);
 
   const handlePlayerClick = useCallback(
     (player: 1 | 2) => {
@@ -58,7 +69,7 @@ const DVA: React.FC = () => {
         setWinner(player === 1 ? 2 : 1);
         setGameState("finished");
         document.body.style.overflow = "auto";
-        if (timeoutId) clearTimeout(timeoutId);
+        if (timeoutId !== null) clearTimeout(timeoutId);
       } else if (gameState === "active") {
         // Valid click - player won
         setWinner(player);
@@ -69,19 +80,10 @@ const DVA: React.FC = () => {
     [gameState, timeoutId],
   );
 
-  const resetGame = useCallback(() => {
-    setGameState("idle");
-    setDisplayText("...");
-    setWinner(null);
-    setFoulPlayer(null);
-    document.body.style.overflow = "auto";
-    if (timeoutId) clearTimeout(timeoutId);
-  }, [timeoutId]);
-
   // Clean up on unmount
   useEffect(() => {
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+    return (): void => {
+      if (timeoutId !== null) clearTimeout(timeoutId);
       document.body.style.overflow = "auto";
     };
   }, [timeoutId]);
@@ -141,7 +143,7 @@ const DVA: React.FC = () => {
             className={`mt-10 flex w-full flex-col items-stretch sm:flex-row sm:justify-center ${gameState === "idle" ? "opacity-70" : "opacity-100"}`}
           >
             <div
-              className={`flex-1 cursor-pointer border border-gray-300 bg-blue-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-blue-900/30 ${winner === 1 && !foulPlayer ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 1 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
+              className={`flex-1 cursor-pointer border border-gray-300 bg-blue-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-blue-900/30 ${winner === 1 && foulPlayer === null ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 1 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
               onClick={() => handlePlayerClick(1)}
             >
               player 1
@@ -159,7 +161,7 @@ const DVA: React.FC = () => {
             </div>
 
             <div
-              className={`flex-1 cursor-pointer border border-gray-300 bg-red-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-red-900/30 ${winner === 2 && !foulPlayer ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 2 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
+              className={`flex-1 cursor-pointer border border-gray-300 bg-red-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-red-900/30 ${winner === 2 && foulPlayer === null ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 2 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
               onClick={() => handlePlayerClick(2)}
             >
               player 2
