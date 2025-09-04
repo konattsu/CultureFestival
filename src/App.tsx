@@ -12,6 +12,7 @@ import MainLayout from "./layouts/MainLayout.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Map = lazy(() => import("./pages/Map.tsx"));
 const BulletinBoard = lazy(() => import("./pages/BulletinBoard.tsx"));
+const AdminLogin = lazy(() => import("./pages/AdminLogin.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const ContentsRoutes = lazy(() => import("./pages/ContentsRoutes.tsx"));
 
@@ -27,6 +28,7 @@ const App: React.FC = () => {
                 <Route index element={<Home />} />
                 <Route path="contents/*" element={<ContentsRoutes />} />
                 <Route path="bulletin-board" element={<BulletinBoard />} />
+                <Route path="admin-login" element={<AdminLogin />} />
                 <Route path="map" element={<Map />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
