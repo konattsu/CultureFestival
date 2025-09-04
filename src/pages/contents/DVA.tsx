@@ -1,29 +1,48 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 import ContentPageLayout from "../../components/ContentPageLayout";
 
 const DVA: React.FC = () => {
-  const [gameState, setGameState] = useState<"idle" | "running" | "finished">(
-    "idle",
-  );
-  const [displayColor, setDisplayColor] = useState<"white" | "black">("white");
+  const [gameState, setGameState] = useState<
+    "idle" | "waiting" | "active" | "finished"
+  >("idle");
+  const [displayText, setDisplayText] = useState<string>("...");
   const [winner, setWinner] = useState<1 | 2 | null>(null);
   const [foulPlayer, setFoulPlayer] = useState<1 | 2 | null>(null);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
-  const handleStart = useCallback(() => {
-    if (gameState !== "idle") return;
+  const gameDisplayRef = useRef<HTMLDivElement>(null);
 
-    setGameState("running");
-    setDisplayColor("white");
+  const handleStart = useCallback(() => {
+    if (gameState !== "idle") {
+      // Reset game
+      resetGame();
+      return;
+    }
+
+    // Start game
+    setGameState("waiting");
+    setDisplayText("Waiting...");
     setWinner(null);
     setFoulPlayer(null);
+
+    // Scroll to game area
+    if (gameDisplayRef.current) {
+      gameDisplayRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+
+    // Lock scroll during game
+    document.body.style.overflow = "hidden";
 
     // Random delay between 2 and 10 seconds
     const delay = Math.floor(Math.random() * 8000) + 2000;
 
     const id = setTimeout(() => {
-      setDisplayColor("black");
+      setDisplayText("Go!!!!!!!");
+      setGameState("active");
     }, delay);
 
     setTimeoutId(id);
@@ -31,29 +50,40 @@ const DVA: React.FC = () => {
 
   const handlePlayerClick = useCallback(
     (player: 1 | 2) => {
-      if (gameState !== "running") return;
+      if (gameState === "idle" || gameState === "finished") return;
 
-      if (displayColor === "white") {
+      if (gameState === "waiting") {
         // Foul - clicked too early
         setFoulPlayer(player);
         setWinner(player === 1 ? 2 : 1);
         setGameState("finished");
+        document.body.style.overflow = "auto";
         if (timeoutId) clearTimeout(timeoutId);
-      } else {
-        // Valid click - display turned black
+      } else if (gameState === "active") {
+        // Valid click - player won
         setWinner(player);
         setGameState("finished");
+        document.body.style.overflow = "auto";
       }
     },
-    [displayColor, gameState, timeoutId],
+    [gameState, timeoutId],
   );
 
   const resetGame = useCallback(() => {
     setGameState("idle");
-    setDisplayColor("white");
+    setDisplayText("...");
     setWinner(null);
     setFoulPlayer(null);
+    document.body.style.overflow = "auto";
     if (timeoutId) clearTimeout(timeoutId);
+  }, [timeoutId]);
+
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.body.style.overflow = "auto";
+    };
   }, [timeoutId]);
 
   // SVG Symbol for DVA visualization
@@ -91,6 +121,8 @@ const DVA: React.FC = () => {
   return (
     <ContentPageLayout title="動体視力勝負" svgSymbols={svgSymbols}>
       <div className="prose dark:prose-invert max-w-none">
+        <p>動体視力勝負です。</p>
+
         <h2 className="mt-8 text-2xl font-bold">ルール</h2>
         <p className="text-lg">
           下の「開始」をクリックすると始まります。画面中央の「白色」が「黒色」になった瞬間にそれぞれの場所をクリックしてください。早いほうが勝ちです。フライングは負けになります。
@@ -98,54 +130,41 @@ const DVA: React.FC = () => {
 
         <div className="mt-10 flex flex-col items-center">
           <button
-            onClick={gameState === "idle" ? handleStart : resetGame}
-            className="rounded-lg bg-blue-600 px-8 py-4 text-xl font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-blue-700 focus:outline-none"
+            onClick={handleStart}
+            className="rounded-lg bg-blue-600 px-8 py-4 text-xl font-bold text-white shadow-lg transition-colors hover:bg-blue-700 focus:outline-none dark:bg-blue-700 dark:hover:bg-blue-600"
           >
             {gameState === "idle" ? "開始" : "リセット"}
           </button>
 
           <div
-            className={`mt-10 flex w-full flex-col items-center md:flex-row md:justify-center ${gameState === "finished" && foulPlayer ? "bg-red-100 dark:bg-red-900/20" : ""}`}
+            ref={gameDisplayRef}
+            className={`mt-10 flex w-full flex-col items-stretch sm:flex-row sm:justify-center ${gameState === "idle" ? "opacity-70" : "opacity-100"}`}
           >
             <div
-              className={`flex h-40 w-full cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-center text-2xl font-bold md:w-1/3 dark:bg-gray-800 ${winner === 1 ? "bg-green-200 dark:bg-green-800/30" : ""} ${foulPlayer === 1 ? "bg-red-200 dark:bg-red-800/30" : ""}`}
+              className={`flex-1 cursor-pointer border border-gray-300 bg-blue-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-blue-900/30 ${winner === 1 && !foulPlayer ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 1 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
               onClick={() => handlePlayerClick(1)}
             >
-              プレイヤー1
+              player 1
               {foulPlayer === 1 && (
-                <div className="text-red-600 dark:text-red-400">
+                <div className="mt-2 text-red-600 dark:text-red-400">
                   フライング!
                 </div>
               )}
             </div>
 
             <div
-              className={`mx-4 my-6 flex h-32 w-32 items-center justify-center rounded-full ${displayColor === "white" ? "bg-white dark:bg-gray-200" : "bg-black"} shadow-lg md:mx-8`}
+              className={`flex items-center justify-center border-t border-b border-gray-300 p-4 font-mono text-lg transition-colors dark:border-gray-700 ${gameState === "active" ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900" : "bg-white text-gray-900 dark:bg-gray-900 dark:text-white"} `}
             >
-              <span
-                className={`text-xl font-bold ${displayColor === "black" ? "text-white" : "text-black dark:text-gray-800"}`}
-              >
-                {gameState === "idle" && "..."}
-                {gameState === "running" &&
-                  displayColor === "white" &&
-                  "待機中"}
-                {gameState === "running" && displayColor === "black" && "今!"}
-                {gameState === "finished" &&
-                  (foulPlayer
-                    ? "反則!"
-                    : winner
-                      ? `${winner}の勝ち!`
-                      : "引き分け")}
-              </span>
+              {displayText}
             </div>
 
             <div
-              className={`flex h-40 w-full cursor-pointer items-center justify-center rounded-lg bg-gray-100 text-center text-2xl font-bold md:w-1/3 dark:bg-gray-800 ${winner === 2 ? "bg-green-200 dark:bg-green-800/30" : ""} ${foulPlayer === 2 ? "bg-red-200 dark:bg-red-800/30" : ""}`}
+              className={`flex-1 cursor-pointer border border-gray-300 bg-red-100 p-8 text-center font-medium transition-colors dark:border-gray-700 dark:bg-red-900/30 ${winner === 2 && !foulPlayer ? "bg-green-200 dark:bg-green-900/50" : ""} ${foulPlayer === 2 ? "bg-red-200 dark:bg-red-900/50" : ""} `}
               onClick={() => handlePlayerClick(2)}
             >
-              プレイヤー2
+              player 2
               {foulPlayer === 2 && (
-                <div className="text-red-600 dark:text-red-400">
+                <div className="mt-2 text-red-600 dark:text-red-400">
                   フライング!
                 </div>
               )}
@@ -153,12 +172,17 @@ const DVA: React.FC = () => {
           </div>
 
           {gameState === "finished" && (
-            <button
-              onClick={resetGame}
-              className="mt-8 rounded bg-gray-300 px-4 py-2 font-medium dark:bg-gray-700"
-            >
-              もう一回
-            </button>
+            <div className="mt-4 text-center">
+              {foulPlayer !== null ? (
+                <p className="text-red-600 dark:text-red-400">
+                  Player {foulPlayer} フライング! Player {winner} の勝ち!
+                </p>
+              ) : (
+                <p className="text-green-600 dark:text-green-400">
+                  Player {winner} の勝ち!
+                </p>
+              )}
+            </div>
           )}
         </div>
       </div>
