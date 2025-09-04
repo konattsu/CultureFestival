@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { motion } from "framer-motion";
-import { Save, X, Eye, Code, FileText } from "lucide-react";
+import { Save, X, FileText } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -92,7 +92,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="max-h-[95vh] w-full max-w-7xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800"
+        className="flex max-h-[95vh] w-full max-w-7xl flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6 dark:border-gray-700">
@@ -102,33 +102,6 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
               : "新規記事作成"}
           </h2>
           <div className="flex items-center space-x-3">
-            {/* プレビュー切り替えボタン */}
-            <div className="flex rounded-lg border border-gray-300 dark:border-gray-600">
-              <button
-                type="button"
-                onClick={() => setPreviewMode(false)}
-                className={`flex items-center space-x-2 px-3 py-1 text-sm font-medium ${
-                  !previewMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                }`}
-              >
-                <Code className="h-4 w-4" />
-                <span>Raw</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setPreviewMode(true)}
-                className={`flex items-center space-x-2 px-3 py-1 text-sm font-medium ${
-                  previewMode
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-                }`}
-              >
-                <Eye className="h-4 w-4" />
-                <span>Preview</span>
-              </button>
-            </div>
             <button
               onClick={onClose}
               className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
@@ -139,11 +112,15 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex h-full flex-col">
-          <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 overflow-hidden">
+          <form
+            id="post-form"
+            onSubmit={handleSubmit}
+            className="flex w-full flex-1 overflow-hidden"
+          >
             {/* 左側: フォーム */}
             <div className="w-1/2 overflow-y-auto border-r border-gray-200 p-6 dark:border-gray-700">
-              <div className="space-y-6">
+              <div className="flex h-full flex-col space-y-6">
                 {/* Title */}
                 <div>
                   <label
@@ -182,26 +159,23 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
+                <div className="flex flex-1 flex-col">
                   <label
                     htmlFor="content"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
                     本文 *{" "}
-                    {!previewMode && (
-                      <span className="text-xs text-gray-500">
-                        (Markdown, KaTeX, Mermaid対応)
-                      </span>
-                    )}
+                    <span className="text-xs text-gray-500">
+                      (Markdown, KaTeX, Mermaid対応)
+                    </span>
                   </label>
-                  {!previewMode ? (
-                    <textarea
-                      id="content"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      rows={20}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                      placeholder="記事の本文を入力...
+                  <textarea
+                    id="content"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows={20}
+                    className="mt-1 block w-full flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    placeholder="記事の本文を入力...
 
 ## Markdownサンプル
 - **太字** *斜体*
@@ -220,16 +194,8 @@ graph TD
     B -->|Yes| C[Action 1]
     B -->|No| D[Action 2]
 \`\`\`"
-                      required
-                    />
-                  ) : (
-                    <div className="mt-1 block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 dark:border-gray-600 dark:bg-gray-700">
-                      <div className="mb-2 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                        <FileText className="h-4 w-4" />
-                        <span>プレビューモード</span>
-                      </div>
-                    </div>
-                  )}
+                    required
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -346,27 +312,28 @@ graph TD
                 </div>
               )}
             </div>
-          </div>
+          </form>
+        </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-end space-x-3 border-t border-gray-200 p-6 dark:border-gray-700">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
-            >
-              キャンセル
-            </button>
-            <button
-              type="submit"
-              disabled={loading || title.trim() === "" || content.trim() === ""}
-              className="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Save className="h-4 w-4" />
-              <span>{loading ? "保存中..." : "保存"}</span>
-            </button>
-          </div>
-        </form>
+        {/* Footer */}
+        <div className="flex items-center justify-end space-x-3 border-t border-gray-200 p-6 dark:border-gray-700">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            キャンセル
+          </button>
+          <button
+            type="submit"
+            form="post-form"
+            disabled={loading || title.trim() === "" || content.trim() === ""}
+            className="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Save className="h-4 w-4" />
+            <span>{loading ? "保存中..." : "保存"}</span>
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   );
