@@ -8,6 +8,7 @@ import {
   Home,
   Grid3X3,
   Map,
+  MessageSquare,
   Sparkles,
   ChevronRight,
   Terminal as TerminalIcon,
@@ -124,6 +125,11 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
       to: "/contents",
       label: "コンテンツ",
       icon: <Grid3X3 className="h-5 w-5" />,
+    },
+    {
+      to: "/bulletin-board",
+      label: "掲示板",
+      icon: <MessageSquare className="h-5 w-5" />,
     },
     { to: "/map", label: "地図", icon: <Map className="h-5 w-5" /> },
   ];
