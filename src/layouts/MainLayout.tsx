@@ -244,7 +244,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
               <div className="mt-auto border-t border-gray-700 pt-6">
                 <div className="text-center">
                   <p className="mb-2 text-sm text-gray-400">
-                    Culture Festival 2024
+                    Culture Festival 2025
                   </p>
                   <div className="flex items-center justify-center space-x-2">
                     <div className="bg-neon-green h-2 w-2 animate-pulse rounded-full" />
@@ -321,11 +321,11 @@ const MainLayout: React.FC = () => {
             {/* Center Section - Event Info */}
             <div className="text-center">
               <h3 className="mb-4 text-lg font-semibold text-white">
-                Culture Festival 2024
+                Culture Festival 2025
               </h3>
               <div className="space-y-2">
                 <p className="text-sm text-gray-400">
-                  開催日: 2024年9月7日-8日
+                  開催日: 2025年9月6日-7日
                 </p>
                 <p className="text-sm text-gray-400">場所: 高校校舎</p>
                 <div className="mt-3 flex items-center justify-center space-x-2">
@@ -354,7 +354,7 @@ const MainLayout: React.FC = () => {
             <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
               <div className="text-center md:text-left">
                 <p className="text-xs text-gray-500">
-                  © 2024 Math Department. All rights reserved.
+                  © 2025 Math Department. All rights reserved.
                 </p>
                 <p className="mt-1 text-xs text-gray-600">
                   Built with React + TypeScript + Vite
