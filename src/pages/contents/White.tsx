@@ -776,18 +776,18 @@ const White: React.FC = () => {
 
         {/* White color generator */}
         <div className="my-6 space-y-4 rounded-lg border border-gray-300 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex flex-grow items-center">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+            <div className="flex flex-col gap-2 lg:flex-grow lg:flex-row lg:items-center">
               <label
                 htmlFor="input-white-name"
-                className="mr-2 font-medium whitespace-nowrap"
+                className="font-medium whitespace-nowrap"
               >
                 色の名前(1-10字):
               </label>
               <input
                 type="text"
                 id="input-white-name"
-                className="flex-grow rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700"
+                className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none lg:min-w-0 lg:flex-grow dark:border-gray-600 dark:bg-gray-700"
                 value={whiteName}
                 onChange={handleWhiteNameChange}
                 maxLength={10}
@@ -795,20 +795,22 @@ const White: React.FC = () => {
               />
             </div>
 
-            <button
-              onClick={handleGenerateWhite}
-              className="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
-            >
-              別の白色
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row lg:flex-shrink-0">
+              <button
+                onClick={handleGenerateWhite}
+                className="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+              >
+                別の白色
+              </button>
 
-            <a
-              href={getCanvasImage()}
-              download="white.png"
-              className="rounded bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
-            >
-              画像を保存
-            </a>
+              <a
+                href={getCanvasImage()}
+                download="white.png"
+                className="rounded bg-green-600 px-4 py-2 text-center font-medium text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+              >
+                画像を保存
+              </a>
+            </div>
           </div>
 
           <div className="relative aspect-video w-full overflow-hidden rounded border border-gray-300 bg-white dark:border-gray-600">
