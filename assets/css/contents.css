@@ -1,0 +1,128 @@
+.light-theme {
+  --text-color: #000;
+  --text-rgb-color: 0, 0, 0;
+  --rev-text-color: #fff;
+  --rev-text-rgb-color: 255, 255, 255;
+  --background-color: #eee;
+  --background-rgb-color: 238, 238, 238;
+  --blurred-text-color: #444;
+  --blurred-text-rgb-color: 68, 68, 68;
+  --rev-blurred-text-color: #bbb;
+  --rev-blurred-text-rgb-color: 187, 187, 187;
+}
+
+.dark-theme {
+  --text-color: #fff;
+  --text-rgb-color: 255, 255, 255;
+  --rev-text-color: #000;
+  --rev-text-rgb-color: 0, 0, 0;
+  --background-color: #002b36;
+  --background-rgb-color: 0, 43, 54;
+  --blurred-text-color: #bbb;
+  --blurred-text-rgb-color: 187, 187, 187;
+  --rev-blurred-text-color: #444;
+  --rev-blurred-text-rgb-color: 68, 68, 68;
+}
+
+h1 {
+  font-size: calc(2vw + 2rem);
+  text-align: center;
+}
+
+.contents-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  border-top: solid 1px #d33682;
+  border-bottom: solid 1px #d33682;
+  margin: 0.1rem;
+}
+
+.content {
+  border: solid 2px #268bd2;
+  margin: 15px 0;
+}
+@media (min-width: 500px) {
+  .content {
+    margin: 1rem;
+  }
+}
+
+.content a {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.content-text {
+  font-size: 140%;
+  color: var(--text-color);
+  padding-left: 1.5rem;
+  line-height: 100%;
+}
+
+svg.content-svg {
+  display: inline;
+  width: 100%;
+  aspect-ratio: 1;
+  z-index: 10;
+}
+
+body {
+  margin-top: -155px;
+}
+
+h1 {
+  padding-top: 1.5rem;
+}
+
+.club-logo-svg-a {
+  stroke: var(--text-color);
+}
+
+.cryptanalysis-svg-a,
+.cryptanalysis-svg-b {
+  stroke: var(--text-color);
+}
+
+.vs-svg-a {
+  stroke: var(--text-color);
+}
+
+.tech-svg-a {
+  stroke: var(--text-color);
+}
+
+.tech-svg-b {
+  stroke: var(--rev-text-color);
+  fill: var(--text-color);
+}
+
+.melos-svg-a {
+  stroke: var(--text-color);
+}
+
+.white-svg-a {
+  stroke: var(--text-color);
+}
+
+.gacha-svg-a {
+  stroke: var(--text-color);
+}
+
+.gacha-svg-b {
+  fill: var(--text-color);
+}
+
+.thermometer-svg-a {
+  stroke: var(--text-color);
+}
+
+.thermometer-svg-b {
+  fill: var(--text-color);
+}
+
+.hello-world-svg-a {
+  stroke: var(--text-color);
+}/*# sourceMappingURL=contents.css.map */

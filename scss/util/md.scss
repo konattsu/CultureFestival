@@ -1,0 +1,47 @@
+.md-note,
+.md-warning,
+.md-important {
+    display: block;
+    margin: 2.5rem 0 2.5rem 1rem;
+    padding-left: 1rem;
+    font-size: 95%;
+
+    &::before {
+        display: block;
+        font-size: 120%;
+        width: 80%;
+    }
+}
+
+.md-note {
+    border-left: 8px ridge #268bd2;
+    &::before {
+        content: "Note";
+    }
+}
+
+.md-warning {
+    border-left: 8px ridge #b58900;
+    &::before {
+        content: "Warning";
+    }
+}
+
+.md-important {
+    border-left: 8px ridge #6c71c4;
+    &::before {
+        content: "Important";
+    }
+}
+
+.md-emphasis {
+    font-size: 105%;
+    font: bold;
+
+    &::before {
+        content: "【";
+    }
+    &::after {
+        content: "】";
+    }
+}

@@ -1,0 +1,51 @@
+.light-theme {
+  --text-color: #000;
+  --text-rgb-color: 0, 0, 0;
+  --rev-text-color: #fff;
+  --rev-text-rgb-color: 255, 255, 255;
+  --background-color: #eee;
+  --background-rgb-color: 238, 238, 238;
+  --blurred-text-color: #444;
+  --blurred-text-rgb-color: 68, 68, 68;
+  --rev-blurred-text-color: #bbb;
+  --rev-blurred-text-rgb-color: 187, 187, 187;
+}
+
+.dark-theme {
+  --text-color: #fff;
+  --text-rgb-color: 255, 255, 255;
+  --rev-text-color: #000;
+  --rev-text-rgb-color: 0, 0, 0;
+  --background-color: #002b36;
+  --background-rgb-color: 0, 43, 54;
+  --blurred-text-color: #bbb;
+  --blurred-text-rgb-color: 187, 187, 187;
+  --rev-blurred-text-color: #444;
+  --rev-blurred-text-rgb-color: 68, 68, 68;
+} 
+h1 {
+  font-size: calc(2vw + 2rem);
+  text-align: center;
+}
+
+h2 {
+  font-size: calc(1.5vw + 1.3rem);
+  max-width: 500px;
+  padding: 9px;
+  font-family: serif;
+}
+
+p.brief {
+  font-size: calc(0.5vw + 1rem);
+}
+
+.dummy-url {
+  text-decoration: underline;
+  color: var(--text-color);
+}
+
+p > a {
+  color: var(--text-color);
+  -webkit-text-decoration: underline #268bd2;
+          text-decoration: underline #268bd2;
+}/*# sourceMappingURL=tech.css.map */

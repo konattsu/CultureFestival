@@ -1,0 +1,14 @@
+@use "theme";
+
+svg {
+    --math-formulas-color-1: var(--text-color);
+    --math-formulas-color-2: var(--background-color);
+
+    .svg-math-formulas-a {
+        fill: var(--math-formulas-color-1);
+    }
+
+    .svg-math-formulas-b {
+        fill: var(--math-formulas-color-2);
+    }
+}

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ガチャシミュ | 数学部</title>
+    <link rel="icon" href="./../../favicon.svg?ver=0.1.0" sizes="any" type="image/svg+xml" />
+    <link rel="stylesheet" href="./../../assets/css/main.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/header.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/move_top.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/md.css?ver=0.1.0" class="css" />
+    <link rel="stylesheet" href="./../../assets/css/gacha.css?ver=0.1.0" class="css" />
+    <script src="./../../scripts/util/store_settings.js?ver=0.1.0"></script>
+  </head>
+
+  <body class="body" id="body">
+    <div class="all-wrapper">
+      <!-- ヘッダー begin -->
+      <div class="overlay" id="overlay"></div>
+      <header class="header show" id="header">
+        <button class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="menu" id="menu">
+          <ul class="nav-list">
+            <li><a href="https://math-club.net">ホーム</a></li>
+            <li>
+              <a href="https://math-club.net/pages/contents.html">コンテンツ</a>
+            </li>
+            <li><a href="https://math-club.net/pages/map.html">地図</a></li>
+            <li>
+              <button class="settings-button" id="settings-button">more</button>
+            </li>
+            <ul class="change-settings" id="change-settings">
+              <button class="toggle-theme settings" id="toggle-theme">theme</button>
+              <button class="toggle-hand settings" id="toggle-hand">mirror</button>
+              <button class="toggle-up-arrow settings" id="toggle-up-arrow">upArrow</button>
+              <button class="copy-current-url settings" id="copy-current-url">copyUrl</button>
+            </ul>
+          </ul>
+        </nav>
+        <script src="./../../scripts/util/hamburger.js?ver=0.1.0" defer></script>
+      </header>
+      <!-- ヘッダー end -->
+
+      <!-- topに戻る begin -->
+      <script src="./../../scripts/util/fetch_svg.js?ver=0.1.0" defer></script>
+      <div class="svg"></div>
+      <svg class="up-arrow" id="up-arrow">
+        <use href="#up-arrow-svg-src"></use>
+      </svg>
+      <script src="./../../scripts/util/move_top.js?ver=0.1.0" defer></script>
+      <!-- topに戻る end -->
+
+      <!-- メイン begin -->
+      <div class="main-content">
+        <h1>ガチャシミュ</h1>
+        <p>
+          色々なガチャを回せます。PU, すり抜け, はずれから抽選されます。天井は実装が難しいため無いです。
+          <br />なお、実際に存在する企業、キャラクター、人物とは一切関係ありません。
+        </p>
+
+        <div class="gacha-wrapper" id="gacha-wrapper">
+          <select name="gacha" id="gacha-select" class="gacha-select">
+            <option value="">--選択してください--</option>
+            <option value="genshin">gemshim</option>
+            <option value="bluaka">blueAchieve</option>
+            <option value="proseka">projectMakai</option>
+            <option value="monsuto">monsterStripe</option>
+            <option value="nikke">nike</option>
+          </select>
+          <button class="roll-button" id="single-roll">一連</button>
+          <button class="roll-button" id="multi-10-roll">十連</button>
+          <button class="roll-button" id="multi-100-roll">百連</button>
+          <button class="roll-button" id="multi-1000-roll">千連</button>
+          <label for="total">回数</label>
+          <input type="number" class="result-count total" id="total" value="0" readonly />
+          <label for="pu">PU</label>
+          <input type="number" class="result-count pu" id="pu" value="0" readonly />
+          <label for="rare">すり抜け</label>
+          <input type="number" class="result-count rare" id="rare" value="0" readonly />
+          <label for="lose">はずれ</label>
+          <input type="number" class="result-count lose" id="lose" value="0" readonly />
+          <div class="gacha-results" id="gacha-results"></div>
+        </div>
+      </div>
+      <!-- メイン end -->
+    </div>
+  </body>
+  <script src="./../../scripts/util/grant_color_theme.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/util/fetch_settings.js?ver=0.1.0" defer></script>
+  <script src="./../../scripts/each_pages/gacha.js?ver=0.1.0" defer></script>
+</html>

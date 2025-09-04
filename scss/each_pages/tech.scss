@@ -1,0 +1,27 @@
+@use "./../../assets/css/theme";
+
+h1 {
+    font-size: calc(2vw + 2rem);
+    text-align: center;
+}
+
+h2 {
+    font-size: calc(1.5vw + 1.3rem);
+    max-width: 500px;
+    padding: 9px;
+    font-family: serif;
+}
+
+p.brief {
+    font-size: calc(0.5vw + 1rem);
+}
+
+.dummy-url {
+    text-decoration: underline;
+    color: var(--text-color);
+}
+
+p > a {
+    color: var(--text-color);
+    text-decoration: underline #268bd2;
+}
