@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 
-import { Route } from "react-router";
-import { Routes } from "react-router";
+import { Route, Routes } from "react-router";
 
 import Contents from "./Contents";
 import NotFound from "./NotFound";
@@ -23,7 +22,7 @@ const Loading: React.FC = () => (
 );
 
 const contentsRoutes = [
-  <Route path="" element={<Contents />} key="index" />,
+  <Route index element={<Contents />} key="index" />,
   <Route
     path="cryptanalysis"
     element={
@@ -108,6 +107,7 @@ const contentsRoutes = [
   <Route path="*" element={<NotFound />} key="notfound" />,
 ];
 
+// React Router v6で独立したRoutesコンポーネントとして実装
 const ContentsRoutes = (): React.JSX.Element => (
   <Routes>{contentsRoutes}</Routes>
 );
