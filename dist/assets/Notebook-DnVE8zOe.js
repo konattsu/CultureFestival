@@ -1,0 +1,2 @@
+import{j as e}from"./index-CEU4D7Wc.js";import{C as t}from"./ContentPageLayout-h1tGEIyG.js";const r=()=>e.jsx(t,{title:"ノートブック",children:e.jsxs("div",{className:"prose dark:prose-invert max-w-none",children:[e.jsx("p",{children:"このページでは数学的思考を整理するためのノートの取り方と活用法を紹介します。"}),e.jsx("h2",{className:"mt-8 text-2xl font-bold",children:"準備中"}),e.jsx("p",{children:"このページは現在開発中です。もうしばらくお待ちください。"})]})});export{r as default};
+//# sourceMappingURL=Notebook-DnVE8zOe.js.map
