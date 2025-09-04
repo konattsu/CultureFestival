@@ -12,9 +12,12 @@ import {
   Sparkles,
   ChevronRight,
   Terminal as TerminalIcon,
+  Shield,
+  LogOut,
 } from "lucide-react";
 
 import Terminal from "../components/Terminal";
+import { useAuth } from "../context/AuthContext";
 
 interface HeaderProps {
   menuOpen: boolean;
@@ -118,6 +121,7 @@ interface NavMenuProps {
 const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { user, adminUser, signOut: handleSignOut } = useAuth();
 
   const navLinks = [
     { to: "/", label: "ホーム", icon: <Home className="h-5 w-5" /> },
@@ -250,6 +254,56 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
 
               {/* Footer */}
               <div className="mt-auto border-t border-gray-700 pt-6">
+                {/* Admin Section */}
+                {user !== null && adminUser !== null ? (
+                  <div className="mb-4">
+                    <div className="rounded-lg bg-green-100 p-3 dark:bg-green-900/30">
+                      <div className="mb-2 flex items-center space-x-2">
+                        <Shield className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        <span className="text-sm font-medium text-green-800 dark:text-green-300">
+                          管理者としてログイン中
+                        </span>
+                      </div>
+                      <div className="mb-3 text-xs text-green-600 dark:text-green-400">
+                        {adminUser.email}
+                      </div>
+                      <motion.button
+                        onClick={() => {
+                          void handleSignOut();
+                          toggleMenu();
+                        }}
+                        className="flex w-full items-center justify-center space-x-2 rounded-lg bg-red-100 px-3 py-2 text-red-700 transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span className="text-sm">ログアウト</span>
+                      </motion.button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mb-4">
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Link
+                        to="/admin-login"
+                        className="group flex w-full items-center space-x-3 rounded-xl p-3 transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20"
+                        onClick={toggleMenu}
+                      >
+                        <div className="rounded-lg bg-blue-100 p-2 text-blue-600 group-hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:group-hover:bg-blue-900/50">
+                          <Shield className="h-4 w-4" />
+                        </div>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          管理者ログイン
+                        </span>
+                        <ChevronRight className="ml-auto h-4 w-4 text-gray-400 transition-transform group-hover:translate-x-1 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                      </Link>
+                    </motion.div>
+                  </div>
+                )}
+
                 <div className="text-center">
                   <p className="mb-2 text-sm text-gray-400">
                     Culture Festival 2025
