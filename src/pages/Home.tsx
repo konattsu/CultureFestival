@@ -66,6 +66,42 @@ const FloatingCodeElements: React.FC = () => {
 
     const elements: HTMLDivElement[] = [];
 
+    // Predefined spawn positions for more balanced distribution
+    const spawnPositions = [
+      // Top edge positions
+      { side: 0, x: 10, y: -20, name: "top-left" },
+      { side: 0, x: 30, y: -25, name: "top-left-center" },
+      { side: 0, x: 50, y: -20, name: "top-center" },
+      { side: 0, x: 70, y: -25, name: "top-right-center" },
+      { side: 0, x: 90, y: -20, name: "top-right" },
+
+      // Right edge positions
+      { side: 1, x: 120, y: 15, name: "right-top" },
+      { side: 1, x: 125, y: 35, name: "right-top-center" },
+      { side: 1, x: 120, y: 50, name: "right-center" },
+      { side: 1, x: 125, y: 65, name: "right-bottom-center" },
+      { side: 1, x: 120, y: 85, name: "right-bottom" },
+
+      // Bottom edge positions
+      { side: 2, x: 90, y: 120, name: "bottom-right" },
+      { side: 2, x: 70, y: 125, name: "bottom-right-center" },
+      { side: 2, x: 50, y: 120, name: "bottom-center" },
+      { side: 2, x: 30, y: 125, name: "bottom-left-center" },
+      { side: 2, x: 10, y: 120, name: "bottom-left" },
+
+      // Left edge positions
+      { side: 3, x: -20, y: 85, name: "left-bottom" },
+      { side: 3, x: -25, y: 65, name: "left-bottom-center" },
+      { side: 3, x: -20, y: 50, name: "left-center" },
+      { side: 3, x: -25, y: 35, name: "left-top-center" },
+      { side: 3, x: -20, y: 15, name: "left-top" },
+    ];
+
+    // Shuffle the spawn positions for variety
+    const shuffledPositions = [...spawnPositions].sort(
+      () => Math.random() - 0.5,
+    );
+
     // Increased count for more density
     for (let i = 0; i < 40; i++) {
       const element = document.createElement("div");
@@ -78,29 +114,13 @@ const FloatingCodeElements: React.FC = () => {
       element.style.fontSize = `${Math.random() * 20 + 16}px`; // Larger font size
       element.style.textShadow = "0 0 10px rgba(59, 130, 246, 0.8)"; // Glow effect
 
-      // Random spawn position outside viewport
-      const spawnSide = Math.floor(Math.random() * 4); // 0: top, 1: right, 2: bottom, 3: left
-      let startX, startY;
+      // Use predefined positions in cycle, with some randomness
+      const positionIndex = i % shuffledPositions.length;
+      const basePosition = shuffledPositions[positionIndex];
 
-      switch (spawnSide) {
-        case 0: // top
-          startX = Math.random() * 120 - 10; // -10% to 110%
-          startY = -20; // Above viewport
-          break;
-        case 1: // right
-          startX = 120; // Right of viewport
-          startY = Math.random() * 120 - 10;
-          break;
-        case 2: // bottom
-          startX = Math.random() * 120 - 10;
-          startY = 120; // Below viewport
-          break;
-        case 3: // left
-        default:
-          startX = -20; // Left of viewport
-          startY = Math.random() * 120 - 10;
-          break;
-      }
+      // Add small random offset to avoid exact same positions
+      const startX = basePosition.x + (Math.random() * 10 - 5); // ±5% variation
+      const startY = basePosition.y + (Math.random() * 10 - 5); // ±5% variation
 
       element.style.left = `${startX}%`;
       element.style.top = `${startY}%`;
@@ -151,35 +171,21 @@ const FloatingCodeElements: React.FC = () => {
           ease: "power1.inOut", // Smoother easing
         })
         .set(element, {
-          // Reset to new random spawn position outside viewport
+          // Reset to new balanced spawn position
           ...((): { left: string; top: string } => {
-            const side = Math.floor(Math.random() * 4);
-            // const newTargetXPercent = Math.random() * 30 + 35;
-            // const newTargetYPercent = Math.random() * 30 + 35;
+            // Use next position in the shuffled array for balance
+            const nextIndex =
+              (i + Math.floor(elements.length / 2)) % shuffledPositions.length;
+            const resetPosition = shuffledPositions[nextIndex];
 
-            switch (side) {
-              case 0: // top
-                return {
-                  left: `${Math.random() * 120 - 10}%`,
-                  top: "-20%",
-                };
-              case 1: // right
-                return {
-                  left: "120%",
-                  top: `${Math.random() * 120 - 10}%`,
-                };
-              case 2: // bottom
-                return {
-                  left: `${Math.random() * 120 - 10}%`,
-                  top: "120%",
-                };
-              case 3: // left
-              default:
-                return {
-                  left: "-20%",
-                  top: `${Math.random() * 120 - 10}%`,
-                };
-            }
+            // Add small random offset
+            const resetX = resetPosition.x + (Math.random() * 8 - 4); // ±4% variation
+            const resetY = resetPosition.y + (Math.random() * 8 - 4); // ±4% variation
+
+            return {
+              left: `${resetX}%`,
+              top: `${resetY}%`,
+            };
           })(),
           scale: startScale,
           z: Math.random() * 500 + 200, // Reset to close position
