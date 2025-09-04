@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from "react";
 
 import { Route } from "react-router";
+import { Routes } from "react-router";
 
 import Contents from "./Contents";
 import NotFound from "./NotFound";
@@ -107,5 +108,7 @@ const contentsRoutes = [
   <Route path="*" element={<NotFound />} key="notfound" />,
 ];
 
-const ContentsRoutes = (): React.JSX.Element => <>{contentsRoutes}</>;
+const ContentsRoutes = (): React.JSX.Element => (
+  <Routes>{contentsRoutes}</Routes>
+);
 export default ContentsRoutes;
