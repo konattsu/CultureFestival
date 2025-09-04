@@ -4,8 +4,21 @@
 /* KaTeX CSS */
 @import "katex/dist/katex.min.css";
 
-/* Highlight.js CSS */
-@import "highlight.js/styles/github.css";
+/* Highlight.js CSS for rehype-highlight */
+/* Light theme */
+:root {
+  --hljs-theme: url("highlight.js/styles/github.css");
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hljs-theme: url("highlight.js/styles/github-dark.css");
+  }
+}
+
+/* Import both themes conditionally */
+@import "highlight.js/styles/github.css" (prefers-color-scheme: light);
 @import "highlight.js/styles/github-dark.css" (prefers-color-scheme: dark);
 
 @layer base {
