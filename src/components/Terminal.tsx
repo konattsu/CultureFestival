@@ -270,11 +270,6 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
                 xterm.writeln("We are passionate about mathematics and");
                 xterm.writeln("love sharing our knowledge with everyone!");
                 break;
-              case "contact.txt":
-                xterm.writeln("\x1b[36m=== Contact Information ===\x1b[0m");
-                xterm.writeln("Email: mathclub@example.com");
-                xterm.writeln("Twitter: @mathclub2024");
-                break;
               default:
                 xterm.writeln(
                   `\x1b[31mcat: ${fileName}: No such file or directory\x1b[0m`,

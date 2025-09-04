@@ -29,18 +29,6 @@
   // Typescript
   "typescript.tsserver.log": "verbose",
 
-  // 楽曲データたちよう
-  "json.schemas": [
-    {
-      "fileMatch": ["/music_data/data/artists_data.json"],
-      "url": "./tools/artists_data.schema.json"
-    },
-    {
-      "fileMatch": ["/music_data/data/input/*.json"],
-      "url": "./tools/music_data.schema.json"
-    }
-  ],
-
   // spell checking
   "cSpell.words": [
     "appender",

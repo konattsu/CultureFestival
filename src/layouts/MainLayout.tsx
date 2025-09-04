@@ -44,30 +44,30 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <motion.header
       ref={headerRef}
-      className="border-neon-blue/20 shadow-neon-blue/10 sticky top-0 z-30 border-b bg-black/80 shadow-lg backdrop-blur-lg"
+      className="border-neon-blue/20 shadow-neon-blue/10 sticky top-0 z-30 border-b bg-white/80 shadow-lg backdrop-blur-lg dark:bg-neutral-900/90"
     >
-      <div className="container mx-auto flex items-center justify-between px-4 py-3">
+      <div className="container mx-auto flex items-center justify-between px-4 py-1">
         <button
           className="flex flex-col items-center justify-center space-y-1 p-2 focus:outline-none"
           onClick={toggleMenu}
           aria-label="メニュー"
         >
           <span
-            className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "translate-y-1.5 rotate-45" : ""}`}
+            className={`block h-0.5 w-6 bg-black transition-transform dark:bg-white ${menuOpen ? "translate-y-1.5 rotate-45" : ""}`}
           ></span>
           <span
-            className={`block h-0.5 w-6 bg-white transition-opacity ${menuOpen ? "opacity-0" : "opacity-100"}`}
+            className={`block h-0.5 w-6 bg-black transition-opacity dark:bg-white ${menuOpen ? "opacity-0" : "opacity-100"}`}
           ></span>
           <span
-            className={`block h-0.5 w-6 bg-white transition-transform ${menuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
+            className={`block h-0.5 w-6 bg-black transition-transform dark:bg-white ${menuOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
           ></span>
         </button>
 
         <Link
           to="/"
-          className="group from-neon-blue via-neon-purple to-neon-pink relative flex items-center space-x-2 bg-gradient-to-r bg-clip-text text-2xl font-bold transition-transform duration-300 hover:scale-105"
+          className="group relative flex items-center space-x-2 bg-clip-text text-2xl font-bold text-gray-900 transition-transform duration-300 hover:scale-105 dark:text-gray-100"
         >
-          <Sparkles className="text-neon-yellow h-6 w-6 animate-pulse" />
+          <Sparkles className="text-neon-blue dark:text-neon-yellow h-6 w-6 animate-pulse" />
           <span>数学部</span>
           <div className="from-neon-blue/20 to-neon-purple/20 absolute inset-0 -z-10 rounded-lg bg-gradient-to-r opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </Link>
@@ -76,8 +76,8 @@ const Header: React.FC<HeaderProps> = ({
           <motion.button
             className={`relative rounded-lg p-3 transition-all duration-300 ${
               terminalOpen
-                ? "from-neon-blue/30 to-neon-green/30 text-neon-blue shadow-neon-blue/20 ring-neon-blue/50 bg-gradient-to-r shadow-lg ring-2"
-                : "hover:from-neon-blue/20 hover:to-neon-green/20 hover:text-neon-blue hover:shadow-neon-blue/10 bg-gray-800/50 text-gray-300 hover:bg-gradient-to-r hover:shadow-md"
+                ? "from-neon-blue/30 to-neon-green/30 text-neon-blue shadow-neon-blue/20 ring-neon-blue/50 dark:text-neon-green bg-gradient-to-r shadow-lg ring-2"
+                : "hover:from-neon-blue/20 hover:to-neon-green/20 hover:text-neon-blue hover:shadow-neon-blue/10 bg-gray-200/70 text-gray-700 hover:bg-gradient-to-r hover:shadow-md dark:bg-gray-800/50 dark:text-gray-300"
             }`}
             onClick={toggleTerminal}
             whileHover={{ scale: 1.1 }}
@@ -96,7 +96,9 @@ const Header: React.FC<HeaderProps> = ({
             )}
             <div
               className={`absolute top-1 right-1 h-2 w-2 rounded-full transition-all duration-300 ${
-                terminalOpen ? "bg-neon-green animate-pulse" : "bg-gray-600"
+                terminalOpen
+                  ? "bg-neon-green animate-pulse"
+                  : "bg-gray-400 dark:bg-gray-600"
               }`}
             />
           </motion.button>
@@ -153,7 +155,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
         <>
           {/* Overlay */}
           <motion.div
-            className="fixed inset-0 z-60 bg-black/70 backdrop-blur-sm"
+            className="fixed inset-0 z-60 bg-white/70 backdrop-blur-sm dark:bg-black/70"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -163,18 +165,18 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
           {/* Menu */}
           <motion.nav
             ref={menuRef}
-            className="border-neon-blue/30 fixed top-0 bottom-0 left-0 z-80 w-80 border-r bg-gradient-to-br from-gray-900 via-black to-gray-900 shadow-2xl"
+            className="border-neon-blue/30 fixed top-0 bottom-0 left-0 z-80 w-80 border-r bg-gradient-to-br from-gray-100 via-white to-gray-200 shadow-2xl dark:from-gray-900 dark:via-black dark:to-gray-900"
             initial={{ x: -320 }}
             animate={{ x: 0 }}
             exit={{ x: -320 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <div className="flex h-full flex-col p-6">
+            <div className="flex h-full flex-col bg-white p-6 dark:bg-gray-900">
               {/* Header */}
               <div className="mb-12 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Sparkles className="text-neon-yellow h-8 w-8 animate-pulse" />
-                  <h2 className="from-neon-blue to-neon-purple bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent">
+                  <Sparkles className="text-neon-blue dark:text-neon-yellow h-8 w-8 animate-pulse" />
+                  <h2 className="bg-clip-text text-2xl font-bold text-gray-900 dark:text-gray-100">
                     数学部
                   </h2>
                 </div>
@@ -201,16 +203,16 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
                       to={to}
                       className={`group hover:from-neon-blue/20 hover:to-neon-purple/20 relative flex items-center space-x-4 rounded-xl p-4 transition-all duration-300 hover:bg-gradient-to-r ${
                         location.pathname === to
-                          ? "from-neon-blue/30 to-neon-purple/30 shadow-neon-blue/20 bg-gradient-to-r text-white shadow-lg"
-                          : "text-gray-300 hover:text-white"
+                          ? "text-neon-blue dark:text-neon-yellow"
+                          : "text-gray-900 dark:text-gray-100"
                       }`}
                       onClick={toggleMenu}
                     >
                       <div
                         className={`rounded-lg p-2 ${
                           location.pathname === to
-                            ? "bg-neon-blue/30 text-neon-blue"
-                            : "group-hover:bg-neon-blue/20 group-hover:text-neon-blue bg-gray-800 text-gray-400"
+                            ? "bg-neon-blue/30 text-neon-blue dark:bg-neon-yellow/30 dark:text-neon-yellow"
+                            : "group-hover:bg-neon-blue/20 group-hover:text-neon-blue bg-gray-200 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
                         }`}
                       >
                         {icon}
@@ -219,14 +221,14 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
                       <ChevronRight
                         className={`ml-auto h-4 w-4 transition-transform ${
                           location.pathname === to
-                            ? "text-neon-blue"
-                            : "group-hover:text-neon-blue text-gray-500 group-hover:translate-x-1"
+                            ? "text-neon-blue dark:text-neon-yellow"
+                            : "group-hover:text-neon-blue text-gray-400 group-hover:translate-x-1 dark:text-gray-500"
                         }`}
                       />
 
                       {location.pathname === to && (
                         <motion.div
-                          className="from-neon-blue/10 to-neon-purple/10 border-neon-blue/20 absolute inset-0 rounded-xl border bg-gradient-to-r"
+                          className="from-neon-blue/10 to-neon-purple/10 border-neon-blue/20 dark:from-neon-yellow/10 dark:to-neon-pink/10 absolute inset-0 rounded-xl border bg-gradient-to-r"
                           layoutId="activeTab"
                           transition={{
                             type: "spring",
@@ -255,8 +257,8 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
             </div>
 
             {/* Decorative elements */}
-            <div className="from-neon-blue/10 to-neon-purple/10 absolute top-20 right-4 h-24 w-24 rounded-full bg-gradient-to-br blur-xl" />
-            <div className="from-neon-pink/10 to-neon-yellow/10 absolute bottom-20 left-4 h-16 w-16 rounded-full bg-gradient-to-br blur-xl" />
+            <div className="from-neon-blue/10 to-neon-purple/10 dark:from-neon-yellow/10 dark:to-neon-pink/10 absolute top-20 right-4 h-24 w-24 rounded-full bg-gradient-to-br blur-xl" />
+            <div className="from-neon-pink/10 to-neon-yellow/10 dark:from-neon-blue/10 dark:to-neon-green/10 absolute bottom-20 left-4 h-16 w-16 rounded-full bg-gradient-to-br blur-xl" />
           </motion.nav>
         </>
       )}
@@ -279,7 +281,8 @@ const MainLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-black">
+    // <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-white dark:bg-neutral-950">
       <Header
         menuOpen={menuOpen}
         toggleMenu={toggleMenu}
@@ -299,73 +302,60 @@ const MainLayout: React.FC = () => {
 
       {/* Footer */}
       {/* Footer */}
-      <footer className="border-neon-blue/20 border-t bg-black/80 backdrop-blur-lg">
+      <footer className="border-neon-blue/20 border-t bg-gray-100/90 backdrop-blur-lg dark:bg-black/80">
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {/* Left Section - About */}
             <div className="text-center md:text-left">
               <div className="mb-4 flex items-center justify-center space-x-2 md:justify-start">
-                <Sparkles className="text-neon-yellow h-6 w-6" />
-                <span className="from-neon-blue to-neon-purple bg-gradient-to-r bg-clip-text text-xl font-bold text-transparent">
+                <Sparkles className="h-6 w-6 text-amber-50" />
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">
                   数学部
                 </span>
               </div>
-              <p className="mb-2 text-sm text-gray-400">
-                高校数学部による文化祭展示
+              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                数学部の文化祭展示
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-400 dark:text-gray-500">
                 Mathematics Department Exhibition
               </p>
             </div>
 
             {/* Center Section - Event Info */}
             <div className="text-center">
-              <h3 className="mb-4 text-lg font-semibold text-white">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                 Culture Festival 2025
               </h3>
               <div className="space-y-2">
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   開催日: 2025年9月6日-7日
                 </p>
-                <p className="text-sm text-gray-400">場所: 高校校舎</p>
                 <div className="mt-3 flex items-center justify-center space-x-2">
                   <div className="bg-neon-green h-2 w-2 rounded-full" />
-                  <span className="text-xs text-gray-500">LIVE EVENT</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    LIVE EVENT
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Right Section - Activities */}
             <div className="text-center md:text-right">
-              <h3 className="mb-4 text-lg font-semibold text-white">
+              <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                 展示内容
               </h3>
               <div className="space-y-1">
-                <p className="text-sm text-gray-400">数学パズル</p>
-                <p className="text-sm text-gray-400">暗号解読体験</p>
-                <p className="text-sm text-gray-400">数学ゲーム</p>
-                <p className="text-sm text-gray-400">プログラミング展示</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Section */}
-          <div className="mt-8 border-t border-gray-700 pt-6">
-            <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
-              <div className="text-center md:text-left">
-                <p className="text-xs text-gray-500">
-                  © 2025 Math Department. All rights reserved.
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  数学パズル
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
-                  Built with React + TypeScript + Vite
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  暗号解読体験
                 </p>
-              </div>
-              <div className="text-center md:text-right">
-                <p className="text-xs text-gray-500">
-                  Visit us at the school festival!
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  数学ゲーム
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
-                  Location: Room 3-A Math Classroom
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  プログラミング展示
                 </p>
               </div>
             </div>
@@ -375,8 +365,8 @@ const MainLayout: React.FC = () => {
 
       {/* Background decorative elements */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="bg-neon-blue/5 absolute top-1/4 left-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
-        <div className="bg-neon-purple/5 absolute right-1/4 bottom-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
+        <div className="bg-neon-blue/5 dark:bg-neon-yellow/10 absolute top-1/4 left-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
+        <div className="bg-neon-purple/5 dark:bg-neon-pink/10 absolute right-1/4 bottom-1/4 h-96 w-96 animate-pulse rounded-full blur-3xl" />
       </div>
 
       {/* Terminal */}
