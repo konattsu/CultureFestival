@@ -113,7 +113,7 @@ const White: React.FC = () => {
   };
 
   // Generate a random white color
-  const generateWhiteColor = (): string => {
+  const generateWhiteColor = React.useCallback((): string => {
     const [base, min, max] = RGB_RANGE[generateRandom(0, RGB_RANGE.length)];
     const a = base;
     const b1 = generateRandom(min, max + 1);
@@ -135,7 +135,7 @@ const White: React.FC = () => {
 
     const [r, g, b] = arrangeRGB();
     return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
-  };
+  }, []);
 
   // Draw on the white canvas
   const drawWhiteCanvas = (color: string, name?: string): void => {
@@ -223,7 +223,7 @@ const White: React.FC = () => {
     const newColor = generateWhiteColor();
     setWhiteColor(newColor);
     // drawWhiteCanvas will be called by the [whiteColor, whiteName] effect
-  }, []);
+  }, [generateWhiteColor]);
 
   // Redraw canvas whenever whiteColor or whiteName changes
   useEffect(() => {
