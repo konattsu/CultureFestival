@@ -606,7 +606,7 @@ const ContentsHero: React.FC = () => {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <Sparkles className="h-6 w-6 animate-pulse text-yellow-400" />
-          <span className="text-lg font-light tracking-wider text-gray-300">
+          <span className="text-lg font-light tracking-wider text-white">
             MATHEMATICS & TECHNOLOGY
           </span>
           <Sparkles className="h-6 w-6 animate-pulse text-yellow-400" />
@@ -614,16 +614,14 @@ const ContentsHero: React.FC = () => {
 
         <motion.p
           ref={subtitleRef}
-          className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-300"
+          className="mx-auto max-w-3xl text-lg leading-relaxed text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 1 }}
         >
           数学部が作成した部誌、記事、ミニゲームなどの一覧です。
           <br />
-          <span className="text-blue-400">
-            気になる項目をタップして、数学の世界を探索しましょう。
-          </span>
+          気になる項目をタップして、数学の世界を探索しましょう。
         </motion.p>
       </div>
     </div>
@@ -691,7 +689,7 @@ const ContentCard: React.FC<{
     >
       <Link
         to={`/contents/${item.id}`}
-        className="block overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg transition-all duration-500 hover:border-white/40 hover:bg-white/20 hover:shadow-2xl"
+        className="block overflow-hidden rounded-2xl border border-black/20 bg-black/4 backdrop-blur-lg transition-all duration-500 hover:border-white/40 hover:bg-white/20 hover:shadow-2xl dark:border-white/20 dark:bg-white/10"
       >
         <div
           className={`flex h-48 items-center justify-center bg-gradient-to-br ${gradient} p-6 transition-all duration-500 group-hover:scale-105`}
@@ -702,15 +700,15 @@ const ContentCard: React.FC<{
         </div>
 
         <div className="p-6">
-          <h2 className="mb-3 text-xl font-bold text-white transition-colors duration-300 group-hover:text-blue-400">
+          <h2 className="mb-3 text-xl font-bold transition-colors duration-300 group-hover:text-blue-800 dark:group-hover:text-blue-400">
             {item.title}
           </h2>
-          <p className="leading-relaxed text-gray-300 transition-colors duration-300 group-hover:text-gray-200">
+          <p className="leading-relaxed transition-colors duration-300 group-hover:text-gray-800 dark:group-hover:text-gray-200">
             {item.description}
           </p>
 
           <motion.div
-            className="mt-4 flex items-center text-blue-400 opacity-0 transition-all duration-300 group-hover:opacity-100"
+            className="mt-4 flex items-center text-blue-500 opacity-0 transition-all duration-300 group-hover:opacity-100"
             initial={{ x: -10 }}
             whileHover={{ x: 0 }}
           >
@@ -824,7 +822,7 @@ const Contents: React.FC = () => {
 
       {/* Main Content Grid */}
       <section className="relative px-4 py-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-200 to-white dark:from-black dark:via-gray-900 dark:to-black" />
 
         <div className="relative z-10 mx-auto max-w-7xl">
           {/* Section Header */}
@@ -836,7 +834,7 @@ const Contents: React.FC = () => {
             viewport={{ once: true }}
           >
             <h2 className="mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-4xl font-bold text-transparent">
-              数学部の展示コンテンツ
+              コンテンツ
             </h2>
             <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-blue-400 to-purple-400" />
           </motion.div>
@@ -852,18 +850,16 @@ const Contents: React.FC = () => {
           </div>
 
           {/* Call to Action */}
-          <motion.div
+          {/* <motion.div
             className="mt-20 text-center"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <div className="rounded-3xl border border-white/20 bg-white/5 p-8 backdrop-blur-lg">
-              <h3 className="mb-4 text-2xl font-bold text-white">
-                さらなる数学の世界へ
-              </h3>
-              <p className="mb-6 text-gray-300">
+            <div className="rounded-3xl border border-gray-500/100 bg-gray-500/5 p-8 backdrop-blur-lg">
+              <h3 className="mb-4 text-2xl font-bold">さらなる数学の世界へ</h3>
+              <p className="mb-6">
                 これらのコンテンツは数学部員が制作したものです。
                 <br />
                 数学とテクノロジーの融合をお楽しみください。
@@ -889,7 +885,7 @@ const Contents: React.FC = () => {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
     </div>
