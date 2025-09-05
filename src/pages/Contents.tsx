@@ -835,8 +835,8 @@ const contentItems: ContentItem[] = [
   },
   {
     id: "notebook",
-    title: "ノートブック",
-    description: "数学の考えを整理するノートの取り方や活用法を紹介します。",
+    title: "書籍",
+    description: "部員が読んで特に印象に残った書籍を紹介します。",
     icon: <NotebookIcon />,
   },
   {
