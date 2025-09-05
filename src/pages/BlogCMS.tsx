@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { motion } from "framer-motion";
+import { gsap } from "gsap";
 import {
   ArrowLeft,
   Plus,
@@ -16,6 +16,8 @@ import {
   BookOpen,
   FileText,
   AlertCircle,
+  BarChart3,
+  TrendingUp,
 } from "lucide-react";
 
 import PostEditorModal from "../components/PostEditorModal";
@@ -48,6 +50,12 @@ const BlogCMS: React.FC = () => {
   const { user, adminUser } = useAuth();
   const navigate = useNavigate();
 
+  // GSAP refs
+  const headerRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const filterRef = useRef<HTMLDivElement>(null);
+  const postsRef = useRef<HTMLDivElement>(null);
+
   // 管理者チェック
   useEffect(() => {
     if (user !== null && adminUser === null) {
@@ -77,6 +85,61 @@ const BlogCMS: React.FC = () => {
       void fetchData();
     }
   }, [adminUser]);
+
+  // GSAPアニメーション
+  useEffect(() => {
+    if (!loading && adminUser !== null && adminUser !== undefined) {
+      const tl = gsap.timeline();
+
+      // ヘッダーのアニメーション
+      tl.fromTo(
+        headerRef.current,
+        { opacity: 0, y: -30 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" },
+      );
+
+      // 統計カードのアニメーション
+      if (statsRef.current !== null && statsRef.current !== undefined) {
+        tl.fromTo(
+          statsRef.current.children,
+          { opacity: 0, y: 20, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out",
+          },
+          "-=0.3",
+        );
+      }
+
+      // フィルターのアニメーション
+      tl.fromTo(
+        filterRef.current,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" },
+        "-=0.2",
+      );
+
+      // 投稿リストのアニメーション
+      if (postsRef.current !== null && postsRef.current !== undefined) {
+        tl.fromTo(
+          postsRef.current.children,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power2.out",
+          },
+          "-=0.2",
+        );
+      }
+    }
+  }, [loading, adminUser, posts]);
 
   const handleCreatePost = async (postData: NewBlogPost): Promise<void> => {
     setSaving(true);
@@ -199,212 +262,214 @@ const BlogCMS: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="mb-4">
+        <div ref={headerRef} className="mb-8">
+          <div className="mb-6">
             <button
               onClick={() => navigate("/cms")}
-              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              className="inline-flex items-center space-x-2 text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>CMS管理パネルに戻る</span>
+              <span className="text-sm font-medium">CMS管理パネルに戻る</span>
             </button>
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-                ブログ CMS
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                ブログ管理
               </h1>
-              <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">
-                記事の作成・編集・管理
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                記事の作成・編集・管理を行います
               </p>
             </div>
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              className="inline-flex items-center space-x-2 rounded-md bg-white px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4" />
               <span>新規記事</span>
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Stats */}
         {metadata !== null && metadata !== undefined && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3"
+          <div
+            ref={statsRef}
+            className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-3"
           >
-            <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-              <div className="flex items-center space-x-3">
-                <div className="rounded-lg bg-blue-100 p-3 dark:bg-blue-900/30">
-                  <FileText className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    総記事数
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {metadata.total_posts}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-              <div className="flex items-center space-x-3">
-                <div className="rounded-lg bg-green-100 p-3 dark:bg-green-900/30">
-                  <Eye className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    公開済み
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {metadata.published_posts}
-                  </p>
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-900/30">
+                      <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="ml-4 w-0 flex-1">
+                    <dl>
+                      <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
+                        総記事数
+                      </dt>
+                      <dd className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {metadata.total_posts}
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-              <div className="flex items-center space-x-3">
-                <div className="rounded-lg bg-yellow-100 p-3 dark:bg-yellow-900/30">
-                  <EyeOff className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    下書き
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {metadata.draft_posts}
-                  </p>
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-green-50 dark:bg-green-900/30">
+                      <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    </div>
+                  </div>
+                  <div className="ml-4 w-0 flex-1">
+                    <dl>
+                      <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
+                        公開済み
+                      </dt>
+                      <dd className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {metadata.published_posts}
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800">
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-amber-50 dark:bg-amber-900/30">
+                      <BarChart3 className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    </div>
+                  </div>
+                  <div className="ml-4 w-0 flex-1">
+                    <dl>
+                      <dt className="truncate text-sm font-medium text-gray-500 dark:text-gray-400">
+                        下書き
+                      </dt>
+                      <dd className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {metadata.draft_posts}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6"
-        >
-          <div className="flex space-x-2">
+        <div ref={filterRef} className="mb-6">
+          <div className="flex space-x-1 rounded-md bg-gray-100 p-1 dark:bg-gray-800">
             <button
               onClick={() => setFilter("all")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 filter === "all"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               }`}
             >
               すべて
             </button>
             <button
               onClick={() => setFilter("published")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 filter === "published"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               }`}
             >
               公開済み
             </button>
             <button
               onClick={() => setFilter("draft")}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-all duration-200 ${
                 filter === "draft"
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  ? "bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               }`}
             >
               下書き
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Posts List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <div ref={postsRef}>
           {filteredPosts.length === 0 ? (
-            <div className="py-12 text-center">
-              <BookOpen className="mx-auto h-16 w-16 text-gray-400" />
+            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800">
+              <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
                 記事がありません
               </h3>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                 新規記事を作成してください。
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {filteredPosts.map((post, index) => (
-                <motion.div
+            <div className="space-y-3">
+              {filteredPosts.map((post) => (
+                <div
                   key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 + index * 0.05 }}
-                  className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                  className="group rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:border-gray-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600"
                 >
                   <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="mb-2 flex items-center space-x-3">
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                          {post.title}
-                        </h3>
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-3 flex items-start justify-between">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                            {post.title}
+                          </h3>
 
-                        {/* Status Badge */}
-                        <span
-                          className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                            post.status === "published"
-                              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                          }`}
-                        >
-                          {post.status === "published" ? (
-                            <>
-                              <Eye className="mr-1 h-3 w-3" />
-                              公開中
-                            </>
-                          ) : (
-                            <>
-                              <EyeOff className="mr-1 h-3 w-3" />
-                              下書き
-                            </>
-                          )}
-                        </span>
-
-                        {/* Featured Badge */}
-                        {post.featured === true && (
-                          <span className="inline-flex items-center rounded-full bg-gradient-to-r from-yellow-100 to-orange-100 px-2 py-1 text-xs font-medium text-yellow-800 dark:from-yellow-900/30 dark:to-orange-900/30 dark:text-yellow-400">
-                            <Star className="mr-1 h-3 w-3" />
-                            注目
+                          {/* Status Badge */}
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                              post.status === "published"
+                                ? "bg-green-50 text-green-700 ring-1 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400 dark:ring-green-400/30"
+                                : "bg-amber-50 text-amber-700 ring-1 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-400/30"
+                            }`}
+                          >
+                            {post.status === "published" ? (
+                              <>
+                                <Eye className="mr-1 h-3 w-3" />
+                                公開中
+                              </>
+                            ) : (
+                              <>
+                                <EyeOff className="mr-1 h-3 w-3" />
+                                下書き
+                              </>
+                            )}
                           </span>
-                        )}
+
+                          {/* Featured Badge */}
+                          {post.featured === true && (
+                            <span className="inline-flex items-center rounded-full bg-gradient-to-r from-yellow-50 to-orange-50 px-2 py-1 text-xs font-medium text-yellow-700 ring-1 ring-yellow-600/20 dark:from-yellow-900/30 dark:to-orange-900/30 dark:text-yellow-400 dark:ring-yellow-400/30">
+                              <Star className="mr-1 h-3 w-3" />
+                              注目
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {post.summary !== null &&
                         post.summary !== undefined &&
                         post.summary !== "" && (
-                          <p className="mb-3 text-gray-600 dark:text-gray-400">
+                          <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
                             {post.summary}
                           </p>
                         )}
 
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center space-x-1">
                           <User className="h-4 w-4" />
                           <span>{post.author}</span>
@@ -414,6 +479,11 @@ const BlogCMS: React.FC = () => {
                           <span>
                             {new Date(post.created_at).toLocaleDateString(
                               "ja-JP",
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              },
                             )}
                           </span>
                         </div>
@@ -422,35 +492,48 @@ const BlogCMS: React.FC = () => {
                           post.tags.length > 0 && (
                             <div className="flex items-center space-x-1">
                               <Tag className="h-4 w-4" />
-                              <span>{post.tags.slice(0, 2).join(", ")}</span>
-                              {post.tags.length > 2 && <span>など</span>}
+                              <div className="flex space-x-1">
+                                {post.tags.slice(0, 2).map((tag, index) => (
+                                  <span
+                                    key={index}
+                                    className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                                {post.tags.length > 2 && (
+                                  <span className="text-xs text-gray-400">
+                                    +{post.tags.length - 2}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           )}
                       </div>
                     </div>
 
-                    <div className="ml-4 flex space-x-2">
+                    <div className="ml-4 flex flex-shrink-0 space-x-2">
                       <button
                         onClick={() => openEditModal(post)}
-                        className="rounded-lg p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/30"
+                        className="rounded-md p-2 text-gray-400 transition-all duration-200 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:hover:bg-gray-700 dark:hover:text-gray-300"
                         title="編集"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeletePost(post.id)}
-                        className="rounded-lg p-2 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/30"
+                        className="rounded-md p-2 text-gray-400 transition-all duration-200 hover:bg-red-50 hover:text-red-500 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none dark:hover:bg-red-900/30 dark:hover:text-red-400"
                         title="削除"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Modal */}
