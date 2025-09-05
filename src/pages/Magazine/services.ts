@@ -1,6 +1,6 @@
-import metaData from "../pages/Magazine/data/meta.json";
+import metaData from "./data/meta.json";
 
-import type { MagazinePost } from "../types/magazine";
+import type { MagazinePost } from "./types";
 
 // meta.jsonの型定義
 interface MagazineMetaData {
@@ -14,13 +14,14 @@ interface MagazineMetaData {
 // Markdown ファイルのコンテンツを取得する関数
 const getMarkdownContent = async (filename: string): Promise<string> => {
   try {
-    const modules = import.meta.glob("../pages/Magazine/data/*.md", {
-      as: "raw",
+    const modules = import.meta.glob("./data/*.md", {
+      query: "?raw",
+      import: "default",
     });
-    const path = `../pages/Magazine/data/${filename}`;
+    const path = `./data/${filename}`;
     const loader = modules[path];
     if (typeof loader === "function") {
-      return await loader();
+      return (await loader()) as string;
     } else {
       console.error(`Markdown file ${filename} not found`);
       return "";
@@ -31,8 +32,7 @@ const getMarkdownContent = async (filename: string): Promise<string> => {
   }
 };
 
-// 部誌投稿一覧を取得（公開済みのみ）
-// 部誌投稿一覧を取得（全件）
+// 部誌投稿一覧を取得
 export const getMagazinePosts = async (): Promise<MagazinePost[]> => {
   try {
     const posts: MagazinePost[] = [];
@@ -83,10 +83,4 @@ export const getMagazinePost = async (
     console.error("部誌投稿の取得に失敗しました:", error);
     return null;
   }
-};
-
-// 全部誌投稿を取得（管理者用）
-export const getAllMagazinePosts = async (): Promise<MagazinePost[]> => {
-  // 静的ファイルベースでは全件取得
-  return getMagazinePosts();
 };
