@@ -94,7 +94,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
 
     // 初期プロンプトの表示
     xterm.writeln(
-      "\x1b[36m🎉 Culture Festival 2024 - Math Club Terminal\x1b[0m",
+      "\x1b[36m🎉 Culture Festival 2025 - Math Club Terminal\x1b[0m",
     );
     xterm.writeln('\x1b[33mType "help" to see available commands\x1b[0m');
     xterm.writeln("");
@@ -271,7 +271,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
             switch (fileName) {
               case "readme.txt":
                 xterm.writeln(
-                  "\x1b[36m=== Culture Festival 2024 - Math Club ===\x1b[0m",
+                  "\x1b[36m=== Culture Festival 2025 - Math Club ===\x1b[0m",
                 );
                 xterm.writeln("Welcome to our interactive exhibition!");
                 xterm.writeln("Explore various mathematical topics and enjoy!");
