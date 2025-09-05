@@ -157,13 +157,13 @@ const MagazineList: React.FC = () => {
                     className="group block h-full"
                   >
                     <div className="h-full rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                      <h3 className="mb-3 text-lg font-semibold text-gray-900 group-hover:text-blue-600 md:text-xl lg:text-2xl dark:text-white dark:group-hover:text-blue-400">
                         {post.title}
                       </h3>
 
                       {post.summary !== undefined &&
                         post.summary.length > 0 && (
-                          <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                          <p className="mb-4 text-sm text-gray-600 md:text-base lg:text-lg dark:text-gray-400">
                             {post.summary.length > 80
                               ? `${post.summary.slice(0, 80)}...`
                               : post.summary}
