@@ -6,9 +6,8 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { ref, get } from "firebase/database";
 
-import { auth, database } from "../config/firebase";
+import { auth } from "../config/firebase";
 
 interface AdminUser {
   uid: string;
@@ -44,31 +43,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const checkAdminStatus = async (firebaseUser: User): Promise<void> => {
-    try {
-      const adminRef = ref(database, `admin/users/${firebaseUser.uid}`);
-      const snapshot = await get(adminRef);
-      if (snapshot.exists()) {
-        const adminData = snapshot.val();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      if (firebaseUser !== null) {
+        // Firebase Authに登録されているユーザーは全て管理者として扱う
         setAdminUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email ?? "",
-          role: (adminData.role as "admin" | "moderator") ?? "admin",
+          role: "admin",
         });
-      } else {
-        setAdminUser(null);
-      }
-    } catch (error) {
-      console.error("管理者ステータスの確認に失敗しました:", error);
-      setAdminUser(null);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser !== null) {
-        await checkAdminStatus(firebaseUser);
       } else {
         setAdminUser(null);
       }
