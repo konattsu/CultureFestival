@@ -116,11 +116,12 @@ const FloatingCodeElements: React.FC = () => {
         codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 
       element.textContent = snippet;
-      // Softer color, lighter font, less glow, lower opacity
+      // More vibrant color, stronger glow effect
       element.className =
-        "absolute text-blue-300 font-mono opacity-0 select-none pointer-events-none font-bold";
+        "absolute text-blue-100 font-mono opacity-0 select-none pointer-events-none font-bold";
       element.style.fontSize = `${Math.random() * 20 + 16}px`; // Larger font size
-      element.style.textShadow = "0 0 10px rgba(59, 130, 246, 0.8)"; // Glow effect
+      element.style.textShadow =
+        "0 0 20px rgba(59, 130, 246, 1), 0 0 40px rgba(16, 215, 255, 0.6)"; // Stronger glow effect
 
       // Use predefined positions in cycle, with some randomness
       const positionIndex = i % shuffledPositions.length;
@@ -141,10 +142,10 @@ const FloatingCodeElements: React.FC = () => {
       const targetXPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
       const targetYPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
 
-      // 3D perspective animation - less depth effect
+      // 3D perspective animation - improved visibility
       const startScale = Math.random() * 0.8 + 1.3; // Smaller start
       const endScale = Math.random() * 0.1 + 0.1; // Slightly larger end
-      const startOpacity = Math.random() * 0.3 + 0.1; // Lower opacity
+      const startOpacity = Math.random() * 0.4 + 0.3; // Higher opacity for better visibility
 
       gsap.set(element, {
         scale: startScale,
