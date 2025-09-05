@@ -208,11 +208,11 @@ const CMS: React.FC = () => {
         >
           <div className="mb-4">
             <button
-              onClick={() => navigate("/bulletin-board")}
+              onClick={() => navigate("/blog")}
               className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>掲示板に戻る</span>
+              <span>ブログに戻る</span>
             </button>
           </div>
           <div className="flex items-center justify-between">
