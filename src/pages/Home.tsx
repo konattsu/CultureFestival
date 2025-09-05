@@ -36,6 +36,13 @@ const FloatingCodeElements: React.FC = () => {
       typeof window !== "undefined" && window.innerWidth < 768;
 
     const codeSnippets = [
+      "git rebase -i origin/main",
+      "file_ptr",
+      "regedit",
+      "wsl",
+      "clg",
+      "Arc<Mutex<T>>",
+      "Rc<RefCell<T>>",
       "∫f(x)dx",
       "Σn²",
       "π²/6",
@@ -362,29 +369,6 @@ const HeroSection: React.FC = () => {
         transition={{ duration: 2, ease: "easeOut" }}
       />
 
-      {/* Geometric shapes */}
-      {/* <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="border-neon-blue absolute top-20 left-20 h-32 w-32 border-2 opacity-50"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          <Triangle className="text-neon-blue h-full w-full" />
-        </motion.div>
-        <motion.div
-          className="border-neon-pink absolute right-20 bottom-20 h-24 w-24 border-2 opacity-60"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        >
-          <Star className="text-neon-pink h-full w-full" />
-        </motion.div>
-        <motion.div
-          className="bg-neon-green absolute top-1/2 left-10 h-16 w-16 rounded-full opacity-40"
-          animate={{ y: [-20, 20] }}
-          transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-        />
-      </div> */}
-
       <FloatingCodeElements />
       <FloatingParticles />
 
@@ -619,8 +603,7 @@ const Home: React.FC = () => {
               <p className="text-lg leading-relaxed text-gray-300">
                 パズル体験コーナーや、数学に関する動画の上映もご用意しています。
                 <br />
-                <span className="text-neon-green">冷房完備</span>
-                の快適な空間で、数学の楽しさをぜひ体感してください。
+                冷房完備の快適な空間で、数学, ITをお楽しみください
               </p>
             </div>
           </motion.div>

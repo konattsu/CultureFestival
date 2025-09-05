@@ -222,7 +222,6 @@ plt.legend()
 plt.grid(True)
 plt.show()`,
     "Pandas データ処理": `import pandas as pd
-import pandas as pd
 
 # データフレーム生成
 data = [('Takana', 0)] * 10000 + [('Nakashima', 12000)]
