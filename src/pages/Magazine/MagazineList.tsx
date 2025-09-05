@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Tag, Search, BookOpen } from "lucide-react";
+import seedrandom from "seedrandom";
 
 import { getMagazinePosts } from "./services";
 
@@ -19,16 +20,30 @@ const MagazineList: React.FC = () => {
       try {
         setLoading(true);
         const postsData = await getMagazinePosts();
-        // 配列をランダムに並び替え
-        const shuffled = postsData.sort(() => Math.random() - 0.5);
-        setPosts(shuffled);
+        // ローカルストレージからseed取得・保存
+        let seedStr = window.localStorage.getItem("magazine-seed");
+        if (seedStr === null) {
+          seedStr = Date.now().toString();
+          window.localStorage.setItem("magazine-seed", seedStr);
+        }
+        const seed = seedStr;
+        // 外部ライブラリseedrandomでシャッフル
+        const rng = seedrandom(seed);
+        const shuffleArray = (array: MagazinePost[]): MagazinePost[] => {
+          const arr = array.slice();
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
+        setPosts(shuffleArray(postsData));
       } catch (error) {
         console.error("部誌投稿の取得に失敗しました:", error);
       } finally {
         setLoading(false);
       }
     };
-
     void fetchPosts();
   }, []);
 
