@@ -16,12 +16,13 @@ import {
   type NewPost,
   type BoardId,
 } from "../types/bulletin-board";
+import { withFirebaseTimeout } from "../utils/timeout";
 
 // 板一覧を取得
 export const getBoards = async (): Promise<Board[]> => {
   try {
     const boardsRef = ref(database, "bulletin_board/boards");
-    const snapshot = await get(boardsRef);
+    const snapshot = await withFirebaseTimeout(get(boardsRef));
     if (!snapshot.exists()) {
       // 初期板を作成
       await initializeBoards();
@@ -39,7 +40,7 @@ export const getBoards = async (): Promise<Board[]> => {
     );
   } catch (error) {
     console.error("板の取得に失敗しました:", error);
-    return [];
+    throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
@@ -47,7 +48,7 @@ export const getBoards = async (): Promise<Board[]> => {
 export const getBoard = async (boardId: BoardId): Promise<Board | null> => {
   try {
     const boardRef = ref(database, `bulletin_board/boards/${boardId}`);
-    const snapshot = await get(boardRef);
+    const snapshot = await withFirebaseTimeout(get(boardRef));
 
     if (!snapshot.exists()) {
       return null;
@@ -56,7 +57,7 @@ export const getBoard = async (boardId: BoardId): Promise<Board | null> => {
     return snapshot.val();
   } catch (error) {
     console.error("板の取得に失敗しました:", error);
-    return null;
+    throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
@@ -64,7 +65,7 @@ export const getBoard = async (boardId: BoardId): Promise<Board | null> => {
 export const getPosts = async (boardId: BoardId): Promise<Post[]> => {
   try {
     const postsRef = ref(database, `bulletin_board/posts/${boardId}`);
-    const snapshot = await get(postsRef);
+    const snapshot = await withFirebaseTimeout(get(postsRef));
 
     if (!snapshot.exists()) {
       return [];
@@ -76,7 +77,7 @@ export const getPosts = async (boardId: BoardId): Promise<Post[]> => {
     );
   } catch (error) {
     console.error("投稿の取得に失敗しました:", error);
-    return [];
+    throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
@@ -87,7 +88,7 @@ export const createPost = async (newPost: NewPost): Promise<boolean> => {
 
     // 投稿番号を取得
     const boardRef = ref(database, `bulletin_board/boards/${board_id}`);
-    const boardSnapshot = await get(boardRef);
+    const boardSnapshot = await withFirebaseTimeout(get(boardRef));
 
     if (!boardSnapshot.exists()) {
       throw new Error("板が存在しません");
@@ -121,7 +122,7 @@ export const createPost = async (newPost: NewPost): Promise<boolean> => {
     updates[`bulletin_board/boards/${board_id}/last_updated`] =
       serverTimestamp();
 
-    await update(ref(database), updates);
+    await withFirebaseTimeout(update(ref(database), updates));
 
     // メタデータ更新
     await updateMetadata();
@@ -140,8 +141,8 @@ const updateMetadata = async (): Promise<void> => {
     const postsRef = ref(database, "bulletin_board/posts");
 
     const [boardsSnapshot, postsSnapshot] = await Promise.all([
-      get(boardsRef),
-      get(postsRef),
+      withFirebaseTimeout(get(boardsRef)),
+      withFirebaseTimeout(get(postsRef)),
     ]);
 
     let totalBoards = 0;
@@ -168,7 +169,7 @@ const updateMetadata = async (): Promise<void> => {
     };
 
     const metadataRef = ref(database, "bulletin_board/metadata");
-    await set(metadataRef, metadata);
+    await withFirebaseTimeout(set(metadataRef, metadata));
   } catch (error) {
     console.error("メタデータの更新に失敗しました:", error);
   }
@@ -190,7 +191,7 @@ const initializeBoards = async (): Promise<void> => {
     });
 
     const boardsRef = ref(database, "bulletin_board/boards");
-    await set(boardsRef, boardsData);
+    await withFirebaseTimeout(set(boardsRef, boardsData));
 
     await updateMetadata();
   } catch (error) {
@@ -205,7 +206,7 @@ export const updateBoardTitle = async (
 ): Promise<boolean> => {
   try {
     const boardRef = ref(database, `bulletin_board/boards/${boardId}/title`);
-    await set(boardRef, title);
+    await withFirebaseTimeout(set(boardRef, title));
     return true;
   } catch (error) {
     console.error("板のタイトル更新に失敗しました:", error);
@@ -223,7 +224,7 @@ export const updateBoardDescription = async (
       database,
       `bulletin_board/boards/${boardId}/description`,
     );
-    await set(boardRef, description);
+    await withFirebaseTimeout(set(boardRef, description));
     return true;
   } catch (error) {
     console.error("板の説明更新に失敗しました:", error);
@@ -238,7 +239,7 @@ export const deletePost = async (
 ): Promise<boolean> => {
   try {
     const postRef = ref(database, `bulletin_board/posts/${boardId}/${postId}`);
-    await set(postRef, null);
+    await withFirebaseTimeout(set(postRef, null));
     return true;
   } catch (error) {
     console.error("投稿の削除に失敗しました:", error);
