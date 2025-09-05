@@ -30,6 +30,7 @@ const config: Config = {
         "gradient-y": "gradient-y 15s ease infinite",
         "gradient-xy": "gradient-xy 15s ease infinite",
         sparkle: "sparkle 1.5s ease-in-out infinite",
+        "spin-reverse": "spin-reverse 1s linear infinite",
       },
       keyframes: {
         glow: {
@@ -93,6 +94,10 @@ const config: Config = {
         sparkle: {
           "0%, 100%": { opacity: "1", transform: "scale(1)" },
           "50%": { opacity: "0.5", transform: "scale(1.2)" },
+        },
+        "spin-reverse": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(-360deg)" },
         },
       },
       backgroundImage: {
