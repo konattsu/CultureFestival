@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 
 import ContentPageLayout from "../../components/ContentPageLayout";
 
+interface StickyState {
+  isSticky: boolean;
+  scrollY: number;
+}
+
 interface CipherPair {
   plain: string;
   encrypted: string;
@@ -11,38 +16,44 @@ const Cryptanalysis: React.FC = () => {
   const [sortColumn, setSortColumn] = useState<number>(0);
   const [plainText, setPlainText] = useState<string>("");
   const [encryptedText, setEncryptedText] = useState<string>("");
+  const [stickyState, setStickyState] = useState<StickyState>({
+    isSticky: false,
+    scrollY: 0,
+  });
 
   const plainTextRef = useRef<HTMLDivElement>(null);
   const encryptedTextRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   // Cipher alphabet mapping - matches the HTML page exactly
   const cipherPairs: CipherPair[] = [
-    { plain: "a", encrypted: "e" },
-    { plain: "b", encrypted: "d" },
-    { plain: "c", encrypted: "t" },
-    { plain: "d", encrypted: "h" },
-    { plain: "e", encrypted: "y" },
-    { plain: "f", encrypted: "s" },
-    { plain: "g", encrypted: "f" },
-    { plain: "h", encrypted: "l" },
-    { plain: "i", encrypted: "g" },
-    { plain: "j", encrypted: "z" },
-    { plain: "k", encrypted: "b" },
-    { plain: "l", encrypted: "r" },
-    { plain: "m", encrypted: "j" },
-    { plain: "n", encrypted: "k" },
-    { plain: "o", encrypted: "c" },
-    { plain: "p", encrypted: "i" },
-    { plain: "q", encrypted: "p" },
-    { plain: "r", encrypted: "x" },
-    { plain: "s", encrypted: "n" },
-    { plain: "t", encrypted: "q" },
-    { plain: "u", encrypted: "o" },
-    { plain: "v", encrypted: "u" },
-    { plain: "w", encrypted: "a" },
-    { plain: "x", encrypted: "v" },
-    { plain: "y", encrypted: "m" },
-    { plain: "z", encrypted: "w" },
+    { plain: "A", encrypted: "E" },
+    { plain: "B", encrypted: "D" },
+    { plain: "C", encrypted: "T" },
+    { plain: "D", encrypted: "H" },
+    { plain: "E", encrypted: "Y" },
+    { plain: "F", encrypted: "S" },
+    { plain: "G", encrypted: "F" },
+    { plain: "H", encrypted: "L" },
+    { plain: "I", encrypted: "G" },
+    { plain: "J", encrypted: "Z" },
+    { plain: "K", encrypted: "B" },
+    { plain: "L", encrypted: "R" },
+    { plain: "M", encrypted: "J" },
+    { plain: "N", encrypted: "K" },
+    { plain: "O", encrypted: "C" },
+    { plain: "P", encrypted: "I" },
+    { plain: "Q", encrypted: "P" },
+    { plain: "R", encrypted: "X" },
+    { plain: "S", encrypted: "N" },
+    { plain: "T", encrypted: "Q" },
+    { plain: "U", encrypted: "O" },
+    { plain: "V", encrypted: "U" },
+    { plain: "W", encrypted: "A" },
+    { plain: "X", encrypted: "V" },
+    { plain: "Y", encrypted: "M" },
+    { plain: "Z", encrypted: "W" },
   ];
 
   // Sort the cipher pairs based on the selected column
@@ -62,6 +73,36 @@ const Cryptanalysis: React.FC = () => {
         encryptedTextRef.current.scrollWidth;
     }
   }, [plainText, encryptedText]);
+
+  // スクロール位置に基づいて固定表示を制御
+  useEffect(() => {
+    const handleScroll = (): void => {
+      if (tableRef.current !== null && containerRef.current !== null) {
+        const tableBottom = tableRef.current.getBoundingClientRect().bottom;
+        const tableTop = tableRef.current.getBoundingClientRect().top;
+
+        // テーブルが表示領域内にある場合のみ固定表示を有効にする
+        if (tableTop < 500 && tableBottom > 400) {
+          setStickyState({
+            isSticky: true,
+            scrollY: window.scrollY,
+          });
+        } else {
+          setStickyState({
+            isSticky: false,
+            scrollY: window.scrollY,
+          });
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // 初期状態を設定
+
+    return (): void => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleSort = (columnIndex: number): void => {
     setSortColumn(columnIndex);
@@ -142,10 +183,6 @@ const Cryptanalysis: React.FC = () => {
   return (
     <ContentPageLayout title="暗号解読" svgSymbols={svgSymbols}>
       <div className="prose dark:prose-invert max-w-none">
-        <p className="rounded bg-blue-100/80 p-4 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
-          パンフレット記載の暗号解読はこのページです。無くても別の文字列を解読できます。
-        </p>
-
         <h2 className="mt-8 text-2xl font-bold">使用する暗号化方式</h2>
         <p>
           単一換字式暗号(たんいつかえじしき)という手法で暗号化された文字列を解読していただきます。
@@ -191,18 +228,21 @@ const Cryptanalysis: React.FC = () => {
           「暗号後の"e"」のどちらをクリックしても同様の動作をします。
         </p>
 
-        <div className="mt-6 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+        <div
+          ref={tableRef}
+          className="mt-6 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700"
+        >
           <table className="w-full border-collapse text-left">
             <thead>
               <tr className="bg-gray-100 dark:bg-gray-800">
                 <th
-                  className={`cursor-pointer p-3 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 0 ? "text-blue-600 dark:text-blue-400" : ""}`}
+                  className={`cursor-pointer p-4 font-sans text-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 0 ? "text-blue-600 dark:text-blue-400" : ""}`}
                   onClick={() => handleSort(0)}
                 >
                   暗号前 {sortColumn === 0 && "↓"}
                 </th>
                 <th
-                  className={`cursor-pointer p-3 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 1 ? "text-blue-600 dark:text-blue-400" : ""}`}
+                  className={`cursor-pointer p-4 font-sans text-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 ${sortColumn === 1 ? "text-blue-600 dark:text-blue-400" : ""}`}
                   onClick={() => handleSort(1)}
                 >
                   暗号後 {sortColumn === 1 && "↓"}
@@ -216,13 +256,13 @@ const Cryptanalysis: React.FC = () => {
                   className="border-t border-gray-200 dark:border-gray-700"
                 >
                   <td
-                    className="cursor-pointer p-3 font-mono hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
+                    className="cursor-pointer p-4 font-sans text-2xl hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
                     onClick={() => handleCharClick(pair)}
                   >
                     {pair.plain}
                   </td>
                   <td
-                    className="cursor-pointer p-3 font-mono hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
+                    className="cursor-pointer p-4 font-sans text-2xl hover:bg-blue-100/50 dark:hover:bg-blue-900/30"
                     onClick={() => handleCharClick(pair)}
                   >
                     {pair.encrypted}
@@ -236,13 +276,13 @@ const Cryptanalysis: React.FC = () => {
         <div className="mt-8 rounded-lg bg-gray-100 p-6 dark:bg-gray-800">
           <p className="mb-4 font-medium">以下の文字列を解読してみてください</p>
           <ul className="mb-2 space-y-2 font-mono">
-            <li>「ejy」</li>
-            <li>「jeqltrod」</li>
-            <li>「ixcfxejjgkf」</li>
+            <li>「EJY」</li>
+            <li>「JEQLTROD」</li>
+            <li>「IXCFXEJJGKF」</li>
           </ul>
         </div>
 
-        <div className="mt-8 space-y-4">
+        <div ref={containerRef} className="mt-8 space-y-4">
           <div className="flex space-x-2">
             <button
               onClick={handleDelete}
@@ -257,28 +297,37 @@ const Cryptanalysis: React.FC = () => {
               全削除
             </button>
           </div>
+        </div>
 
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              暗号前:
-            </p>
-            <div
-              ref={plainTextRef}
-              className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
-            >
-              {plainText}
+        {/* 暗号前/後のテキスト表示ボックス - スクロール位置に応じて固定表示 */}
+        <div
+          className={`space-y-4 ${stickyState.isSticky ? "fixed right-0 bottom-4 left-0 z-10 mx-auto max-w-screen-lg px-4 pb-4" : "mt-4"}`}
+        >
+          <div
+            className={`${stickyState.isSticky ? "rounded-lg bg-white/90 p-4 shadow-lg backdrop-blur-md transition-all duration-300 dark:bg-gray-800/90" : ""}`}
+          >
+            <div className="space-y-1">
+              <p className="font-medium text-gray-600 dark:text-gray-300">
+                暗号前:
+              </p>
+              <div
+                ref={plainTextRef}
+                className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono text-xl whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
+              >
+                {plainText}
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              暗号後:
-            </p>
-            <div
-              ref={encryptedTextRef}
-              className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
-            >
-              {encryptedText}
+            <div className="space-y-1">
+              <p className="font-medium text-gray-600 dark:text-gray-300">
+                暗号後:
+              </p>
+              <div
+                ref={encryptedTextRef}
+                className="h-10 overflow-x-auto rounded border border-gray-200 bg-white p-2 font-mono text-xl whitespace-nowrap dark:border-gray-700 dark:bg-gray-900"
+              >
+                {encryptedText}
+              </div>
             </div>
           </div>
         </div>
