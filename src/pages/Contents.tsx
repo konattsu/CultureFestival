@@ -143,22 +143,171 @@ const DvaIcon = (): React.JSX.Element => (
 
 const HeatExhaustionIcon = (): React.JSX.Element => (
   <svg viewBox="0 0 100 100" className="h-32 w-32">
-    <circle
-      cx="50"
-      cy="75"
-      r="15"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
+    {/* メインのやつ */}
+    <circle cx="50" cy="75" r="15" fill="#fff" stroke="#000" strokeWidth="2" />
     <path
       d="M40 64 l0 -50 q10 -10, 20 0 l0 50"
+      stroke="#000"
+      strokeWidth="2"
+      fill="#fff"
+    />
+    <path d="M45 75 l0 -55 q5 -5, 10 0 l0 55" stroke="none" fill="#f00" />
+    <circle cx="50" cy="75" r="10" fill="#f00" />
+    {/* 目盛り */}
+    <line
+      x1="65"
+      y1="20"
+      x2="80"
+      y2="20"
       stroke="currentColor"
       strokeWidth="2"
-      fill="currentColor"
     />
-    <path d="M45 72 l0 -55 q5 -5, 10 0 l0 55" stroke="#f00" fill="#f00" />
-    <circle cx="50" cy="75" r="10" fill="#f00" />
+    <line
+      x1="65"
+      y1="40"
+      x2="80"
+      y2="40"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <line
+      x1="65"
+      y1="60"
+      x2="80"
+      y2="60"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <line
+      x1="65"
+      y1="24"
+      x2="72"
+      y2="24"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="28"
+      x2="72"
+      y2="28"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="32"
+      x2="72"
+      y2="32"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="36"
+      x2="72"
+      y2="36"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="44"
+      x2="72"
+      y2="44"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="48"
+      x2="72"
+      y2="48"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="52"
+      x2="72"
+      y2="52"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="65"
+      y1="56"
+      x2="72"
+      y2="56"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    {/* 太陽 */}
+    <circle cx="20" cy="30" r="5" fill="currentColor" />
+    <line
+      x1="28"
+      y1="30"
+      x2="35"
+      y2="30"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="12"
+      y1="30"
+      x2="5"
+      y2="30"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="20"
+      y1="38"
+      x2="20"
+      y2="45"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="20"
+      y1="22"
+      x2="20"
+      y2="15"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="15"
+      y1="25"
+      x2="10"
+      y2="20"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="15"
+      y1="35"
+      x2="10"
+      y2="40"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="25"
+      y1="35"
+      x2="30"
+      y2="40"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
+    <line
+      x1="25"
+      y1="25"
+      x2="30"
+      y2="20"
+      stroke="currentColor"
+      strokeWidth="1"
+    />
   </svg>
 );
 
