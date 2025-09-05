@@ -10,7 +10,8 @@
     "format": "prettier --check './**/*.{js,ts,jsx,tsx,json,md}'",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "super-helpful-script": "eslint --fix './**/*.{js,ts,tsx}' && prettier --write './**/*.{js,ts,jsx,tsx,json,md}' && vite build && vitest run"
   },
   "homepage": "https://konattsu.github.io",
   "dependencies": {

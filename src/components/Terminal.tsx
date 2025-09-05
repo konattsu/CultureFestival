@@ -144,7 +144,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           xterm.writeln("  /contents/programming     - Programming page");
           xterm.writeln("  /contents/tech            - Tech page");
           xterm.writeln("  /contents/white           - White page");
-          xterm.writeln("  /blog        - Blog page");
+          xterm.writeln("  /magazine    - Magazine page");
           xterm.writeln("  /bulletin-board - Bulletin Board page");
           xterm.writeln("  /map         - Map page");
           break;
@@ -153,7 +153,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           const currentLocation = location.pathname;
           if (currentLocation === "/") {
             xterm.writeln(
-              "\x1b[34mcontents/\x1b[0m    \x1b[34mblog/\x1b[0m         \x1b[34mbulletin-board/\x1b[0m",
+              "\x1b[34mcontents/\x1b[0m    \x1b[34mmagazine/\x1b[0m         \x1b[34mbulletin-board/\x1b[0m",
             );
             xterm.writeln("\x1b[34mmap/\x1b[0m");
           } else if (currentLocation === "/contents") {
@@ -229,7 +229,7 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
               "/contents/programming",
               "/contents/tech",
               "/contents/white",
-              "/blog",
+              "/magazine",
               "/bulletin-board",
               "/map",
             ];
