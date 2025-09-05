@@ -2,7 +2,6 @@
   "name": "数学部 - Math Club",
   "short_name": "MATH",
   "description": "数学部の文化祭展示サイト",
-  "start_url": "/CultureFestival/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
