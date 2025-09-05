@@ -39,7 +39,7 @@ const useDevicePerformance = (): {
         isMobile || isLowEnd || prefersReducedMotion,
       ),
       animationElementCount: isMobile ? 8 : 25,
-      animationDuration: isMobile ? 0.6 : 1.2,
+      animationDuration: isMobile ? 0.3 : 1.2,
       complexAnimations: Boolean(
         !isMobile && !isLowEnd && !prefersReducedMotion,
       ),
@@ -698,7 +698,7 @@ const ContentsHero: React.FC = () => {
         >
           数学部が作成した部誌、記事、ミニゲームなどの一覧です。
           <br />
-          気になる項目をタップして、数学の世界を探索しましょう。
+          気になるコンテンツをタップして、数学の世界を体験してみましょう。
         </motion.p>
       </div>
     </div>
@@ -818,7 +818,7 @@ const contentItems: ContentItem[] = [
   {
     id: "gacha",
     title: "ガチャシミュレーション",
-    description: "確率や統計を使ったゲームのガチャをシミュレーションできます。",
+    description: "ガチャシミュレーションを体験できます。",
     icon: <GachaIcon />,
   },
   {
@@ -841,23 +841,23 @@ const contentItems: ContentItem[] = [
   },
   {
     id: "melos",
-    title: "メロスの統計",
+    title: "メロスは速い? 遅い?",
     description:
-      "『走れメロス』のメロスがどれくらいの速さで走ったのかを調べます。",
+      "『走れメロス』のメロスがどれくらいの速さで走ったのかを研究します。",
     icon: <MelosIcon />,
   },
   {
     id: "white",
-    title: "色と光の数学",
+    title: "白く見える範囲は?",
     description:
-      "RGBやHSVなどの色空間を使って、色と光の関係を数学的に考えます。",
+      "RGBやHSVなどの色空間を使って、白く見える色の範囲を数学的に考えます。",
     icon: <WhiteIcon />,
   },
   {
     id: "programming",
     title: "プログラミング",
     description:
-      "「Hello, World!」から始めて、プログラミングの基礎を学びます。",
+      "よく目にする「Hello, World!」の由来や出力方法について調べます。",
     icon: <ProgrammingIcon />,
   },
   {
