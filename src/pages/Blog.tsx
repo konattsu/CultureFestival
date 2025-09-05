@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import MarkdownPreview from "../components/MarkdownPreview";
-import { getPublishedBlogPosts, getBlogPost } from "../services/blog";
+import { getAllMagazinePosts, getBlogPost } from "../services/blog";
 
 import type { BlogPost } from "../types/blog";
 
@@ -201,7 +201,7 @@ const BlogList: React.FC = () => {
     const fetchPosts = async (): Promise<void> => {
       try {
         setLoading(true);
-        const postsData = await getPublishedBlogPosts();
+        const postsData = await getAllMagazinePosts();
         setPosts(postsData);
       } catch (error) {
         console.error("ブログ投稿の取得に失敗しました:", error);
