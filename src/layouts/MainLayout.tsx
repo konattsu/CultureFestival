@@ -286,7 +286,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
                             onClick={toggleMenu}
                           >
                             <Settings className="h-4 w-4" />
-                            <span className="text-sm">ブログCMS</span>
+                            <span className="text-sm">CMS管理</span>
                             <ChevronRight className="ml-auto h-3 w-3 transition-transform group-hover:translate-x-1" />
                           </Link>
                         </motion.div>
