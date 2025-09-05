@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 
+import { defaultKeymap } from "@codemirror/commands";
+import { markdown } from "@codemirror/lang-markdown";
+import { search, searchKeymap } from "@codemirror/search";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { EditorView, keymap } from "@codemirror/view";
+import CodeMirror from "@uiw/react-codemirror";
 import { motion } from "framer-motion";
 import { Save, X, FileText } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 import CopyButton from "./CopyButton";
 import MarkdownPreview from "./MarkdownPreview";
@@ -33,10 +40,53 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   const [status, setStatus] = useState<"published" | "draft">("draft");
   const [featured, setFeatured] = useState(false);
   const [author, setAuthor] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSavedIndicator, setShowSavedIndicator] = useState(false);
   const { adminUser } = useAuth();
+  const { theme } = useTheme();
 
   // debounce用のタイマー
   const debounceTimer = useRef<number | null>(null);
+  const savedIndicatorTimer = useRef<number | null>(null);
+
+  // CodeMirror extensions
+  const extensions = [
+    markdown(),
+    search({ top: true }),
+    keymap.of([...defaultKeymap, ...searchKeymap]),
+    EditorView.theme({
+      "&": {
+        fontSize: "14px",
+        fontFamily:
+          "ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
+      },
+      ".cm-editor": {
+        height: "400px", // 20行固定の高さ
+        maxHeight: "400px", // 最大高さも制限
+      },
+      ".cm-content": {
+        padding: "16px",
+        backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+        color: theme === "dark" ? "#f9fafb" : "#111827",
+      },
+      ".cm-scroller": {
+        fontFamily: "inherit",
+        backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff",
+        height: "100%",
+        maxHeight: "400px",
+        overflow: "auto",
+      },
+      ".cm-focused": {
+        outline: "none",
+      },
+      ".cm-line": {
+        color: theme === "dark" ? "#f9fafb" : "#111827",
+      },
+      ".cm-cursor": {
+        borderLeftColor: theme === "dark" ? "#60a5fa" : "#2563eb",
+      },
+    }),
+  ];
 
   // localStorageのキー
   const LOCAL_STORAGE_KEY = "post-editor-draft";
@@ -53,12 +103,28 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       featured: boolean;
     }) => {
       try {
+        setIsSaving(true);
         window.localStorage.setItem(
           LOCAL_STORAGE_KEY,
           JSON.stringify(draftData),
         );
+
+        // 保存完了アニメーション
+        setTimeout(() => {
+          setIsSaving(false);
+          setShowSavedIndicator(true);
+
+          // 保存完了表示を3秒後に非表示
+          if (savedIndicatorTimer.current !== null) {
+            clearTimeout(savedIndicatorTimer.current);
+          }
+          savedIndicatorTimer.current = window.setTimeout(() => {
+            setShowSavedIndicator(false);
+          }, 3000);
+        }, 500);
       } catch (error) {
         console.error("Failed to save draft to localStorage:", error);
+        setIsSaving(false);
       }
     },
     [],
@@ -191,9 +257,17 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
 
   // モーダルが閉じられるときにタイマーをクリア
   useEffect(() => {
-    if (!isOpen && debounceTimer.current !== null) {
-      clearTimeout(debounceTimer.current);
-      debounceTimer.current = null;
+    if (!isOpen) {
+      if (debounceTimer.current !== null) {
+        clearTimeout(debounceTimer.current);
+        debounceTimer.current = null;
+      }
+      if (savedIndicatorTimer.current !== null) {
+        clearTimeout(savedIndicatorTimer.current);
+        savedIndicatorTimer.current = null;
+      }
+      setIsSaving(false);
+      setShowSavedIndicator(false);
     }
   }, [isOpen]);
 
@@ -244,11 +318,41 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {editingPost !== null && editingPost !== undefined
-              ? "記事を編集"
-              : "新規記事作成"}
-          </h2>
+          <div className="flex items-center space-x-4">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {editingPost !== null && editingPost !== undefined
+                ? "記事を編集"
+                : "新規記事作成"}
+            </h2>
+
+            {/* 保存状態インジケーター */}
+            <div className="flex items-center space-x-2">
+              {isSaving && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center space-x-2 text-sm text-blue-600 dark:text-blue-400"
+                >
+                  <div className="h-3 w-3 animate-spin rounded-full border-2 border-blue-600 border-t-transparent dark:border-blue-400"></div>
+                  <span>保存中...</span>
+                </motion.div>
+              )}
+
+              {showSavedIndicator && !isSaving && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="flex items-center space-x-2 text-sm text-green-600 dark:text-green-400"
+                >
+                  <div className="h-3 w-3 rounded-full bg-green-600 dark:bg-green-400"></div>
+                  <span>下書き保存済み</span>
+                </motion.div>
+              )}
+            </div>
+          </div>
+
           <div className="flex items-center space-x-3">
             <button
               onClick={onClose}
@@ -267,7 +371,7 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
             className="flex w-full flex-1 overflow-hidden"
           >
             {/* 左側: フォーム */}
-            <div className="w-1/2 overflow-y-auto border-r border-gray-200 p-6 dark:border-gray-700">
+            <div className="w-1/2 overflow-y-auto border-r border-gray-200 p-6 pb-12 dark:border-gray-700">
               <div className="flex h-full flex-col space-y-6">
                 {/* Title */}
                 <div>
@@ -348,33 +452,27 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
                       />
                     </p>
                   </label>
-                  <textarea
-                    id="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={20}
-                    className="mt-1 block w-full flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                    placeholder="記事の本文を入力...
-
-## Markdownサンプル
-- **太字** *斜体*
-- `code`
-- [リンク](https://example.com)
-
-## 数式サンプル (KaTeX)
-$E = mc^2$
-
-$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$
-
-## Mermaidサンプル
-\`\`\`mermaid
-graph TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Action 1]
-    B -->|No| D[Action 2]
-\`\`\`"
-                    required
-                  />
+                  <div className="mt-1 flex-1 rounded-lg border border-gray-300 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 dark:border-gray-600 dark:bg-gray-800">
+                    <CodeMirror
+                      value={content}
+                      onChange={(value) => setContent(value)}
+                      extensions={extensions}
+                      theme={theme === "dark" ? [oneDark] : "light"}
+                      height="400px"
+                      basicSetup={{
+                        lineNumbers: true,
+                        foldGutter: true,
+                        dropCursor: false,
+                        allowMultipleSelections: false,
+                        indentOnInput: true,
+                        bracketMatching: true,
+                        closeBrackets: true,
+                        autocompletion: true,
+                        highlightSelectionMatches: true,
+                        searchKeymap: true,
+                      }}
+                    />
+                  </div>
                   <p className="mt-1 text-right text-xs text-gray-500">
                     {content.length} 文字
                   </p>

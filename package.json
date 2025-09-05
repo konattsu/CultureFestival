@@ -14,7 +14,10 @@
   },
   "homepage": "https://konattsu.github.io",
   "dependencies": {
+    "@codemirror/commands": "^6.8.1",
+    "@codemirror/lang-markdown": "^6.3.4",
     "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/search": "^6.5.11",
     "@codemirror/state": "^6.4.1",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.34.1",
