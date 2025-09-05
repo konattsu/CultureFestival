@@ -730,8 +730,8 @@ const ContentCard: React.FC<{
         opacity: 1,
         rotateX: 0,
         scale: 1,
-        duration: performance.isMobile ? 0.3 : 0.8,
-        delay: performance.isMobile ? index * 0.05 : index * 0.1,
+        duration: performance.isMobile ? 0.1 : 0.4,
+        delay: performance.isMobile ? index * 0.03 : index * 0.05,
         ease: performance.isMobile ? "power2.out" : "back.out(1.7)",
         scrollTrigger: {
           trigger: card,
