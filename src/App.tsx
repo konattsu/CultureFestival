@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 
 import { Routes, Route } from "react-router";
 
+import LoadingSpinner from "./components/LoadingSpinner.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { SettingsProvider } from "./context/SettingsContext.tsx";
@@ -26,7 +27,7 @@ const App: React.FC = () => {
       <AuthProvider>
         <SettingsProvider>
           <ScrollToTop />
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<Home />} />
