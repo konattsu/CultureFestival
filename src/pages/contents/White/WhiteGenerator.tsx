@@ -53,7 +53,7 @@ const WhiteGenerator: React.FC<WhiteGeneratorProps> = ({
             onClick={onGenerateWhite}
             className="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
           >
-            別の白色
+            別の白色を生成
           </button>
 
           <a

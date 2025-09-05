@@ -619,8 +619,7 @@ const Home: React.FC = () => {
               <p className="text-lg leading-relaxed text-gray-300">
                 パズル体験コーナーや、数学に関する動画の上映もご用意しています。
                 <br />
-                <span className="text-neon-green">冷房完備</span>
-                の快適な空間で、数学の楽しさをぜひ体感してください。
+                冷房完備の快適な空間で、数学, ITをお楽しみください
               </p>
             </div>
           </motion.div>
