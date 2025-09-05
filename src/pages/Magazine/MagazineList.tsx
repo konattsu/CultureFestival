@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Tag, Search, BookOpen } from "lucide-react";
+import seedrandom from "seedrandom";
 
 import { getMagazinePosts } from "./services";
 
@@ -19,16 +20,30 @@ const MagazineList: React.FC = () => {
       try {
         setLoading(true);
         const postsData = await getMagazinePosts();
-        // 配列をランダムに並び替え
-        const shuffled = postsData.sort(() => Math.random() - 0.5);
-        setPosts(shuffled);
+        // ローカルストレージからseed取得・保存
+        let seedStr = window.localStorage.getItem("magazine-seed");
+        if (seedStr === null) {
+          seedStr = Date.now().toString();
+          window.localStorage.setItem("magazine-seed", seedStr);
+        }
+        const seed = seedStr;
+        // 外部ライブラリseedrandomでシャッフル
+        const rng = seedrandom(seed);
+        const shuffleArray = (array: MagazinePost[]): MagazinePost[] => {
+          const arr = array.slice();
+          for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+          }
+          return arr;
+        };
+        setPosts(shuffleArray(postsData));
       } catch (error) {
         console.error("部誌投稿の取得に失敗しました:", error);
       } finally {
         setLoading(false);
       }
     };
-
     void fetchPosts();
   }, []);
 
@@ -142,13 +157,13 @@ const MagazineList: React.FC = () => {
                     className="group block h-full"
                   >
                     <div className="h-full rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:border-blue-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600">
-                      <h3 className="mb-3 text-lg font-semibold text-gray-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                      <h3 className="mb-3 text-lg font-semibold text-gray-900 group-hover:text-blue-600 md:text-xl lg:text-2xl dark:text-white dark:group-hover:text-blue-400">
                         {post.title}
                       </h3>
 
                       {post.summary !== undefined &&
                         post.summary.length > 0 && (
-                          <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                          <p className="mb-4 text-sm text-gray-600 md:text-base lg:text-lg dark:text-gray-400">
                             {post.summary.length > 80
                               ? `${post.summary.slice(0, 80)}...`
                               : post.summary}

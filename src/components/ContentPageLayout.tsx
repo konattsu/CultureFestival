@@ -26,7 +26,7 @@ const ContentPageLayout: React.FC<ContentPageLayoutProps> = ({
       {svgSymbols !== null && <div className="hidden">{svgSymbols}</div>}
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold">{title}</h1>
+        <h1 className="mt-8 mb-14 text-center text-3xl font-bold">{title}</h1>
         <div className="max-w-none leading-7">{children}</div>
       </main>
     </div>

@@ -49,11 +49,11 @@ const GistDetails: React.FC<GistDetailsProps> = ({
             かなり無理やりですが、ソースは
             <a
               className="ml-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-              href="https://gist.github.com/konattsu/e56eff220bd0a364a0f79ea91b666fc5"
+              href="https://gist.github.com/konattsu/00c6195f3ee3a2df83e03311e6b64dbb"
               target="_blank"
               rel="noreferrer"
             >
-              ここ
+              ここ. (gistで開きます)
             </a>
             。
           </p>
