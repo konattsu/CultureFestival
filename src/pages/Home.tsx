@@ -445,11 +445,11 @@ const HeroSection: React.FC = () => {
           </Link>
 
           <Link
-            to="/blog"
+            to="/magazine"
             className="border-neon-yellow hover:bg-neon-yellow flex items-center rounded-full border-2 px-8 py-4 text-lg font-semibold transition-all duration-300 hover:text-black"
           >
             <BookOpen className="mr-2 h-5 w-5" />
-            ブログを読む
+            部誌を読む
           </Link>
 
           <Link

@@ -1,0 +1,359 @@
+/* Magazine.css - 部誌ページ専用のスタイル */
+
+/* コンテンツコンテナ */
+.magazine-content-container {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(229 231 235);
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark .magazine-content-container {
+  border-color: rgb(75 85 99);
+  background-color: rgb(31 41 55);
+}
+
+/* マガジン記事のMarkdownスタイル */
+.magazine-content {
+  color: rgb(17 24 39);
+  line-height: 1.8;
+  font-family:
+    "Inter", "Hiragino Sans", "Yu Gothic UI", "Segoe UI", "Helvetica Neue",
+    Arial, "Noto Sans JP", sans-serif;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.dark .magazine-content {
+  color: rgb(229 231 235);
+}
+
+/* マガジン記事の見出しスタイル */
+.magazine-content h1 {
+  font-size: clamp(1.5rem, 4vw, 1.875rem);
+  font-weight: 700;
+  color: rgb(0 0 0);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgb(59 130 246);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content h1 {
+  color: rgb(243 244 246);
+}
+
+.magazine-content h2 {
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem);
+  font-weight: 600;
+  color: rgb(0 0 0);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid rgb(209 213 219);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content h2 {
+  color: rgb(243 244 246);
+  border-bottom-color: rgb(75 85 99);
+}
+
+.magazine-content h3 {
+  font-size: clamp(1.125rem, 3vw, 1.25rem);
+  font-weight: 500;
+  color: rgb(0 0 0);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content h3 {
+  color: rgb(243 244 246);
+}
+
+.magazine-content h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: rgb(0 0 0);
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.dark .magazine-content h4 {
+  color: rgb(243 244 246);
+}
+
+.magazine-content h5,
+.magazine-content h6 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgb(0 0 0);
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.dark .magazine-content h5,
+.dark .magazine-content h6 {
+  color: rgb(243 244 246);
+}
+
+/* 段落とテキスト */
+.magazine-content p {
+  color: rgb(17 24 39);
+  margin: 1rem 0;
+  line-height: 1.625;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.dark .magazine-content p {
+  color: rgb(229 231 235);
+}
+
+.magazine-content strong {
+  font-weight: 600;
+  color: rgb(0 0 0);
+}
+
+.dark .magazine-content strong {
+  color: rgb(243 244 246);
+}
+
+.magazine-content em {
+  font-style: italic;
+}
+
+/* リストスタイル */
+.magazine-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+  color: rgb(17 24 39);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content ul {
+  color: rgb(229 231 235);
+}
+
+.magazine-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+  color: rgb(17 24 39);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content ol {
+  color: rgb(229 231 235);
+}
+
+.magazine-content li {
+  line-height: 1.625;
+  margin-bottom: 0.25rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.magazine-content li::marker {
+  color: rgb(59 130 246);
+}
+
+/* 引用ブロック */
+.magazine-content blockquote {
+  margin: 1rem 0;
+  border-left: 4px solid rgb(59 130 246);
+  background-color: rgb(239 246 255);
+  padding: 0.5rem 1rem;
+  color: rgb(17 24 39);
+  font-style: italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.dark .magazine-content blockquote {
+  background-color: rgba(59 130 246 / 0.2);
+  color: rgb(229 231 235);
+}
+
+.magazine-content blockquote p {
+  margin: 0.5rem 0;
+}
+
+/* コードブロックとインラインコード */
+.magazine-content code {
+  background-color: rgb(243 244 246);
+  color: rgb(0 0 0);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  font-family:
+    "Fira Code", "JetBrains Mono", "SF Mono", Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.dark .magazine-content code {
+  background-color: rgb(31 41 55);
+  color: rgb(243 244 246);
+}
+
+.magazine-content pre {
+  background-color: rgb(17 24 39);
+  color: rgb(243 244 246);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.magazine-content pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+/* テーブル */
+.magazine-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+.magazine-content th {
+  background-color: rgb(243 244 246);
+  border: 1px solid rgb(209 213 219);
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: rgb(0 0 0);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.dark .magazine-content th {
+  background-color: rgb(31 41 55);
+  border-color: rgb(75 85 99);
+  color: rgb(243 244 246);
+}
+
+.magazine-content td {
+  border: 1px solid rgb(209 213 219);
+  padding: 0.75rem;
+  color: rgb(17 24 39);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.dark .magazine-content td {
+  border-color: rgb(75 85 99);
+  color: rgb(229 231 235);
+}
+
+.magazine-content tr:nth-child(even) {
+  background-color: rgb(249 250 251);
+}
+
+.dark .magazine-content tr:nth-child(even) {
+  background-color: rgba(31 41 55 / 0.5);
+}
+
+/* リンク */
+.magazine-content a {
+  color: rgb(37 99 235);
+  text-decoration: underline;
+}
+
+.dark .magazine-content a {
+  color: rgb(96 165 250);
+}
+
+.magazine-content a:hover {
+  color: rgb(29 78 216);
+}
+
+.dark .magazine-content a:hover {
+  color: rgb(147 197 253);
+}
+
+/* 水平線 */
+.magazine-content hr {
+  border-top: 1px solid rgb(209 213 219);
+  margin: 1.5rem 0;
+}
+
+.dark .magazine-content hr {
+  border-top-color: rgb(75 85 99);
+}
+
+/* 画像 */
+.magazine-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto;
+  display: block;
+}
+
+/* Mermaidチャート用のスタイル */
+.magazine-content .mermaid-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(229 231 235);
+}
+
+.dark .magazine-content .mermaid-container {
+  background-color: rgb(31 41 55);
+  border-color: rgb(75 85 99);
+}
+
+/* KaTeX数式用のスタイル */
+.magazine-content .katex {
+  color: rgb(0 0 0);
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.dark .magazine-content .katex {
+  color: rgb(243 244 246);
+}
+
+.magazine-content .katex-display {
+  margin: 1rem 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
