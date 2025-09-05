@@ -135,18 +135,27 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           xterm.writeln("\x1b[36mNavigation paths:\x1b[0m");
           xterm.writeln("  /            - Home page");
           xterm.writeln("  /contents    - Contents page");
-          xterm.writeln("  /contents/cryptanalysis - Cryptanalysis page");
-          xterm.writeln("  /contents/dva           - DVA page");
-          xterm.writeln("  /contents/gacha         - Gacha page");
+          xterm.writeln("  /contents/cryptanalysis   - Cryptanalysis page");
+          xterm.writeln("  /contents/dva             - DVA page");
+          xterm.writeln("  /contents/gacha           - Gacha page");
           xterm.writeln("  /contents/heat-exhaustion - Heat Exhaustion page");
-          xterm.writeln("  /contents/melos         - Melos page");
+          xterm.writeln("  /contents/melos           - Melos page");
+          xterm.writeln("  /contents/notebook        - Notebook page");
+          xterm.writeln("  /contents/programming     - Programming page");
+          xterm.writeln("  /contents/tech            - Tech page");
+          xterm.writeln("  /contents/white           - White page");
+          xterm.writeln("  /blog        - Blog page");
+          xterm.writeln("  /bulletin-board - Bulletin Board page");
           xterm.writeln("  /map         - Map page");
           break;
 
         case "ls": {
           const currentLocation = location.pathname;
           if (currentLocation === "/") {
-            xterm.writeln("\x1b[34mcontents/\x1b[0m    \x1b[34mmap/\x1b[0m");
+            xterm.writeln(
+              "\x1b[34mcontents/\x1b[0m    \x1b[34mblog/\x1b[0m         \x1b[34mbulletin-board/\x1b[0m",
+            );
+            xterm.writeln("\x1b[34mmap/\x1b[0m");
           } else if (currentLocation === "/contents") {
             xterm.writeln(
               "\x1b[32mcryptanalysis\x1b[0m    \x1b[32mdva\x1b[0m          \x1b[32mgacha\x1b[0m",
@@ -220,6 +229,8 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
               "/contents/programming",
               "/contents/tech",
               "/contents/white",
+              "/blog",
+              "/bulletin-board",
               "/map",
             ];
 
@@ -264,11 +275,18 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
                 );
                 xterm.writeln("Welcome to our interactive exhibition!");
                 xterm.writeln("Explore various mathematical topics and enjoy!");
+                xterm.writeln("New features: Blog and Bulletin Board!");
                 break;
               case "about.txt":
                 xterm.writeln("\x1b[36m=== About Math Club ===\x1b[0m");
                 xterm.writeln("We are passionate about mathematics and");
                 xterm.writeln("love sharing our knowledge with everyone!");
+                xterm.writeln("Check out our blog for latest updates!");
+                break;
+              case "contact.txt":
+                xterm.writeln("\x1b[36m=== Contact Information ===\x1b[0m");
+                xterm.writeln("Visit us at 3F Science Room 2");
+                xterm.writeln("Follow our updates on the bulletin board!");
                 break;
               default:
                 xterm.writeln(
@@ -286,7 +304,13 @@ const Terminal: React.FC<TerminalProps> = ({ isOpen, onClose }) => {
           xterm.writeln("│   ├── \x1b[32mdva\x1b[0m");
           xterm.writeln("│   ├── \x1b[32mgacha\x1b[0m");
           xterm.writeln("│   ├── \x1b[32mheat-exhaustion\x1b[0m");
-          xterm.writeln("│   └── \x1b[32mmelos\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mmelos\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mnotebook\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mprogramming\x1b[0m");
+          xterm.writeln("│   ├── \x1b[32mtech\x1b[0m");
+          xterm.writeln("│   └── \x1b[32mwhite\x1b[0m");
+          xterm.writeln("├── \x1b[34mblog/\x1b[0m");
+          xterm.writeln("├── \x1b[34mbulletin-board/\x1b[0m");
           xterm.writeln("├── \x1b[34mmap/\x1b[0m");
           xterm.writeln("├── \x1b[37mreadme.txt\x1b[0m");
           xterm.writeln("├── \x1b[37mabout.txt\x1b[0m");
