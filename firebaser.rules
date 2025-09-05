@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "bulletin_board": {
+      "boards": {
+        ".read": true,
+        "$board_id": {
+          "post_count": {
+            ".write": true
+          },
+          "last_updated": {
+            ".write": true
+          },
+          "$other": {
+            ".write": "auth != null"
+          }
+        }
+      },
+      "posts": {
+        ".read": true,
+        "$board_id": {
+          "$post_id": {
+            ".write": true
+          }
+        }
+      },
+      "metadata": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "admin": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "blog": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}

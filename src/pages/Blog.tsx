@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   Calendar,
-  User,
   Tag,
   Clock,
   Star,
@@ -132,10 +131,6 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({ postId }) => {
 
             {/* Meta Information */}
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-              <div className="flex items-center space-x-2">
-                <User className="h-4 w-4" />
-                <span>{post.author}</span>
-              </div>
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
                 <span>
@@ -335,10 +330,6 @@ const BlogList: React.FC = () => {
                         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                           <div className="flex items-center space-x-4">
                             <div className="flex items-center space-x-1">
-                              <User className="h-4 w-4" />
-                              <span>{post.author}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
                               <Calendar className="h-4 w-4" />
                               <span>
                                 {new Date(post.created_at).toLocaleDateString(
@@ -443,12 +434,6 @@ const BlogList: React.FC = () => {
                       )}
 
                       <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center space-x-1">
-                            <User className="h-4 w-4" />
-                            <span>{post.author}</span>
-                          </div>
-                        </div>
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4" />
                           <span>
