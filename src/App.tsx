@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 
 import { Routes, Route } from "react-router";
 
+import ErrorBoundary from "./components/ErrorBoundary";
 import LoadingSpinner from "./components/LoadingSpinner.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
@@ -13,7 +14,7 @@ import MainLayout from "./layouts/MainLayout.tsx";
 const Home = lazy(() => import("./pages/Home.tsx"));
 const Map = lazy(() => import("./pages/Map.tsx"));
 const BulletinBoard = lazy(() => import("./pages/BulletinBoard.tsx"));
-const Blog = lazy(() => import("./pages/Blog.tsx"));
+const Magazine = lazy(() => import("./pages/Magazine.tsx"));
 const CMSSelection = lazy(() => import("./pages/CMSSelection.tsx"));
 const BlogCMS = lazy(() => import("./pages/BlogCMS.tsx"));
 const BulletinCMS = lazy(() => import("./pages/BulletinCMS.tsx"));
@@ -23,29 +24,31 @@ const ContentsRoutes = lazy(() => import("./pages/ContentsRoutes.tsx"));
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <SettingsProvider>
-          <ScrollToTop />
-          <Suspense fallback={<LoadingSpinner />}>
-            <Routes>
-              <Route path="/" element={<MainLayout />}>
-                <Route index element={<Home />} />
-                <Route path="contents/*" element={<ContentsRoutes />} />
-                <Route path="blog" element={<Blog />} />
-                <Route path="bulletin-board" element={<BulletinBoard />} />
-                <Route path="cms" element={<CMSSelection />} />
-                <Route path="blog-cms" element={<BlogCMS />} />
-                <Route path="bulletin-cms" element={<BulletinCMS />} />
-                <Route path="admin-login" element={<AdminLogin />} />
-                <Route path="map" element={<Map />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-            </Routes>
-          </Suspense>
-        </SettingsProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <SettingsProvider>
+            <ScrollToTop />
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<Home />} />
+                  <Route path="contents/*" element={<ContentsRoutes />} />
+                  <Route path="magazine" element={<Magazine />} />
+                  <Route path="bulletin-board" element={<BulletinBoard />} />
+                  <Route path="cms" element={<CMSSelection />} />
+                  <Route path="blog-cms" element={<BlogCMS />} />
+                  <Route path="bulletin-cms" element={<BulletinCMS />} />
+                  <Route path="admin-login" element={<AdminLogin />} />
+                  <Route path="map" element={<Map />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </SettingsProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

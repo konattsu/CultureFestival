@@ -133,8 +133,8 @@ const NavMenu: React.FC<NavMenuProps> = ({ menuOpen, toggleMenu }) => {
       icon: <Grid3X3 className="h-5 w-5" />,
     },
     {
-      to: "/blog",
-      label: "ブログ",
+      to: "/magazine",
+      label: "部誌",
       icon: <BookOpen className="h-5 w-5" />,
     },
     {
