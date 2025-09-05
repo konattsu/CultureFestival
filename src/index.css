@@ -38,13 +38,13 @@
   }
 }
 
-
 /* markdown.css - GitHub風Markdownスタイル（ダーク背景対応） */
 
 .markdown-body {
   color: var(--markdown-foreground, #d4d4d4);
   background: var(--markdown-background, #18181b);
-  font-family: 'Segoe UI', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+  font-family:
+    "Segoe UI", "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
   font-size: 1rem;
   line-height: 1.7;
   word-break: break-word;
@@ -63,9 +63,19 @@
   font-weight: 700;
 }
 
-.markdown-body h1 { font-size: 2em; border-bottom: 1px solid #333; padding-bottom: 0.3em; }
-.markdown-body h2 { font-size: 1.5em; border-bottom: 1px solid #333; padding-bottom: 0.3em; }
-.markdown-body h3 { font-size: 1.2em; }
+.markdown-body h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.3em;
+}
+.markdown-body h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.3em;
+}
+.markdown-body h3 {
+  font-size: 1.2em;
+}
 
 .markdown-body p {
   margin: 1em 0;
