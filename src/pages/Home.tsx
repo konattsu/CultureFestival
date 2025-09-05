@@ -36,6 +36,13 @@ const FloatingCodeElements: React.FC = () => {
       typeof window !== "undefined" && window.innerWidth < 768;
 
     const codeSnippets = [
+      "git rebase -i origin/main",
+      "file_ptr",
+      "regedit",
+      "wsl",
+      "clg",
+      "Arc<Mutex<T>>",
+      "Rc<RefCell<T>>",
       "∫f(x)dx",
       "Σn²",
       "π²/6",
@@ -361,29 +368,6 @@ const HeroSection: React.FC = () => {
         animate={{ scale: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}
       />
-
-      {/* Geometric shapes */}
-      {/* <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="border-neon-blue absolute top-20 left-20 h-32 w-32 border-2 opacity-50"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        >
-          <Triangle className="text-neon-blue h-full w-full" />
-        </motion.div>
-        <motion.div
-          className="border-neon-pink absolute right-20 bottom-20 h-24 w-24 border-2 opacity-60"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        >
-          <Star className="text-neon-pink h-full w-full" />
-        </motion.div>
-        <motion.div
-          className="bg-neon-green absolute top-1/2 left-10 h-16 w-16 rounded-full opacity-40"
-          animate={{ y: [-20, 20] }}
-          transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-        />
-      </div> */}
 
       <FloatingCodeElements />
       <FloatingParticles />
