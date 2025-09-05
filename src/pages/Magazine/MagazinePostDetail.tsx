@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Tag, Clock, BookOpen } from "lucide-react";
 
 import MarkdownPreview from "../../components/MarkdownPreview";
-import { getMagazinePost } from "../../services/magazine";
 
-import type { MagazinePost } from "../../types/magazine";
+import { getMagazinePost } from "./services";
+
+import type { MagazinePost } from "./types";
 
 // Magazine専用のCSSをインポート
 import "./Magazine.css";
@@ -27,6 +28,8 @@ const MagazinePostDetail: React.FC<MagazinePostDetailProps> = ({ postId }) => {
         setLoading(true);
         const postData = await getMagazinePost(postId);
         setPost(postData);
+        // 部誌記事を読み込んだ後に画面を一番上にスクロール
+        window.scrollTo(0, 0);
       } catch (error) {
         console.error("部誌投稿の取得に失敗しました:", error);
       } finally {

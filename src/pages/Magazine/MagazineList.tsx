@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Tag, Search, BookOpen } from "lucide-react";
 
-import { getAllMagazinePosts } from "../../services/magazine";
+import { getMagazinePosts } from "./services";
 
-import type { MagazinePost } from "../../types/magazine";
+import type { MagazinePost } from "./types";
 
 // 部誌一覧コンポーネント
 const MagazineList: React.FC = () => {
@@ -18,8 +18,10 @@ const MagazineList: React.FC = () => {
     const fetchPosts = async (): Promise<void> => {
       try {
         setLoading(true);
-        const postsData = await getAllMagazinePosts();
-        setPosts(postsData);
+        const postsData = await getMagazinePosts();
+        // 配列をランダムに並び替え
+        const shuffled = postsData.sort(() => Math.random() - 0.5);
+        setPosts(shuffled);
       } catch (error) {
         console.error("部誌投稿の取得に失敗しました:", error);
       } finally {
