@@ -21,6 +21,7 @@ declare global {
 const Programming: React.FC = () => {
   const [code, setCode] = useState(`print("Hello, world!")`);
   const [output, setOutput] = useState("");
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -117,6 +118,7 @@ const Programming: React.FC = () => {
 
     setIsRunning(true);
     setOutput("コードを解析中...");
+    setImageSrc(null);
 
     try {
       // 必要なパッケージを検出
@@ -127,34 +129,61 @@ const Programming: React.FC = () => {
         setOutput(
           `パッケージをインストール中: ${requiredPackages.join(", ")}...`,
         );
-
-        // パッケージを一括インストール
         await pyodideRef.current.loadPackage(requiredPackages);
         setOutput("パッケージのインストールが完了しました。コードを実行中...");
       }
 
-      // Capture stdout
+      // 標準出力キャプチャ
       pyodideRef.current.runPython(`
 import sys
 import io
 sys.stdout = io.StringIO()
 `);
 
-      // Run user code
+      // Matplotlib画像キャプチャ用コード
+      // const matplotlibCode = `import matplotlib.pyplot as plt\n`;
+      const isMatplotlibUsed =
+        code.includes("plt.") || code.includes("matplotlib");
+
+      // 実行コード
       pyodideRef.current.runPython(code);
 
-      // Get output
+      // Matplotlib画像取得
+      let imgData: string | null = null;
+      if (isMatplotlibUsed) {
+        try {
+          pyodideRef.current.runPython(`import io, base64`);
+          pyodideRef.current.runPython(`buf = io.BytesIO()`);
+          pyodideRef.current.runPython(`plt.savefig(buf, format='png')`);
+          pyodideRef.current.runPython(`buf.seek(0)`);
+          const imgBase64 = pyodideRef.current.runPython(
+            `base64.b64encode(buf.read()).decode('utf-8')`,
+          );
+          if (typeof imgBase64 === "string" && imgBase64.length > 0) {
+            imgData = `data:image/png;base64,${imgBase64}`;
+            setImageSrc(imgData);
+          }
+          pyodideRef.current.runPython(`plt.close('all')`);
+        } catch (e) {
+          // 画像取得失敗時は無視
+        }
+      }
+
+      // 標準出力取得
       const result = pyodideRef.current.runPython("sys.stdout.getvalue()");
       const outputText =
         typeof result === "string" ? result : String(result ?? "");
       setOutput(
         outputText.length > 0
           ? outputText
-          : "実行が完了しました（出力はありません）",
+          : imgData !== null
+            ? "グラフ画像を出力しました"
+            : "実行が完了しました（出力はありません）",
       );
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setOutput(`エラー: ${errorMessage}`);
+      setImageSrc(null);
     } finally {
       setIsRunning(false);
       setInstallingPackages([]);
@@ -163,11 +192,12 @@ sys.stdout = io.StringIO()
 
   const clearOutput = (): void => {
     setOutput("");
+    setImageSrc(null);
   };
 
   // プリセットサンプルコード
   const sampleCodes = {
-    "Hello World": `print("Hello, world!")`,
+    "Hello World": `print("hello, world")`,
     NumPy基本: `import numpy as np
 
 # NumPyの基本操作
@@ -192,19 +222,13 @@ plt.legend()
 plt.grid(True)
 plt.show()`,
     "Pandas データ処理": `import pandas as pd
-import numpy as np
+import pandas as pd
 
-# データフレーム作成
-data = {
-    'name': ['Alice', 'Bob', 'Charlie'],
-    'age': [25, 30, 35],
-    'city': ['Tokyo', 'Osaka', 'Kyoto']
-}
+# データフレーム生成
+data = [('Takana', 0)] * 10000 + [('Nakashima', 12000)]
 
-df = pd.DataFrame(data)
-print("データフレーム:")
-print(df)
-print(f"\\n平均年齢: {df['age'].mean()}")`,
+df = pd.DataFrame(data, columns=['name', 'apple_count'])
+print(f"平均リンゴ所持数: {df['apple_count'].mean()}")`,
   };
 
   const loadSampleCode = (sampleName: keyof typeof sampleCodes): void => {
@@ -241,6 +265,15 @@ print(f"\\n平均年齢: {df['age'].mean()}")`,
         </div>
 
         <h2>Python で試してみよう</h2>
+        <p>Pythonでは先ほどの"Hello, world"の出力を以下のように記述します</p>
+        <div className="not-prose my-6">
+          <div className="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
+            <pre className="text-sm text-gray-900 dark:text-gray-100">
+              <code>{`print("hello, world")`}</code>
+            </pre>
+          </div>
+        </div>
+
         <p>
           下記のPython実行環境で、Hello
           Worldを出力してみましょう。コードを編集して実行ボタンをクリックしてください。
@@ -258,7 +291,7 @@ print(f"\\n平均年齢: {df['age'].mean()}")`,
                 onClick={() =>
                   loadSampleCode(sampleName as keyof typeof sampleCodes)
                 }
-                className="rounded bg-green-500 px-3 py-1 text-sm text-white hover:bg-green-600"
+                className="rounded bg-green-700 px-3 py-1 text-sm text-white hover:bg-green-600"
               >
                 {sampleName}
               </button>
@@ -331,11 +364,24 @@ print(f"\\n平均年齢: {df['age'].mean()}")`,
                     <div className="text-red-400">{error}</div>
                   )}
                   {!isLoading && error === null && (
-                    <pre className="whitespace-pre-wrap">
-                      {output.length > 0
-                        ? output
-                        : "コードを実行すると結果がここに表示されます"}
-                    </pre>
+                    <>
+                      {imageSrc !== null && (
+                        <div className="mb-4 flex justify-center">
+                          <img
+                            src={imageSrc}
+                            alt="Matplotlibグラフ"
+                            style={{ maxHeight: "220px", background: "#fff" }}
+                          />
+                        </div>
+                      )}
+                      <pre className="whitespace-pre-wrap">
+                        {output.length > 0
+                          ? output
+                          : imageSrc !== null
+                            ? "グラフ画像を出力しました"
+                            : "コードを実行すると結果がここに表示されます"}
+                      </pre>
+                    </>
                   )}
                 </div>
               </div>
