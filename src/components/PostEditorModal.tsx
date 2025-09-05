@@ -5,6 +5,7 @@ import { Save, X, FileText } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
+import CopyButton from "./CopyButton";
 import MarkdownPreview from "./MarkdownPreview";
 
 import type { BlogPost, NewBlogPost } from "../types/blog";
@@ -315,6 +316,37 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
                     <span className="text-xs text-gray-500">
                       (Markdown, KaTeX, Mermaid対応)
                     </span>
+                    <p className="mt-1 flex items-center space-x-1 text-sm text-gray-500">
+                      <span className="text-xs text-gray-400">|</span>
+                      サンプルをコピー
+                      <CopyButton
+                        content={[
+                          "## Markdownサンプル",
+                          "- **太字** *斜体*",
+                          "- `code`",
+                          "- [リンク](https://example.com)",
+                          "",
+                          "## 数式サンプル (KaTeX)",
+                          "$E = mc^2$",
+                          "",
+                          "$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$",
+                          "",
+                          "## Mermaidサンプル",
+                          "```mermaid",
+                          "graph TD",
+                          "    A[Start] --> B{Decision}",
+                          "    B -->|Yes| C[Action 1]",
+                          "    B -->|No| D[Action 2]",
+                          "```",
+                          "## コードブロックサンプル",
+                          "```ruby",
+                          "def hello_world",
+                          "  puts 'Hello, world!'",
+                          "end",
+                          "```",
+                        ].join("\n")}
+                      />
+                    </p>
                   </label>
                   <textarea
                     id="content"
@@ -343,6 +375,9 @@ graph TD
 \`\`\`"
                     required
                   />
+                  <p className="mt-1 text-right text-xs text-gray-500">
+                    {content.length} 文字
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

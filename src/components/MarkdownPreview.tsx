@@ -5,9 +5,42 @@ import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkToc from "remark-toc";
+
+import CopyButton from "./CopyButton";
+
+// コードブロック用のカスタムコンポーネント
+interface CodeBlockProps {
+  children?: React.ReactNode;
+  className?: string;
+  inline?: boolean;
+}
+
+const CodeBlock: React.FC<CodeBlockProps> = ({
+  children,
+  className,
+  inline,
+}) => {
+  if (inline === true) {
+    return <code className={className}>{children}</code>;
+  }
+
+  const codeContent = String(children);
+
+  return (
+    <div className="relative">
+      <pre className={className}>
+        <code>{children}</code>
+      </pre>
+      <div className="absolute top-2 right-2">
+        <CopyButton content={codeContent} />
+      </div>
+    </div>
+  );
+};
 
 // Mermaid コンポーネント
 interface MermaidProps {
@@ -56,7 +89,7 @@ const MermaidChart: React.FC<MermaidProps> = ({ chart }) => {
 
   return svg !== "" ? (
     <div
-      className="mermaid-container"
+      className="mermaid-container flex justify-center rounded-lg bg-yellow-50 p-4"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   ) : null;
@@ -110,7 +143,16 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
     return parts;
   };
 
-  const contentParts = renderContentWithMermaid(content);
+  // 連続した改行を処理するための前処理
+  const preprocessContent = (content: string): string => {
+    // 連続した改行をHTMLの<br>タグに置換
+    return content.replace(/\n\n+/g, (match) => {
+      const lineBreaks = match.length - 1; // 最初の\nを除く
+      return `\n${"<br/>".repeat(lineBreaks)}\n`;
+    });
+  };
+
+  const contentParts = renderContentWithMermaid(preprocessContent(content));
 
   return (
     <div
@@ -123,8 +165,11 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           return (
             <ReactMarkdown
               key={index}
-              remarkPlugins={[remarkToc, remarkGfm, remarkMath]}
+              remarkPlugins={[remarkToc, remarkGfm, remarkMath, remarkBreaks]}
               rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
+              components={{
+                code: CodeBlock,
+              }}
             >
               {part.content}
             </ReactMarkdown>
