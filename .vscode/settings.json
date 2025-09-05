@@ -30,19 +30,5 @@
   "typescript.tsserver.log": "verbose",
 
   // spell checking
-  "cSpell.words": [
-    "appender",
-    "chrono",
-    "cliplayer",
-    "Deque",
-    "dialoguer",
-    "Gacha",
-    "musictl",
-    "reqwest",
-    "rustls",
-    "serde",
-    "thiserror",
-    "vitest",
-    "walkdir"
-  ]
+  "cSpell.words": ["Gacha", "gasp", "katex", "keymap", "vitest"]
 }
