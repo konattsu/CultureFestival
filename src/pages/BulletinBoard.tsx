@@ -13,14 +13,19 @@ import type { Board, BoardId } from "../types/bulletin-board";
 const BulletinBoardList: React.FC = () => {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBoards = async (): Promise<void> => {
       try {
+        setError(null);
         const boardsData = await getBoards();
         setBoards(boardsData);
       } catch (error) {
         console.error("板の取得に失敗しました:", error);
+        setError(
+          "掲示板の読み込みに失敗しました。サーバーがダウンしている可能性があります。しばらく時間をおいてから再度お試しください。",
+        );
       } finally {
         setLoading(false);
       }
@@ -35,6 +40,39 @@ const BulletinBoardList: React.FC = () => {
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error !== null) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-4">
+            <Link
+              to="/"
+              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>ホームに戻る</span>
+            </Link>
+          </div>
+          <div className="mx-auto max-w-md text-center">
+            <div className="mb-4 rounded-full bg-red-100 p-3 dark:bg-red-900">
+              <MessageSquare className="mx-auto h-8 w-8 text-red-600 dark:text-red-400" />
+            </div>
+            <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+              接続エラー
+            </h2>
+            <p className="mb-4 text-gray-600 dark:text-gray-400">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              再読み込み
+            </button>
+          </div>
         </div>
       </div>
     );
