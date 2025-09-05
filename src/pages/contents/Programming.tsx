@@ -7,15 +7,13 @@ import CodeMirror from "@uiw/react-codemirror";
 import ContentPageLayout from "../../components/ContentPageLayout";
 
 interface PyodideInterface {
-  // eslint-disable-next-line no-unused-vars
   runPython: (code: string) => unknown;
-  // eslint-disable-next-line no-unused-vars
+
   loadPackage: (packages: string | string[]) => Promise<void>;
 }
 
 declare global {
   interface Window {
-    // eslint-disable-next-line no-unused-vars
     loadPyodide: (options: { indexURL: string }) => Promise<PyodideInterface>;
   }
 }
