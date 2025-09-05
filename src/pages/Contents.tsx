@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
@@ -8,6 +8,44 @@ import { Sparkles, ArrowRight } from "lucide-react";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
+
+// デバイス判定とパフォーマンス設定
+const useDevicePerformance = (): {
+  isMobile: boolean;
+  isLowEnd: boolean;
+  prefersReducedMotion: boolean;
+  shouldReduceAnimations: boolean;
+  animationElementCount: number;
+  animationDuration: number;
+  complexAnimations: boolean;
+} => {
+  return useMemo(() => {
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        window.navigator.userAgent,
+      ) || window.innerWidth < 768;
+    const isLowEnd =
+      window.navigator.hardwareConcurrency !== undefined &&
+      window.navigator.hardwareConcurrency <= 4;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    return {
+      isMobile,
+      isLowEnd,
+      prefersReducedMotion,
+      shouldReduceAnimations: Boolean(
+        isMobile || isLowEnd || prefersReducedMotion,
+      ),
+      animationElementCount: isMobile ? 8 : 25,
+      animationDuration: isMobile ? 0.6 : 1.2,
+      complexAnimations: Boolean(
+        !isMobile && !isLowEnd && !prefersReducedMotion,
+      ),
+    };
+  }, []);
+};
 
 // --- BEGIN SVG ICON COMPONENTS ---
 const CryptanalysisIcon = (): React.JSX.Element => (
@@ -399,6 +437,7 @@ const TechIcon = (): React.JSX.Element => (
 // Floating mathematics elements
 const FloatingMathElements: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const performance = useDevicePerformance();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -458,8 +497,9 @@ const FloatingMathElements: React.FC = () => {
     ];
 
     const elements: HTMLDivElement[] = [];
+    const elementCount = performance.animationElementCount;
 
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < elementCount; i++) {
       const element = document.createElement("div");
       const symbol =
         mathSymbols[Math.floor(Math.random() * mathSymbols.length)];
@@ -472,6 +512,8 @@ const FloatingMathElements: React.FC = () => {
       element.style.left = `${Math.random() * 100}%`;
       element.style.top = `${Math.random() * 100}%`;
       element.style.zIndex = `${Math.floor(Math.random() * 5)}`;
+      // モバイル最適化のためwill-changeを追加
+      element.style.willChange = "transform, opacity";
 
       container.appendChild(element);
       elements.push(element);
@@ -481,35 +523,70 @@ const FloatingMathElements: React.FC = () => {
         rotation: Math.random() * 360,
       });
 
-      const tl = gsap.timeline({ repeat: -1, delay: Math.random() * 3 });
+      const animationDuration = performance.animationDuration;
+      const tl = gsap.timeline({
+        repeat: -1,
+        delay: Math.random() * (performance.isMobile ? 1.5 : 3),
+      });
 
-      tl.to(element, {
-        opacity: 0.7,
-        scale: 1,
-        duration: 1,
-        ease: "power2.out",
-      })
-        .to(
-          element,
-          {
-            x: (Math.random() - 0.5) * 300,
-            y: (Math.random() - 0.5) * 300,
-            rotation: `+=${Math.random() * 180 - 90}`,
-            duration: 8,
-            ease: "sine.inOut",
-          },
-          0,
-        )
-        .to(
-          element,
-          {
-            opacity: 0,
-            scale: 0.3,
-            duration: 1,
-            ease: "power2.in",
-          },
-          7,
-        );
+      if (performance.complexAnimations) {
+        // デスクトップ版: 複雑なアニメーション
+        tl.to(element, {
+          opacity: 0.7,
+          scale: 1,
+          duration: animationDuration,
+          ease: "power2.out",
+        })
+          .to(
+            element,
+            {
+              x: (Math.random() - 0.5) * 300,
+              y: (Math.random() - 0.5) * 300,
+              rotation: `+=${Math.random() * 180 - 90}`,
+              duration: 8,
+              ease: "sine.inOut",
+            },
+            0,
+          )
+          .to(
+            element,
+            {
+              opacity: 0,
+              scale: 0.3,
+              duration: animationDuration,
+              ease: "power2.in",
+            },
+            7,
+          );
+      } else {
+        // モバイル版: シンプルなアニメーション
+        tl.to(element, {
+          opacity: 0.5,
+          scale: 1,
+          duration: animationDuration,
+          ease: "none",
+        })
+          .to(
+            element,
+            {
+              x: (Math.random() - 0.5) * 150,
+              y: (Math.random() - 0.5) * 150,
+              duration: 4,
+              ease: "none",
+            },
+            0,
+          )
+          .to(
+            element,
+            {
+              opacity: 0,
+              scale: 0.5,
+              duration: animationDuration,
+              ease: "none",
+            },
+            3,
+          );
+      }
     }
 
     return (): void => {
@@ -519,7 +596,7 @@ const FloatingMathElements: React.FC = () => {
         }
       });
     };
-  }, []);
+  }, [performance]);
 
   return (
     <div
@@ -634,6 +711,7 @@ const ContentCard: React.FC<{
   index: number;
 }> = ({ item, index }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+  const performance = useDevicePerformance();
 
   useEffect(() => {
     const card = cardRef.current;
@@ -642,28 +720,28 @@ const ContentCard: React.FC<{
     gsap.fromTo(
       card,
       {
-        y: 80,
+        y: performance.isMobile ? 20 : 80,
         opacity: 0,
-        rotateX: -30,
-        scale: 0.8,
+        rotateX: performance.isMobile ? 0 : -30,
+        scale: performance.isMobile ? 0.95 : 0.8,
       },
       {
         y: 0,
         opacity: 1,
         rotateX: 0,
         scale: 1,
-        duration: 0.8,
-        delay: index * 0.1,
-        ease: "back.out(1.7)",
+        duration: performance.isMobile ? 0.3 : 0.8,
+        delay: performance.isMobile ? index * 0.05 : index * 0.1,
+        ease: performance.isMobile ? "power2.out" : "back.out(1.7)",
         scrollTrigger: {
           trigger: card,
-          start: "top 85%",
+          start: performance.isMobile ? "top 95%" : "top 85%",
           end: "bottom 15%",
           toggleActions: "play none none reverse",
         },
       },
     );
-  }, [index]);
+  }, [index, performance]);
 
   const gradients = [
     "from-purple-600 to-blue-600",
@@ -792,6 +870,7 @@ const contentItems: ContentItem[] = [
 
 const Contents: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
+  const performance = useDevicePerformance();
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -800,21 +879,21 @@ const Contents: React.FC = () => {
     // Grid container animation
     gsap.fromTo(
       grid,
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: performance.isMobile ? 20 : 40 },
       {
         opacity: 1,
         y: 0,
-        duration: 1,
-        ease: "power3.out",
+        duration: performance.isMobile ? 0.4 : 1,
+        ease: performance.isMobile ? "power2.out" : "power3.out",
         scrollTrigger: {
           trigger: grid,
-          start: "top 80%",
+          start: performance.isMobile ? "top 90%" : "top 80%",
           end: "bottom 20%",
           toggleActions: "play none none reverse",
         },
       },
     );
-  }, []);
+  }, [performance]);
 
   return (
     <div className="min-h-screen bg-black">

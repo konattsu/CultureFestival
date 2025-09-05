@@ -26,6 +26,15 @@ const FloatingCodeElements: React.FC = () => {
     const container = containerRef.current;
     if (container === null) return;
 
+    // Detect mobile/tablet devices for performance optimization
+    const isMobile =
+      typeof window !== "undefined" &&
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        window.navigator.userAgent,
+      );
+    const isSmallScreen =
+      typeof window !== "undefined" && window.innerWidth < 768;
+
     const codeSnippets = [
       "∫f(x)dx",
       "Σn²",
@@ -73,35 +82,45 @@ const FloatingCodeElements: React.FC = () => {
 
     const elements: HTMLDivElement[] = [];
 
-    // Predefined spawn positions for more balanced distribution
+    // Expanded spawn positions for better distribution
     const spawnPositions = [
-      // Top edge positions
-      { side: 0, x: 10, y: -20, name: "top-left" },
-      { side: 0, x: 30, y: -25, name: "top-left-center" },
-      { side: 0, x: 50, y: -20, name: "top-center" },
+      // Top edge positions (more spread out)
+      { side: 0, x: 5, y: -20, name: "top-far-left" },
+      { side: 0, x: 15, y: -25, name: "top-left" },
+      { side: 0, x: 30, y: -20, name: "top-left-center" },
+      { side: 0, x: 45, y: -25, name: "top-center-left" },
+      { side: 0, x: 55, y: -20, name: "top-center-right" },
       { side: 0, x: 70, y: -25, name: "top-right-center" },
-      { side: 0, x: 90, y: -20, name: "top-right" },
+      { side: 0, x: 85, y: -20, name: "top-right" },
+      { side: 0, x: 95, y: -25, name: "top-far-right" },
 
       // Right edge positions
-      { side: 1, x: 120, y: 15, name: "right-top" },
-      { side: 1, x: 125, y: 35, name: "right-top-center" },
-      { side: 1, x: 120, y: 50, name: "right-center" },
-      { side: 1, x: 125, y: 65, name: "right-bottom-center" },
-      { side: 1, x: 120, y: 85, name: "right-bottom" },
+      { side: 1, x: 120, y: 10, name: "right-top" },
+      { side: 1, x: 125, y: 25, name: "right-top-center" },
+      { side: 1, x: 120, y: 40, name: "right-center-top" },
+      { side: 1, x: 125, y: 50, name: "right-center" },
+      { side: 1, x: 120, y: 60, name: "right-center-bottom" },
+      { side: 1, x: 125, y: 75, name: "right-bottom-center" },
+      { side: 1, x: 120, y: 90, name: "right-bottom" },
 
-      // Bottom edge positions
-      { side: 2, x: 90, y: 120, name: "bottom-right" },
-      { side: 2, x: 70, y: 125, name: "bottom-right-center" },
-      { side: 2, x: 50, y: 120, name: "bottom-center" },
+      // Bottom edge positions (more spread out)
+      { side: 2, x: 95, y: 120, name: "bottom-far-right" },
+      { side: 2, x: 85, y: 125, name: "bottom-right" },
+      { side: 2, x: 70, y: 120, name: "bottom-right-center" },
+      { side: 2, x: 55, y: 125, name: "bottom-center-right" },
+      { side: 2, x: 45, y: 120, name: "bottom-center-left" },
       { side: 2, x: 30, y: 125, name: "bottom-left-center" },
-      { side: 2, x: 10, y: 120, name: "bottom-left" },
+      { side: 2, x: 15, y: 120, name: "bottom-left" },
+      { side: 2, x: 5, y: 125, name: "bottom-far-left" },
 
       // Left edge positions
-      { side: 3, x: -20, y: 85, name: "left-bottom" },
-      { side: 3, x: -25, y: 65, name: "left-bottom-center" },
-      { side: 3, x: -20, y: 50, name: "left-center" },
-      { side: 3, x: -25, y: 35, name: "left-top-center" },
-      { side: 3, x: -20, y: 15, name: "left-top" },
+      { side: 3, x: -20, y: 90, name: "left-bottom" },
+      { side: 3, x: -25, y: 75, name: "left-bottom-center" },
+      { side: 3, x: -20, y: 60, name: "left-center-bottom" },
+      { side: 3, x: -25, y: 50, name: "left-center" },
+      { side: 3, x: -20, y: 40, name: "left-center-top" },
+      { side: 3, x: -25, y: 25, name: "left-top-center" },
+      { side: 3, x: -20, y: 10, name: "left-top" },
     ];
 
     // Shuffle the spawn positions for variety
@@ -109,8 +128,10 @@ const FloatingCodeElements: React.FC = () => {
       () => Math.random() - 0.5,
     );
 
-    // Reduce count for less density
-    for (let i = 0; i < 40; i++) {
+    // Adjust particle count based on device capability
+    const particleCount = isMobile || isSmallScreen ? 25 : 40;
+
+    for (let i = 0; i < particleCount; i++) {
       const element = document.createElement("div");
       const snippet =
         codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
@@ -138,9 +159,9 @@ const FloatingCodeElements: React.FC = () => {
       container.appendChild(element);
       elements.push(element);
 
-      // Calculate target position in center area (42.5% to 57.5% = center ±15%)
-      const targetXPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
-      const targetYPercent = Math.random() * 20 + 40; // 40% to 60% of viewport
+      // Calculate target position in center area (35% to 65% = center ±15%)
+      const targetXPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
+      const targetYPercent = Math.random() * 30 + 35; // 35% to 65% of viewport
 
       // 3D perspective animation - improved visibility
       const startScale = Math.random() * 0.8 + 1.3; // Smaller start
@@ -156,16 +177,16 @@ const FloatingCodeElements: React.FC = () => {
         transformPerspective: 800,
       });
 
-      // Slower, less frequent animation
+      // More distributed timing for smoother appearance
       const tl = gsap.timeline({
         repeat: -1,
-        delay: Math.random() * 2, // Shorter random delay
-        repeatDelay: 0, // No delay between repeats
+        delay: Math.random() * 8, // Longer random delay to spread out appearances
+        repeatDelay: Math.random() * 3, // Add random delay between repeats
       });
 
       tl.to(element, {
         opacity: startOpacity,
-        duration: 0.8, // Slower fade in
+        duration: 1.2, // Slightly slower fade in
         ease: "power2.out",
       })
         .to(element, {
@@ -176,17 +197,17 @@ const FloatingCodeElements: React.FC = () => {
           rotateX: `+=${Math.random() * 60 - 30}`,
           rotateY: `+=${Math.random() * 60 - 30}`,
           opacity: 0,
-          duration: Math.random() * 6 + 6, // Slower movement
+          duration: Math.random() * 4 + 4, // 4-8 seconds for movement (closer to 5-6 seconds)
           ease: "power1.inOut",
         })
         .set(element, {
-          // Reset to new balanced spawn position
+          // Reset to new balanced spawn position with more variation
           ...((): { left: string; top: string } => {
             const nextIndex =
-              (i + Math.floor(elements.length / 2)) % shuffledPositions.length;
+              (i + Math.floor(elements.length / 3)) % shuffledPositions.length;
             const resetPosition = shuffledPositions[nextIndex];
-            const resetX = resetPosition.x + (Math.random() * 4 - 2);
-            const resetY = resetPosition.y + (Math.random() * 4 - 2);
+            const resetX = resetPosition.x + (Math.random() * 8 - 4); // More variation
+            const resetY = resetPosition.y + (Math.random() * 8 - 4); // More variation
             return {
               left: `${resetX}%`,
               top: `${resetY}%`,
@@ -225,10 +246,21 @@ const FloatingParticles: React.FC = () => {
     const container = containerRef.current;
     if (container === null) return;
 
+    // Detect mobile/tablet devices for performance optimization
+    const isMobile =
+      typeof window !== "undefined" &&
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        window.navigator.userAgent,
+      );
+    const isSmallScreen =
+      typeof window !== "undefined" && window.innerWidth < 768;
+
     // Create particles
     const particles: HTMLDivElement[] = [];
-    // Reduced count since we have code elements too
-    for (let i = 0; i < 30; i++) {
+    // Reduced count for mobile devices and based on screen size
+    const particleCount = isMobile || isSmallScreen ? 15 : 30;
+
+    for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
       particle.className =
         "absolute w-1 h-1 bg-blue-400 rounded-full opacity-50";
