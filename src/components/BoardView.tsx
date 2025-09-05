@@ -35,6 +35,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
   const [posting, setPosting] = useState(false);
   const [newPostContent, setNewPostContent] = useState("");
   const [userName, setUserName] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const { isAdmin } = useAuth();
 
@@ -42,6 +43,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
     const fetchData = async (): Promise<void> => {
       try {
         setLoading(true);
+        setError(null);
         const [boardData, postsData] = await Promise.all([
           getBoard(boardId),
           getPosts(boardId),
@@ -51,6 +53,9 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
         setPosts(postsData);
       } catch (error) {
         console.error("データの取得に失敗しました:", error);
+        setError(
+          "掲示板の読み込みに失敗しました。サーバーがダウンしている可能性があります。しばらく時間をおいてから再度お試しください。",
+        );
       } finally {
         setLoading(false);
       }
@@ -99,12 +104,16 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
       } else {
         console.error("投稿に失敗しました");
         // TODO: トースト通知などの適切なエラー表示に置き換える
-        window.alert("投稿に失敗しました。もう一度お試しください。");
+        window.alert(
+          "投稿に失敗しました。サーバーがダウンしている可能性があります。もう一度お試しください。",
+        );
       }
     } catch (error) {
       console.error("投稿エラー:", error);
       // TODO: トースト通知などの適切なエラー表示に置き換える
-      window.alert("投稿に失敗しました。");
+      window.alert(
+        "投稿に失敗しました。サーバーがダウンしている可能性があります。",
+      );
     } finally {
       setPosting(false);
     }
@@ -123,12 +132,16 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
         setBoard(updatedBoard);
       } else {
         // TODO: トースト通知などの適切なエラー表示に置き換える
-        window.alert("削除に失敗しました。");
+        window.alert(
+          "削除に失敗しました。サーバーがダウンしている可能性があります。",
+        );
       }
     } catch (error) {
       console.error("削除エラー:", error);
       // TODO: トースト通知などの適切なエラー表示に置き換える
-      window.alert("削除に失敗しました。");
+      window.alert(
+        "削除に失敗しました。サーバーがダウンしている可能性があります。",
+      );
     }
   };
 
@@ -153,6 +166,39 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error !== null) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="mb-4">
+            <Link
+              to="/bulletin-board"
+              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>掲示板一覧に戻る</span>
+            </Link>
+          </div>
+          <div className="mx-auto max-w-md text-center">
+            <div className="mb-4 rounded-full bg-red-100 p-3 dark:bg-red-900">
+              <MessageSquare className="mx-auto h-8 w-8 text-red-600 dark:text-red-400" />
+            </div>
+            <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+              接続エラー
+            </h2>
+            <p className="mb-4 text-gray-600 dark:text-gray-400">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              再読み込み
+            </button>
+          </div>
         </div>
       </div>
     );

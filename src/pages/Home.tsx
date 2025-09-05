@@ -609,6 +609,9 @@ const Home: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* 開発環境かつコメントアウトを外したときのみErrorBoundaryテストボタンを表示 */}
+      {/* {import.meta.env.DEV && <ErrorTestButton />} */}
     </div>
   );
 };
