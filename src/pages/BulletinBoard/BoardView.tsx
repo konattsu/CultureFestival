@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
@@ -13,16 +13,17 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { useAuth } from "../context/AuthContext";
 import {
   getBoard,
-  getPosts,
+  getPostsWithPagination,
   createPost,
   deletePost,
-} from "../services/bulletin-board";
-import { safeLocalStorage } from "../utils/safeLocalStorage";
+} from "./services";
 
-import type { Board, Post, BoardId } from "../types/bulletin-board";
+import type { Board, Post, BoardId } from "./types";
+
+import { useAuth } from "@/context/AuthContext";
+import { safeLocalStorage } from "@/utils/safeLocalStorage";
 
 interface BoardViewProps {
   boardId: BoardId;
@@ -32,12 +33,16 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
   const [board, setBoard] = useState<Board | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
   const [posting, setPosting] = useState(false);
   const [newPostContent, setNewPostContent] = useState("");
   const [userName, setUserName] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const { isAdmin } = useAuth();
+
+  const POSTS_PER_PAGE = 20;
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -46,15 +51,16 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
         setError(null);
         const [boardData, postsData] = await Promise.all([
           getBoard(boardId),
-          getPosts(boardId),
+          getPostsWithPagination(boardId, 0, POSTS_PER_PAGE),
         ]);
 
         setBoard(boardData);
-        setPosts(postsData);
+        setPosts(postsData.posts);
+        setHasMore(postsData.hasMore);
       } catch (error) {
         console.error("データの取得に失敗しました:", error);
         setError(
-          "掲示板の読み込みに失敗しました。サーバーがダウンしている可能性があります。しばらく時間をおいてから再度お試しください。",
+          "スレの読み込みに失敗しました。サーバーがダウンしている可能性があります。しばらく時間をおいてから再度お試しください。",
         );
       } finally {
         setLoading(false);
@@ -63,6 +69,42 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
 
     void fetchData();
   }, [boardId]);
+
+  // 追加のレスを読み込む関数
+  const loadMorePosts = useCallback(async () => {
+    if (loadingMore || !hasMore) return;
+
+    try {
+      setLoadingMore(true);
+      const morePostsData = await getPostsWithPagination(
+        boardId,
+        posts.length,
+        POSTS_PER_PAGE,
+      );
+
+      setPosts((prevPosts) => [...prevPosts, ...morePostsData.posts]);
+      setHasMore(morePostsData.hasMore);
+    } catch (error) {
+      console.error("追加レスの取得に失敗しました:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [boardId, posts.length, loadingMore, hasMore]);
+
+  // スクロールイベントのハンドラ
+  useEffect(() => {
+    const handleScroll = (): void => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 1000 // 1000px手前で読み込み開始
+      ) {
+        void loadMorePosts();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return (): void => window.removeEventListener("scroll", handleScroll);
+  }, [loadMorePosts]);
 
   useEffect(() => {
     // localStorageからユーザー名を取得
@@ -78,8 +120,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
 
     setPosting(true);
     try {
-      const author =
-        userName.trim() === "" ? "不明なユーザー" : userName.trim();
+      const author = userName.trim() === "" ? "名無しさん" : userName.trim();
 
       // ユーザー名をlocalStorageに保存
       if (userName.trim() !== "") {
@@ -94,25 +135,30 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
 
       if (success) {
         setNewPostContent("");
-        // 投稿一覧を再取得
-        const updatedPosts = await getPosts(boardId);
-        setPosts(updatedPosts);
+        // 最初のページを再取得
+        const updatedPostsData = await getPostsWithPagination(
+          boardId,
+          0,
+          POSTS_PER_PAGE,
+        );
+        setPosts(updatedPostsData.posts);
+        setHasMore(updatedPostsData.hasMore);
 
-        // 板情報も更新（投稿数が変わる）
+        // スレ情報も更新（レス数が変わる）
         const updatedBoard = await getBoard(boardId);
         setBoard(updatedBoard);
       } else {
-        console.error("投稿に失敗しました");
+        console.error("レスに失敗しました");
         // TODO: トースト通知などの適切なエラー表示に置き換える
         window.alert(
-          "投稿に失敗しました。サーバーがダウンしている可能性があります。もう一度お試しください。",
+          "レスに失敗しました。サーバーがダウンしている可能性があります。もう一度お試しください。",
         );
       }
     } catch (error) {
-      console.error("投稿エラー:", error);
+      console.error("レスエラー:", error);
       // TODO: トースト通知などの適切なエラー表示に置き換える
       window.alert(
-        "投稿に失敗しました。サーバーがダウンしている可能性があります。",
+        "レスに失敗しました。サーバーがダウンしている可能性があります。",
       );
     } finally {
       setPosting(false);
@@ -120,13 +166,19 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
   };
 
   const handleDeletePost = async (postId: string): Promise<void> => {
-    if (!window.confirm("この投稿を削除しますか？")) return;
+    if (!window.confirm("このレスを削除しますか？")) return;
 
     try {
       const success = await deletePost(boardId, postId);
       if (success) {
-        const updatedPosts = await getPosts(boardId);
-        setPosts(updatedPosts);
+        // 最初のページを再取得
+        const updatedPostsData = await getPostsWithPagination(
+          boardId,
+          0,
+          POSTS_PER_PAGE,
+        );
+        setPosts(updatedPostsData.posts);
+        setHasMore(updatedPostsData.hasMore);
 
         const updatedBoard = await getBoard(boardId);
         setBoard(updatedBoard);
@@ -181,7 +233,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
               className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>掲示板一覧に戻る</span>
+              <span>BBS一覧に戻る</span>
             </Link>
           </div>
           <div className="mx-auto max-w-md text-center">
@@ -210,14 +262,14 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              板が見つかりません
+              スレが見つかりません
             </h1>
             <Link
               to="/bulletin-board"
               className="mt-4 inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>掲示板一覧に戻る</span>
+              <span>BBS一覧に戻る</span>
             </Link>
           </div>
         </div>
@@ -240,7 +292,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
               className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>掲示板一覧に戻る</span>
+              <span>BBS一覧に戻る</span>
             </Link>
           </div>
 
@@ -256,7 +308,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
                 {board.description}
               </p>
               <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                <span>{board.post_count} 投稿</span>
+                <span>{board.post_count} レス</span>
                 <span
                   className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${
                     board.status === "open"
@@ -280,7 +332,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
           >
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                新規投稿
+                新規レス
               </h3>
               <form onSubmit={handleSubmitPost} className="space-y-4">
                 <div>
@@ -295,7 +347,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
                     id="userName"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
-                    placeholder="不明なユーザー"
+                    placeholder="ユーザ名"
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
@@ -304,14 +356,14 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
                     htmlFor="postContent"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
-                    投稿内容
+                    レス内容
                   </label>
                   <textarea
                     id="postContent"
                     value={newPostContent}
                     onChange={(e) => setNewPostContent(e.target.value)}
                     rows={4}
-                    placeholder="投稿内容を入力してください..."
+                    placeholder="レス内容を入力してください..."
                     required
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
@@ -322,7 +374,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
                   className="inline-flex items-center space-x-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
                   <Send className="h-4 w-4" />
-                  <span>{posting ? "投稿中..." : "投稿する"}</span>
+                  <span>{posting ? "レス中..." : "書き込む"}</span>
                 </button>
               </form>
             </div>
@@ -367,7 +419,7 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
                       <button
                         onClick={() => handleDeletePost(post.id)}
                         className="rounded-lg p-2 text-red-600 transition-colors hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900"
-                        title="投稿を削除"
+                        title="レスを削除"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -383,6 +435,27 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
           ))}
         </motion.div>
 
+        {/* Loading More */}
+        {loadingMore && (
+          <div className="flex justify-center py-8">
+            <div className="text-center">
+              <div className="mx-auto h-6 w-6 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                レスを読み込み中...
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* No More Posts */}
+        {!hasMore && posts.length > 0 && (
+          <div className="py-8 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              すべてのレスを表示しました
+            </p>
+          </div>
+        )}
+
         {/* Empty State */}
         {posts.length === 0 && (
           <motion.div
@@ -392,10 +465,10 @@ const BoardView: React.FC<BoardViewProps> = ({ boardId }) => {
           >
             <MessageSquare className="mx-auto h-16 w-16 text-gray-400" />
             <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-              まだ投稿がありません
+              まだレスがありません
             </h3>
             <p className="mt-2 text-gray-600 dark:text-gray-400">
-              最初の投稿をしてみませんか？
+              最初のレスをしてみませんか？
             </p>
           </motion.div>
         )}
