@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 import { motion } from "framer-motion";
 import { Save, X, FileText } from "lucide-react";
@@ -34,6 +34,89 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
   const [author, setAuthor] = useState("");
   const { adminUser } = useAuth();
 
+  // debounce用のタイマー
+  const debounceTimer = useRef<number | null>(null);
+
+  // localStorageのキー
+  const LOCAL_STORAGE_KEY = "post-editor-draft";
+
+  // localStorageに保存する関数
+  const saveDraftToStorage = useCallback(
+    (draftData: {
+      title: string;
+      content: string;
+      summary: string;
+      tags: string;
+      author: string;
+      status: "published" | "draft";
+      featured: boolean;
+    }) => {
+      try {
+        window.localStorage.setItem(
+          LOCAL_STORAGE_KEY,
+          JSON.stringify(draftData),
+        );
+      } catch (error) {
+        console.error("Failed to save draft to localStorage:", error);
+      }
+    },
+    [],
+  );
+
+  // debounced保存
+  const debouncedSave = useCallback(
+    (
+      titleValue: string,
+      contentValue: string,
+      summaryValue: string,
+      tagsValue: string,
+      authorValue: string,
+      statusValue: "published" | "draft",
+      featuredValue: boolean,
+    ) => {
+      if (debounceTimer.current !== null) {
+        clearTimeout(debounceTimer.current);
+      }
+
+      debounceTimer.current = window.setTimeout(() => {
+        const draftData = {
+          title: titleValue,
+          content: contentValue,
+          summary: summaryValue,
+          tags: tagsValue,
+          author: authorValue,
+          status: statusValue,
+          featured: featuredValue,
+        };
+        saveDraftToStorage(draftData);
+      }, 3000); // 3秒のdebounce
+    },
+    [saveDraftToStorage],
+  );
+
+  // localStorageから下書きを読み込む関数
+  const loadDraftFromStorage = useCallback(() => {
+    try {
+      const savedDraft = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedDraft !== null && savedDraft !== "") {
+        const draft = JSON.parse(savedDraft);
+        return draft;
+      }
+    } catch (error) {
+      console.error("Failed to load draft from localStorage:", error);
+    }
+    return null;
+  }, []);
+
+  // 下書きをクリアする関数
+  const clearDraftFromStorage = useCallback(() => {
+    try {
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+    } catch (error) {
+      console.error("Failed to clear draft from localStorage:", error);
+    }
+  }, []);
+
   useEffect(() => {
     if (editingPost !== null && editingPost !== undefined) {
       setTitle(editingPost.title);
@@ -45,16 +128,73 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       );
       setFeatured(editingPost.featured ?? false);
       setAuthor(editingPost.author);
+      // 編集時は下書きをクリア
+      clearDraftFromStorage();
     } else {
-      setTitle("");
-      setContent("");
-      setSummary("");
-      setTags("");
-      setStatus("draft");
-      setFeatured(false);
-      setAuthor(adminUser?.email ?? "");
+      // 新規作成時は下書きを読み込み
+      const draft = loadDraftFromStorage();
+      if (draft !== null && draft !== undefined) {
+        setTitle(draft.title ?? "");
+        setContent(draft.content ?? "");
+        setSummary(draft.summary ?? "");
+        setTags(draft.tags ?? "");
+        setStatus(draft.status ?? "draft");
+        setFeatured(draft.featured ?? false);
+        setAuthor(draft.author ?? adminUser?.email ?? "");
+      } else {
+        setTitle("");
+        setContent("");
+        setSummary("");
+        setTags("");
+        setStatus("draft");
+        setFeatured(false);
+        setAuthor(adminUser?.email ?? "");
+      }
     }
-  }, [editingPost, adminUser]);
+  }, [editingPost, adminUser, loadDraftFromStorage, clearDraftFromStorage]);
+
+  // フォームの値が変更されたときに自動保存
+  useEffect(() => {
+    // 編集中の場合は自動保存しない
+    if (editingPost !== null && editingPost !== undefined) {
+      return;
+    }
+
+    // 新規作成時のみ自動保存
+    if (
+      title.trim() !== "" ||
+      content.trim() !== "" ||
+      summary.trim() !== "" ||
+      tags.trim() !== ""
+    ) {
+      debouncedSave(title, content, summary, tags, author, status, featured);
+    }
+
+    // クリーンアップ
+    return (): void => {
+      if (debounceTimer.current !== null) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [
+    title,
+    content,
+    summary,
+    tags,
+    author,
+    status,
+    featured,
+    editingPost,
+    debouncedSave,
+  ]);
+
+  // モーダルが閉じられるときにタイマーをクリア
+  useEffect(() => {
+    if (!isOpen && debounceTimer.current !== null) {
+      clearTimeout(debounceTimer.current);
+      debounceTimer.current = null;
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -76,7 +216,14 @@ const PostEditorModal: React.FC<PostEditorModalProps> = ({
       featured,
     };
 
-    await onSave(postData);
+    try {
+      await onSave(postData);
+      // 投稿が成功したら下書きをクリア
+      clearDraftFromStorage();
+    } catch (error) {
+      // エラーが発生した場合は下書きを残す
+      console.error("Failed to save post:", error);
+    }
   };
 
   if (!isOpen) return null;

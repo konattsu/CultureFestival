@@ -4,8 +4,10 @@ import mermaid from "mermaid";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import remarkToc from "remark-toc";
 
 // Mermaid コンポーネント
 interface MermaidProps {
@@ -112,7 +114,7 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
 
   return (
     <div
-      className={`prose prose-gray dark:prose-invert max-w-none ${className}`}
+      className={`prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:p-1 prose-code:rounded max-w-none ${className}`}
     >
       {contentParts.map((part, index) => {
         if (part.type === "mermaid") {
@@ -121,8 +123,8 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({
           return (
             <ReactMarkdown
               key={index}
-              remarkPlugins={[remarkGfm, remarkMath]}
-              rehypePlugins={[rehypeKatex, rehypeHighlight]}
+              remarkPlugins={[remarkToc, remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeRaw, rehypeKatex, rehypeHighlight]}
             >
               {part.content}
             </ReactMarkdown>
