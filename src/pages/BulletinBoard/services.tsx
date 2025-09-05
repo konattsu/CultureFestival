@@ -7,7 +7,6 @@ import {
   serverTimestamp,
 } from "firebase/database";
 
-import { database } from "../config/firebase";
 import {
   DEFAULT_BOARDS,
   type Board,
@@ -15,16 +14,19 @@ import {
   type BulletinBoardMetadata,
   type NewPost,
   type BoardId,
-} from "../types/bulletin-board";
-import { withFirebaseTimeout } from "../utils/timeout";
+  type PostsPagination,
+} from "./types";
 
-// 板一覧を取得
+import { database } from "@/config/firebase";
+import { withFirebaseTimeout } from "@/utils/timeout";
+
+// スレ一覧を取得
 export const getBoards = async (): Promise<Board[]> => {
   try {
     const boardsRef = ref(database, "bulletin_board/boards");
     const snapshot = await withFirebaseTimeout(get(boardsRef));
     if (!snapshot.exists()) {
-      // 初期板を作成
+      // 初期スレを作成
       await initializeBoards();
       return Object.values(DEFAULT_BOARDS).map((board) => ({
         ...board,
@@ -39,12 +41,12 @@ export const getBoards = async (): Promise<Board[]> => {
       (a: Board, b: Board) => a.order - b.order,
     );
   } catch (error) {
-    console.error("板の取得に失敗しました:", error);
+    console.error("スレの取得に失敗しました:", error);
     throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
-// 特定の板を取得
+// 特定のスレを取得
 export const getBoard = async (boardId: BoardId): Promise<Board | null> => {
   try {
     const boardRef = ref(database, `bulletin_board/boards/${boardId}`);
@@ -56,12 +58,12 @@ export const getBoard = async (boardId: BoardId): Promise<Board | null> => {
 
     return snapshot.val();
   } catch (error) {
-    console.error("板の取得に失敗しました:", error);
+    console.error("スレの取得に失敗しました:", error);
     throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
-// 板の投稿一覧を取得
+// スレのレス一覧を取得
 export const getPosts = async (boardId: BoardId): Promise<Post[]> => {
   try {
     const postsRef = ref(database, `bulletin_board/posts/${boardId}`);
@@ -73,31 +75,69 @@ export const getPosts = async (boardId: BoardId): Promise<Post[]> => {
 
     const postsData = snapshot.val() as Record<string, Post>;
     return Object.values(postsData).sort(
-      (a: Post, b: Post) => a.post_number - b.post_number,
+      (a: Post, b: Post) => b.post_number - a.post_number, // 最新が上に来るように降順にソート
     );
   } catch (error) {
-    console.error("投稿の取得に失敗しました:", error);
+    console.error("レスの取得に失敗しました:", error);
     throw new Error("サーバーへの接続に失敗しました");
   }
 };
 
-// 新規投稿作成
+// ページネーション対応のレス一覧を取得
+export const getPostsWithPagination = async (
+  boardId: BoardId,
+  offset: number = 0,
+  limit: number = 20,
+): Promise<PostsPagination> => {
+  try {
+    const postsRef = ref(database, `bulletin_board/posts/${boardId}`);
+    const snapshot = await withFirebaseTimeout(get(postsRef));
+
+    if (!snapshot.exists()) {
+      return {
+        posts: [],
+        hasMore: false,
+        totalCount: 0,
+      };
+    }
+
+    const postsData = snapshot.val() as Record<string, Post>;
+    const allPosts = Object.values(postsData).sort(
+      (a: Post, b: Post) => b.post_number - a.post_number, // 最新が上に来るように降順にソート
+    );
+
+    const totalCount = allPosts.length;
+    const paginatedPosts = allPosts.slice(offset, offset + limit);
+    const hasMore = offset + limit < totalCount;
+
+    return {
+      posts: paginatedPosts,
+      hasMore,
+      totalCount,
+    };
+  } catch (error) {
+    console.error("レスの取得に失敗しました:", error);
+    throw new Error("サーバーへの接続に失敗しました");
+  }
+};
+
+// 新規レス作成
 export const createPost = async (newPost: NewPost): Promise<boolean> => {
   try {
     const { board_id, author, content } = newPost;
 
-    // 投稿番号を取得
+    // レス番号を取得
     const boardRef = ref(database, `bulletin_board/boards/${board_id}`);
     const boardSnapshot = await withFirebaseTimeout(get(boardRef));
 
     if (!boardSnapshot.exists()) {
-      throw new Error("板が存在しません");
+      throw new Error("スレが存在しません");
     }
 
     const board: Board = boardSnapshot.val();
     const postNumber = board.post_count + 1;
 
-    // 新しい投稿のデータ
+    // 新しいレスのデータ
     const postData: Omit<Post, "id"> = {
       board_id,
       author,
@@ -106,7 +146,7 @@ export const createPost = async (newPost: NewPost): Promise<boolean> => {
       post_number: postNumber,
     };
 
-    // 投稿を追加
+    // レスを追加
     const postsRef = ref(database, `bulletin_board/posts/${board_id}`);
     const newPostRef = push(postsRef);
 
@@ -129,7 +169,7 @@ export const createPost = async (newPost: NewPost): Promise<boolean> => {
 
     return true;
   } catch (error) {
-    console.error("投稿の作成に失敗しました:", error);
+    console.error("レスの作成に失敗しました:", error);
     return false;
   }
 };
@@ -175,7 +215,7 @@ const updateMetadata = async (): Promise<void> => {
   }
 };
 
-// 初期板の作成
+// 初期スレの作成
 const initializeBoards = async (): Promise<void> => {
   try {
     const now = new Date().toISOString();
@@ -195,11 +235,11 @@ const initializeBoards = async (): Promise<void> => {
 
     await updateMetadata();
   } catch (error) {
-    console.error("初期板の作成に失敗しました:", error);
+    console.error("初期スレの作成に失敗しました:", error);
   }
 };
 
-// 板のタイトル更新（管理者のみ）
+// スレのタイトル更新（管理者のみ）
 export const updateBoardTitle = async (
   boardId: BoardId,
   title: string,
@@ -209,12 +249,12 @@ export const updateBoardTitle = async (
     await withFirebaseTimeout(set(boardRef, title));
     return true;
   } catch (error) {
-    console.error("板のタイトル更新に失敗しました:", error);
+    console.error("スレのタイトル更新に失敗しました:", error);
     return false;
   }
 };
 
-// 板の説明更新（管理者のみ）
+// スレの説明更新（管理者のみ）
 export const updateBoardDescription = async (
   boardId: BoardId,
   description: string,
@@ -227,12 +267,12 @@ export const updateBoardDescription = async (
     await withFirebaseTimeout(set(boardRef, description));
     return true;
   } catch (error) {
-    console.error("板の説明更新に失敗しました:", error);
+    console.error("スレの説明更新に失敗しました:", error);
     return false;
   }
 };
 
-// 投稿削除（管理者のみ）
+// レス削除（管理者のみ）
 export const deletePost = async (
   boardId: BoardId,
   postId: string,
@@ -242,7 +282,7 @@ export const deletePost = async (
     await withFirebaseTimeout(set(postRef, null));
     return true;
   } catch (error) {
-    console.error("投稿の削除に失敗しました:", error);
+    console.error("レスの削除に失敗しました:", error);
     return false;
   }
 };

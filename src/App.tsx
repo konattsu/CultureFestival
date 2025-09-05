@@ -14,7 +14,6 @@ const Map = lazy(() => import("./pages/Map.tsx"));
 const BulletinBoard = lazy(() => import("./pages/BulletinBoard.tsx"));
 const Magazine = lazy(() => import("./pages/Magazine.tsx"));
 const CMSSelection = lazy(() => import("./pages/CMSSelection.tsx"));
-const BulletinCMS = lazy(() => import("./pages/BulletinCMS.tsx"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const ContentsRoutes = lazy(() => import("./pages/ContentsRoutes.tsx"));
@@ -32,7 +31,6 @@ const App: React.FC = () => {
               <Route path="magazine" element={<Magazine />} />
               <Route path="bulletin-board" element={<BulletinBoard />} />
               <Route path="cms" element={<CMSSelection />} />
-              <Route path="bulletin-cms" element={<BulletinCMS />} />
               <Route path="admin-login" element={<AdminLogin />} />
               <Route path="map" element={<Map />} />
               <Route path="*" element={<NotFound />} />

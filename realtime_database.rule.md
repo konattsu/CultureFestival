@@ -1,25 +1,21 @@
+# rule
+
+```json
 {
   "rules": {
     "bulletin_board": {
       "boards": {
         ".read": true,
         "$board_id": {
-          "post_count": {
-            ".write": true
-          },
-          "last_updated": {
-            ".write": true
-          },
-          "$other": {
-            ".write": "auth != null"
-          }
+          ".write": "auth != null"
         }
       },
       "posts": {
         ".read": true,
         "$board_id": {
           "$post_id": {
-            ".write": true
+            // 新規投稿のみ許可（編集・削除不可）
+            ".write": "auth != null && !data.exists()"
           }
         }
       },
@@ -31,10 +27,7 @@
     "admin": {
       ".read": "auth != null",
       ".write": "auth != null"
-    },
-    "blog": {
-      ".read": true,
-      ".write": "auth != null"
     }
   }
 }
+```
