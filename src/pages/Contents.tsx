@@ -105,39 +105,21 @@ const GachaIcon = (): React.JSX.Element => (
 );
 
 const DvaIcon = (): React.JSX.Element => (
-  <svg viewBox="0 0 100 100" className="h-32 w-32">
-    <polyline
-      points="10,10 30,90 50,10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="5"
-    />
-    <line
-      x1="57.5"
-      y1="23.5"
-      x2="92.5"
-      y2="76.5"
-      stroke="currentColor"
-      strokeWidth="5"
-    />
-    <ellipse
-      cx="75"
-      cy="25"
-      rx="17"
-      ry="13"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="5"
-    />
-    <ellipse
-      cx="75"
-      cy="75"
-      rx="17"
-      ry="13"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="5"
-    />
+  <svg
+    viewBox="0 0 100 100"
+    className="flex h-32 w-32 items-center justify-center"
+  >
+    <text
+      x="50%"
+      y="55%"
+      textAnchor="middle"
+      dominantBaseline="middle"
+      fontSize="48"
+      fill="currentColor"
+      fontWeight="bold"
+    >
+      VS
+    </text>
   </svg>
 );
 

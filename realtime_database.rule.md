@@ -7,21 +7,33 @@
       "boards": {
         ".read": true,
         "$board_id": {
-          ".write": "auth != null"
+          ".write": "auth != null",
+          "post_count": {
+            ".write": true
+          },
+          "last_updated": {
+            ".write": true
+          }
         }
       },
       "posts": {
         ".read": true,
-        "$board_id": {
-          "$post_id": {
-            // 新規投稿のみ許可（編集・削除不可）
-            ".write": "auth != null && !data.exists()"
-          }
+        "broadcast": {
+          ".write": "auth != null"
+        },
+        "classroom": {
+          ".write": true
+        },
+        "playground": {
+          ".write": true
+        },
+        "underground": {
+          ".write": true
         }
       },
       "metadata": {
         ".read": true,
-        ".write": "auth != null"
+        ".write": true
       }
     },
     "admin": {
