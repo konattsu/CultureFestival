@@ -29,7 +29,7 @@
         },
         "underground": {
           ".write": true
-        },
+        }
       },
       "metadata": {
         ".read": true,
