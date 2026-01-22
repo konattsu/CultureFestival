@@ -1,0 +1,2 @@
+import{j as e}from"./index-BYkX6PAe.js";import{C as s}from"./ContentPageLayout-BCXWy6_M.js";const a=()=>e.jsxs(s,{title:"Pyxis-CodeCanvas",children:[e.jsx("div",{className:"mt-8 h-screen",children:e.jsx("iframe",{src:"https://pyxis-code.onrender.com/",className:"h-full w-full rounded-lg border",title:"Pyxis Code"})}),e.jsx("p",{className:"mt-4 text-center text-gray-500",children:"created by Roughfts/Stasshe"})]});export{a as default};
+//# sourceMappingURL=Tech-B4FLyLYa.js.map

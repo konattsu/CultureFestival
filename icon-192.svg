@@ -1,0 +1,31 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style>
+            rect {
+                stroke: #000;
+                fill: #fff;
+            }
+            line {
+                stroke: #000;
+            }
+        </style>
+    </defs>
+
+    <rect x="0" y="0" width="192" height="192" fill="#fff" />
+    <!-- M -->
+    <line x1="20" y1="20" x2="20" y2="85" stroke-width="14" stroke-linecap="round" />
+    <line x1="80" y1="20" x2="80" y2="85" stroke-width="14" stroke-linecap="round" />
+    <line x1="20" y1="20" x2="50" y2="80" stroke-width="14" stroke-linecap="round" />
+    <line x1="80" y1="20" x2="50" y2="80" stroke-width="14" stroke-linecap="round" />
+    <!-- A -->
+    <line x1="140" y1="20" x2="110" y2="85" stroke-width="14" stroke-linecap="round" />
+    <line x1="140" y1="20" x2="170" y2="85" stroke-width="14" stroke-linecap="round" />
+    <line x1="120" y1="70" x2="160" y2="70" stroke-width="14" stroke-linecap="round" />
+    <!-- T -->
+    <line x1="20" y1="105" x2="80" y2="105" stroke-width="14" stroke-linecap="round" />
+    <line x1="50" y1="105" x2="50" y2="170" stroke-width="14" stroke-linecap="round" />
+    <!-- H -->
+    <line x1="110" y1="105" x2="110" y2="170" stroke-width="14" stroke-linecap="round" />
+    <line x1="170" y1="105" x2="170" y2="170" stroke-width="14" stroke-linecap="round" />
+    <line x1="110" y1="137.5" x2="170" y2="137.5" stroke-width="14" stroke-linecap="round" />
+</svg>
